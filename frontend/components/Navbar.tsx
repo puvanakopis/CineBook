@@ -9,7 +9,7 @@ export default function Navbar() {
     const [search, setSearch] = useState("");
 
     return (
-        <header className="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-[#392828] bg-[#181111]/95 backdrop-blur-sm px-4 lg:px-10 py-3">
+        <header className="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-[#392828] bg-[#181111]/95 backdrop-blur-sm px-4 mx-16 lg:px-10 py-3">
             {/* Left section */}
             <div className="flex items-center gap-8">
                 {/* Logo */}
