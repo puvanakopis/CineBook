@@ -1,5 +1,6 @@
 "use client";
 
+import { IoSearch } from "react-icons/io5";
 import { MdOutlineCalendarToday } from "react-icons/md";
 import { MdOutlineMovie } from "react-icons/md";
 import { MdOutlineLocationOn } from "react-icons/md";
@@ -75,7 +76,7 @@ const MovieFilter = () => {
 
                 {/* Search Button */}
                 <button className="w-full lg:w-auto bg-white text-background-dark hover:bg-gray-200 font-bold h-12 px-8 rounded-lg transition-colors flex items-center justify-center gap-2 self-end mt-6 lg:mt-0">
-                    <span className="material-symbols-outlined">search</span>
+                    <span className="material-symbols-outlined"><IoSearch /></span>
                     Find Movies
                 </button>
             </div>

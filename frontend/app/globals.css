@@ -15,3 +15,11 @@ body {
   background-color: #181111;
   color:  #b99d9d; 
 }
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}

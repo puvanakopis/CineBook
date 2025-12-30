@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Noto_Sans } from "next/font/google";
 import "./globals.css";
+import CineBotChat from "@/components/CineBotChat";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
@@ -24,10 +25,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <html lang="en">
       <body className={`${beVietnamPro.variable} ${notoSans.variable}`}>
         {children}
+        {<CineBotChat />}
       </body>
     </html>
   );
