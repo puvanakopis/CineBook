@@ -10,3 +10,8 @@
   --color-input-bg: #392828;
   --color-text-secondary: #b99d9d;
 }
+
+body {
+  background-color: #181111;
+  color:  #b99d9d; 
+}
