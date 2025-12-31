@@ -4,9 +4,18 @@ import Link from "next/link";
 import { useState } from "react";
 import { MdOutlineMovieFilter } from "react-icons/md";
 import { IoMdSearch } from "react-icons/io";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
     const [search, setSearch] = useState("");
+    const pathname = usePathname(); 
+
+    const navLinks = [
+        { href: "/", label: "Home" },
+        { href: "/movies", label: "Movies" },
+        { href: "/about", label: "About" },
+        { href: "/contact", label: "Contact" },
+    ];
 
     return (
         <header className="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-[#392828] bg-[#181111]/95 backdrop-blur-sm px-4 mx-16 lg:px-10 py-3">
@@ -24,30 +33,19 @@ export default function Navbar() {
 
                 {/* Navigation links */}
                 <nav className="hidden lg:flex items-center gap-9">
-                    <Link
-                        href="/"
-                        className="text-[#ec1313] font-bold text-base leading-normal"
-                    >
-                        Home
-                    </Link>
-                    <Link
-                        href="/movies"
-                        className="text-white hover:text-[#ec1313] transition-colors text-base font-medium"
-                    >
-                        Movies
-                    </Link>
-                    <Link
-                        href="/about"
-                        className="text-white hover:text-[#ec1313] transition-colors text-base font-medium"
-                    >
-                        About
-                    </Link>
-                    <Link
-                        href="/contact"
-                        className="text-white hover:text-[#ec1313] transition-colors text-base font-medium"
-                    >
-                        Contact
-                    </Link>
+                    {navLinks.map((link) => (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            className={`text-base font-medium leading-normal transition-colors ${
+                                pathname === link.href
+                                    ? "text-[#ec1313] font-bold"
+                                    : "text-white hover:text-[#ec1313]"
+                            }`}
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
                 </nav>
             </div>
 
