@@ -1,7 +1,8 @@
 import React from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { GoMail } from "react-icons/go";
-import { MdAlternateEmail, MdOutlineExpandMore, MdOutlineSupportAgent } from "react-icons/md";
+import { MdAccessible, MdAlternateEmail, MdOutlineConfirmationNumber, MdOutlineExpandMore, MdOutlineSupportAgent } from "react-icons/md";
+import { RiGroupLine } from "react-icons/ri";
 
 const ContactSection: React.FC = () => {
     return (
@@ -142,6 +143,48 @@ const ContactSection: React.FC = () => {
                             ))}
                         </div>
                     </div>
+                </div>
+
+
+            </div>
+
+            {/* FAQ Section */}
+            <div className="mt-16 mb-8">
+                <h2 className="text-white text-2xl font-bold leading-tight tracking-[-0.015em] mb-8 text-center">
+                    Frequently Asked Questions
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[
+                        {
+                            icon: <MdOutlineConfirmationNumber size={25} />,
+                            title: "Ticket Cancellations",
+                            description:
+                                "Tickets can be cancelled up to 60 minutes before showtime for a full refund to your original payment method.",
+                        },
+                        {
+                            icon: <RiGroupLine size={25} />,
+                            title: "Group Bookings",
+                            description:
+                                "For groups larger than 20, please use the inquiry form above to get special rates and reserved seating blocks.",
+                        },
+                        {
+                            icon: <MdAccessible size={25} />,
+                            title: "Accessibility",
+                            description:
+                                "All our theaters offer wheelchair accessible seating and companion seats. Assistive listening devices are available at the counter.",
+                        },
+                    ].map((faq, idx) => (
+                        <div
+                            key={idx}
+                            className="bg-surface-dark p-6 rounded-lg border border-[#392828] hover:border-primary/30 transition-colors"
+                        >
+                            <div className="flex items-center gap-3 mb-3">
+                                <span className="material-symbols-outlined text-primary">{faq.icon}</span>
+                                <h3 className="text-white font-bold text-base">{faq.title}</h3>
+                            </div>
+                            <p className="text-text-secondary text-sm leading-relaxed">{faq.description}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>
