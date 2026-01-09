@@ -41,8 +41,11 @@ const ContactSection: React.FC = () => {
                                 <span className="text-white text-sm font-medium">Inquiry Type</span>
                                 <div className="relative">
                                     <div className="relative w-full">
-                                        <select className="w-full appearance-none rounded-lg bg-input-bg border-none text-white h-12 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-primary transition-all cursor-pointer">
-                                            <option disabled selected value="">Select an issue</option>
+                                        <select
+                                            defaultValue=""
+                                            className="w-full appearance-none rounded-lg bg-input-bg border-none text-white h-12 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-primary transition-all cursor-pointer"
+                                        >
+                                            <option disabled value="">Select an issue</option>
                                             <option value="ticket">Ticket Issue</option>
                                             <option value="refund">Refund Request</option>
                                             <option value="technical">Technical Support</option>
