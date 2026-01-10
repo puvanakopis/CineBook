@@ -18,8 +18,8 @@ export default function MovieDetail() {
         languages={movie.languages}
         formats={movie.formats}
         synopsis={movie.synopsis}
-        posterUrl={movie.posterUrl}
-        backgroundUrl={movie.backgroundUrl}
+        poster={movie.poster}
+        trailerUrl={movie.trailerUrl}
       />
       <Footer />
     </main>
