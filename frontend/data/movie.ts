@@ -1,24 +1,3 @@
-export interface Showtime {
-    time: string;
-    price: number;
-    format?: string;
-    isSoldOut?: boolean;
-}
-
-export interface Theater {
-    id: string;
-    name: string;
-    address: string;
-    features: {
-        mTicket: boolean;
-        foodBeverage: boolean;
-    };
-    showtimes: {
-        standard: Showtime[];
-        imax3d?: Showtime[];
-    };
-}
-
 export const movie = {
     id: 1,
     title: "Coolie",
@@ -63,5 +42,11 @@ export const movie = {
                 ],
             },
         },
+    ],
+    cast: [
+        { id: "c1", name: "Rajinikanth", role: "Coolie", type: "actor", imageUrl: "./coolie-movie.jpg" },
+        { id: "c2", name: "Kajal Aggarwal", role: "Lead Actress", type: "actor", imageUrl: "./coolie-movie.jpg" },
+        { id: "c3", name: "S. Shankar", role: "Director", type: "director", imageUrl: "./coolie-movie.jpg" },
+        { id: "c4", name: "A. R. Rahman", role: "Music Composer", type: "composer", imageUrl: "./coolie-movie.jpg" },
     ],
 };
