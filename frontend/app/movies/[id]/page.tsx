@@ -3,6 +3,7 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import MovieHero from "@/containers/movieDetail/MovieHero";
+import Showtimes from "@/containers/movieDetail/Showtimes";
 import { movie } from "@/data/movie";
 
 export default function MovieDetail() {
@@ -21,6 +22,7 @@ export default function MovieDetail() {
         poster={movie.poster}
         trailerUrl={movie.trailerUrl}
       />
+      <Showtimes theaters={movie.theaters} />
       <Footer />
     </main>
   );
