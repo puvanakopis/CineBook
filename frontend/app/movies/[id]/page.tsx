@@ -1,14 +1,34 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import MovieHero from "@/containers/movieDetail/MovieHero";
 import Showtimes from "@/containers/movieDetail/Showtimes";
 import CastCrew from "@/containers/movieDetail/CastCrew";
 import Reviews from "@/containers/movieDetail/Reviews";
-import { movie } from "@/data/movie";
+import { movies } from "@/data/movie"; 
 
 export default function MovieDetail() {
+  const params = useParams();
+  const movieId = params?.id ? parseInt(params.id as string) : null;
+
+  const movie = movies.find((m) => m.id === movieId);
+
+  if (!movie) {
+    return (
+      <main>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">Movie Not Found</h1>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    );
+  }
+
   return (
     <main>
       <Navbar />

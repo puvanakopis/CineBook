@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { MdCalendarMonth } from "react-icons/md";
 import { MdOutlineMovieCreation } from "react-icons/md";
@@ -9,14 +10,23 @@ import { MdOutlineExpandMore } from "react-icons/md";
 import { MdOutlineStarPurple500 } from "react-icons/md";
 import { FiChevronLeft } from "react-icons/fi";
 import { FiChevronRight } from "react-icons/fi";
+import { movies } from '@/data/movie';
 
 interface Movie {
     id: number;
     title: string;
-    genre: string;
     rating: number;
+    genres: string[];
     duration: string;
+    releaseDate: string;
+    languages: string;
+    formats: string;
+    synopsis: string;
     poster: string;
+    trailerUrl: string;
+    theaters: any[];
+    cast: any[];
+    reviews: any[];
 }
 
 const MoviesPage = () => {
@@ -26,157 +36,21 @@ const MoviesPage = () => {
     const [selectedRating, setSelectedRating] = useState<string>('');
     const [sortBy, setSortBy] = useState<string>('Popularity');
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [filteredMovies, setFilteredMovies] = useState<Movie[]>(movies);
     const moviesPerPage = 9;
 
-    const movies: Movie[] = [
-        {
-            id: 1,
-            title: "Coolie",
-            genre: "Action/Thriller",
-            duration: "2h 45m",
-            rating: 8.8,
-            poster: "https://www.wallsnapy.com/img_gallery/coolie-movie-rajini--poster-4k-download-9445507.jpg",
-        },
-        {
-            id: 2,
-            title: "Good Bad Ugly",
-            genre: "Biography/Action",
-            duration: "2h 32m",
-            rating: 8.5,
-            poster: "https://www.wallsnapy.com/img_gallery/top-good-bad-ugly-first-look-poster-hd-4k-download-4272458.jpg",
-        },
-        {
-            id: 3,
-            title: "The GOAT",
-            genre: "Sci-Fi/Action",
-            duration: "2h 59m",
-            rating: 7.9,
-            poster: "https://www.wallsnapy.com/img_gallery/new-goat-poster-4k-4123382.jpg",
-        },
-        {
-            id: 4,
-            title: "Madharasi",
-            genre: "Action/Drama",
-            duration: "2h 22m",
-            rating: 8.5,
-            poster: "https://www.wallsnapy.com/img_gallery/madharasi-movie-first-look-poster-4k-3608222.jpg",
-        },
-        {
-            id: 5,
-            title: "Vidaamuyarchi",
-            genre: "Action/Thriller",
-            duration: "2h 38m",
-            rating: 8.2,
-            poster: "https://www.wallsnapy.com/img_gallery/vidamuyarchi-ajith-first-look-poster-4k-wallpaper-7913453.jpg",
-        },
-        {
-            id: 6,
-            title: "Retro",
-            genre: "Drama/Action",
-            duration: "2h 43m",
-            rating: 7.8,
-            poster: "https://www.wallsnapy.com/img_gallery/new-retro-surya-4k-images-5102165.jpg",
-        },
-        {
-            id: 7,
-            title: "Captain Miller",
-            genre: "Sports/Drama",
-            duration: "2h 28m",
-            rating: 8.3,
-            poster: "https://www.wallsnapy.com/img_gallery/top-captain-miller-dhanush-hd-poster-wallpaper-1080px-7975672.jpg",
-        },
-        {
-            id: 8,
-            title: "Thug Life",
-            genre: "Fantasy/Action",
-            duration: "2h 34m",
-            rating: 7.5,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        },
-        {
-            id: 9,
-            title: "Kalki",
-            genre: "Sci-Fi/Action",
-            duration: "2h 45m",
-            rating: 8.7,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        },
-        {
-            id: 10,
-            title: "Pushpa 2",
-            genre: "Action/Drama",
-            duration: "2h 50m",
-            rating: 8.4,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        },
-        {
-            id: 11,
-            title: "Salaar 2",
-            genre: "Action/Thriller",
-            duration: "2h 55m",
-            rating: 8.6,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        },
-        {
-            id: 12,
-            title: "Vikram 2",
-            genre: "Action/Thriller",
-            duration: "2h 40m",
-            rating: 8.9,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        },
-        {
-            id: 13,
-            title: "Leo 2",
-            genre: "Action/Drama",
-            duration: "2h 48m",
-            rating: 8.3,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        },
-        {
-            id: 14,
-            title: "Jailer 2",
-            genre: "Action/Comedy",
-            duration: "2h 35m",
-            rating: 8.1,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        },
-        {
-            id: 15,
-            title: "Beast 2",
-            genre: "Action/Thriller",
-            duration: "2h 30m",
-            rating: 7.9,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        },
-        {
-            id: 16,
-            title: "Master 2",
-            genre: "Action/Drama",
-            duration: "2h 50m",
-            rating: 8.2,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        },
-        {
-            id: 17,
-            title: "Darbar 2",
-            genre: "Action/Crime",
-            duration: "2h 42m",
-            rating: 7.8,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        },
-        {
-            id: 18,
-            title: "Annathe 2",
-            genre: "Action/Family",
-            duration: "2h 38m",
-            rating: 7.6,
-            poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        }
-    ];
+    const router = useRouter();
 
-    const genres = ['Action', 'Adventure', 'Comedy', 'Drama', 'Horror', 'Sci-Fi'];
-    const languages = ['English', 'Spanish', 'Hindi', 'French'];
+    // Extract unique genres from movies data
+    const allGenres = Array.from(
+        new Set(movies.flatMap(movie => movie.genres))
+    ).sort();
+
+    // Extract unique languages from movies data
+    const allLanguages = Array.from(
+        new Set(movies.flatMap(movie => movie.languages.split(',').map(lang => lang.trim())))
+    ).sort();
+
     const ratings = [
         { value: '5', label: '★★★★★' },
         { value: '4', label: '★★★★☆' },
@@ -185,13 +59,57 @@ const MoviesPage = () => {
         { value: '1', label: '★☆☆☆☆' },
     ];
 
+    // Apply filters whenever filter criteria change
+    useEffect(() => {
+        let filtered = [...movies];
+
+        // Apply genre filter
+        if (selectedGenres.length > 0) {
+            filtered = filtered.filter(movie =>
+                movie.genres.some(genre => selectedGenres.includes(genre))
+            );
+        }
+
+        // Apply language filter
+        if (selectedLanguage !== 'English') {
+            filtered = filtered.filter(movie =>
+                movie.languages.toLowerCase().includes(selectedLanguage.toLowerCase())
+            );
+        }
+
+        // Apply rating filter
+        if (selectedRating) {
+            const minRating = parseFloat(selectedRating) * 2;
+            filtered = filtered.filter(movie => movie.rating >= minRating);
+        }
+
+        // Apply sorting
+        filtered.sort((a, b) => {
+            switch (sortBy) {
+                case 'Popularity':
+                    return b.rating - a.rating;
+                case 'Release Date':
+                    return parseInt(b.releaseDate) - parseInt(a.releaseDate);
+                case 'Rating (High to Low)':
+                    return b.rating - a.rating;
+                case 'Rating (Low to High)':
+                    return a.rating - b.rating;
+                default:
+                    return 0;
+            }
+        });
+
+        setFilteredMovies(filtered);
+        setCurrentPage(1);
+    }, [selectedGenres, selectedLanguage, selectedRating, sortBy]);
+
     // Calculate total pages
-    const totalPages = Math.ceil(movies.length / moviesPerPage);
+    const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
 
     // Get current movies to display
     const indexOfLastMovie = currentPage * moviesPerPage;
     const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
-    const currentMovies = movies.slice(indexOfFirstMovie, indexOfLastMovie);
+    const currentMovies = filteredMovies.slice(indexOfFirstMovie, indexOfLastMovie);
 
     const handleGenreToggle = (genre: string) => {
         if (selectedGenres.includes(genre)) {
@@ -251,10 +169,6 @@ const MoviesPage = () => {
         return pageNumbers;
     };
 
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [selectedGenres, selectedLanguage, selectedRating, sortBy]);
-
     return (
         <div className="flex flex-col lg:flex-row max-w-[1400px] mx-auto w-full px-4 md:px-10 lg:px-20 py-10 gap-8">
             {/* Sidebar Filters */}
@@ -295,7 +209,7 @@ const MoviesPage = () => {
                         <span className="material-symbols-outlined text-text-secondary text-sm"><MdOutlineMovieCreation /></span>
                     </h3>
                     <div className="space-y-2">
-                        {genres.map((genre) => (
+                        {allGenres.map((genre) => (
                             <label key={genre} className="flex items-center gap-3 cursor-pointer group">
                                 <input
                                     className="rounded accent-primary border-[#392828] bg-input-bg text-primary focus:ring-primary focus:ring-offset-background-dark w-4 h-4"
@@ -318,7 +232,7 @@ const MoviesPage = () => {
                         <span className="material-symbols-outlined text-text-secondary text-sm"><GrLanguage /></span>
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                        {languages.map((language) => (
+                        {allLanguages.map((language) => (
                             <button
                                 key={language}
                                 className={`px-3 py-1 rounded text-xs font-medium transition-colors border ${selectedLanguage === language
@@ -367,8 +281,8 @@ const MoviesPage = () => {
                 {/* Header with Sort and View Controls */}
                 <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 bg-surface-dark p-4 rounded-xl border border-[#392828]">
                     <span className="text-text-secondary text-sm font-medium">
-                        Showing <strong className="text-white">{indexOfFirstMovie + 1}-{Math.min(indexOfLastMovie, movies.length)}</strong> of{' '}
-                        <strong className="text-white">{movies.length}</strong> movies
+                        Showing <strong className="text-white">{indexOfFirstMovie + 1}-{Math.min(indexOfLastMovie, filteredMovies.length)}</strong> of{' '}
+                        <strong className="text-white">{filteredMovies.length}</strong> movies
                     </span>
                     <div className="flex items-center gap-3">
                         <span className="text-text-secondary text-sm hidden sm:inline">Sort by:</span>
@@ -396,12 +310,16 @@ const MoviesPage = () => {
                         <div
                             key={movie.id}
                             className="group bg-surface-dark rounded-xl overflow-hidden border border-[#392828] hover:border-primary/50 transition-all hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col h-full"
+                            onClick={() => router.push(`/movies/${movie.id}`)}
                         >
                             <div className="relative aspect-[2/3] overflow-hidden bg-gray-800">
                                 <img
                                     alt={movie.title}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     src={movie.poster}
+                                    onError={(e) => {
+                                        e.currentTarget.src = 'https://via.placeholder.com/300x450?text=No+Image';
+                                    }}
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
                                 <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded flex items-center gap-1 border border-white/10">
@@ -415,14 +333,16 @@ const MoviesPage = () => {
                                 </h3>
                                 <div className="flex items-center justify-between mt-2 mb-4">
                                     <p className="text-text-secondary text-xs font-medium bg-[#392828] px-2 py-0.5 rounded">
-                                        {movie.genre}
+                                        {movie.genres.join('/')}
                                     </p>
                                     <span className="text-text-secondary text-xs flex items-center gap-1">
                                         <span className="material-symbols-outlined text-[14px]">schedule</span>
                                         {movie.duration}
                                     </span>
                                 </div>
-                                <button className="mt-auto w-full bg-primary hover:bg-red-700 text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                                <button
+                                    onClick={() => router.push(`/movies/${movie.id}`)}
+                                    className="mt-auto w-full bg-primary hover:bg-red-700 text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors">
                                     Book Now
                                 </button>
                             </div>

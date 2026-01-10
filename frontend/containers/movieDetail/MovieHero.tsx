@@ -1,7 +1,6 @@
 "use client";
 
 import { StaticImageData } from "next/image";
-import Image from "next/image";
 import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { MdOutlineConfirmationNumber } from "react-icons/md";
 import { MdOutlineVideoLabel } from "react-icons/md";
@@ -9,7 +8,6 @@ import { MdLanguage } from "react-icons/md";
 import { IoIosStarOutline } from "react-icons/io";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { MdPlayArrow } from "react-icons/md";
-import bgImage from "@/data/coolie-movie.jpg";
 
 interface MovieHeroProps {
     title: string;
@@ -40,8 +38,8 @@ const MovieHero = ({
         <div className="relative w-full bg-surface-dark border-b border-[#392828]">
             {/* Background */}
             <div className="absolute inset-0 overflow-hidden">
-                <Image
-                    src={bgImage}
+                <img
+                    src={poster}
                     alt="Movie Background"
                     fill
                     className="object-cover opacity-10 blur-xl scale-110"
@@ -56,8 +54,8 @@ const MovieHero = ({
                     {/* Poster */}
                     <div className="w-full lg:w-[350px] flex-shrink-0">
                         <div className="relative aspect-[2/3] rounded-xl overflow-hidden shadow-2xl border border-[#392828]">
-                            <Image
-                                src={bgImage}
+                            <img
+                                src={poster}
                                 alt={`${title} Poster`}
                                 fill
                                 className="object-cover"
@@ -137,8 +135,8 @@ const MovieHero = ({
                                 rel="noopener noreferrer"
                                 className="relative w-full max-w-2xl aspect-video bg-black rounded-xl overflow-hidden border border-[#392828] shadow-lg group flex items-center justify-center cursor-pointer"
                             >
-                                <Image
-                                    src={bgImage}
+                                <img
+                                    src={poster}
                                     alt="Trailer Thumbnail"
                                     fill
                                     className="object-cover opacity-40"
