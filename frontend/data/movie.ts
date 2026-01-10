@@ -49,4 +49,23 @@ export const movie = {
         { id: "c3", name: "S. Shankar", role: "Director", type: "director", imageUrl: "./coolie-movie.jpg" },
         { id: "c4", name: "A. R. Rahman", role: "Music Composer", type: "composer", imageUrl: "./coolie-movie.jpg" },
     ],
+    reviews: [
+        {
+            id: "r1",
+            author: "Anand",
+            date: "2026-01-10",
+            rating: 5,
+            content: "Amazing action sequences and Rajinikanth's charisma stole the show!",
+            initials: "AN",
+            hasPremium: true,
+        },
+        {
+            id: "r2",
+            author: "Priya",
+            date: "2026-01-09",
+            rating: 4,
+            content: "Great movie with solid direction. Music by A. R. Rahman is a highlight.",
+            initials: "PR",
+        },
+    ],
 };

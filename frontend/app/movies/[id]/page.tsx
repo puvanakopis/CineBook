@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import MovieHero from "@/containers/movieDetail/MovieHero";
 import Showtimes from "@/containers/movieDetail/Showtimes";
 import CastCrew from "@/containers/movieDetail/CastCrew";
+import Reviews from "@/containers/movieDetail/Reviews";
 import { movie } from "@/data/movie";
 
 export default function MovieDetail() {
@@ -25,6 +26,7 @@ export default function MovieDetail() {
       />
       <Showtimes theaters={movie.theaters} />
       <CastCrew cast={movie.cast} />
+      <Reviews reviews={movie.reviews} movieTitle={movie.title} movieId={movie.id.toString()} />
       <Footer />
     </main>
   );
