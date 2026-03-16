@@ -6,13 +6,14 @@ import { MdOutlineMovieFilter } from "react-icons/md";
 import { IoMdSearch } from "react-icons/io";
 import { usePathname } from "next/navigation";
 
-export default function Navbar() {
+const Navbar = () => {
     const [search, setSearch] = useState("");
     const pathname = usePathname();
 
     const navLinks = [
         { href: "/", label: "Home" },
         { href: "/movies", label: "Movies" },
+        { href: "/theaters", label: "Theaters" },
         { href: "/about", label: "About" },
         { href: "/contact", label: "Contact" },
     ];
@@ -38,8 +39,8 @@ export default function Navbar() {
                             key={link.href}
                             href={link.href}
                             className={`text-base font-medium leading-normal transition-colors ${pathname === link.href
-                                    ? "text-[#ec1313] font-bold"
-                                    : "text-white hover:text-[#ec1313]"
+                                ? "text-[#ec1313] font-bold"
+                                : "text-white hover:text-[#ec1313]"
                                 }`}
                         >
                             {link.label}
@@ -80,3 +81,5 @@ export default function Navbar() {
         </header>
     );
 }
+
+export default Navbar;
