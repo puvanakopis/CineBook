@@ -38,7 +38,7 @@ const MovieHero = ({
         <div className="relative w-full bg-surface-dark border-b border-[#392828]">
             {/* Background */}
             <div className="absolute inset-0 overflow-hidden">
-                <img
+                <Image
                     src={poster}
                     alt="Movie Background"
                     fill
@@ -54,7 +54,7 @@ const MovieHero = ({
                     {/* Poster */}
                     <div className="w-full lg:w-[350px] flex-shrink-0">
                         <div className="relative aspect-[2/3] rounded-xl overflow-hidden shadow-2xl border border-[#392828]">
-                            <img
+                            <Image
                                 src={poster}
                                 alt={`${title} Poster`}
                                 fill
@@ -133,7 +133,7 @@ const MovieHero = ({
                                 rel="noopener noreferrer"
                                 className="relative w-full max-w-2xl aspect-video bg-black rounded-xl overflow-hidden border border-[#392828] shadow-lg group flex items-center justify-center cursor-pointer"
                             >
-                                <img
+                                <Image
                                     src={poster}
                                     alt="Trailer Thumbnail"
                                     fill

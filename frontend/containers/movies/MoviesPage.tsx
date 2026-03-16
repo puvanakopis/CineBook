@@ -1,5 +1,6 @@
 'use client';
 
+import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { MdCalendarMonth } from "react-icons/md";
@@ -376,7 +377,7 @@ const MoviesPage = () => {
                                 onClick={() => router.push(`/movies/${movie.movie_id}`)}
                             >
                                 <div className="relative aspect-[2/3] overflow-hidden bg-gray-800">
-                                    <img
+                                    <Image  
                                         alt={movie.title}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                         src={movie.poster}

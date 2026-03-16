@@ -39,11 +39,12 @@ const CastCrew = ({ cast }: CastCrewProps) => {
             <div key={member.cast_id} className="text-center group cursor-pointer">
               <div className="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-[#392828] group-hover:border-primary transition-colors mb-3 relative">
                 {member.imageUrl ? (
-                  <img
+                  <Image
                     src={member.imageUrl}
                     alt={member.name}
                     fill
                     className="object-cover"
+                    sizes="96px"
                   />
                 ) : (
                   <div className="w-full h-full bg-[#392828] flex items-center justify-center text-text-secondary">

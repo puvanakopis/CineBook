@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 import { FaRegStar } from "react-icons/fa";
 import { MdSchedule } from "react-icons/md";
@@ -14,10 +15,11 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, genre, duration, rating, p
     return (
         <div className="group bg-surface-dark rounded-xl overflow-hidden border border-[#392828] hover:border-primary/50 transition-all hover:-translate-y-1 shadow-lg hover:shadow-2xl">
             <div className="relative aspect-[2/3] overflow-hidden bg-gray-800">
-                <img
+                <Image
                     src={poster}
                     alt={title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
 
