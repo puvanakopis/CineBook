@@ -7,13 +7,13 @@ import MovieHero from "@/containers/movieDetail/MovieHero";
 import Showtimes from "@/containers/movieDetail/Showtimes";
 import CastCrew from "@/containers/movieDetail/CastCrew";
 import Reviews from "@/containers/movieDetail/Reviews";
-import { movies } from "@/data/movie"; 
+import { movies } from "@/data/movie";
 
 export default function MovieDetail() {
   const params = useParams();
   const movieId = params?.id ? parseInt(params.id as string) : null;
 
-  const movie = movies.find((m) => m.id === movieId);
+  const movie = movies.find((m) => m.movie_id === movieId);
 
   if (!movie) {
     return (
@@ -46,7 +46,7 @@ export default function MovieDetail() {
       />
       <Showtimes theaters={movie.theaters} />
       <CastCrew cast={movie.cast} />
-      <Reviews reviews={movie.reviews} movieTitle={movie.title} movieId={movie.id.toString()} />
+      <Reviews reviews={movie.reviews} movieTitle={movie.title} movieId={movie.movie_id.toString()} />
       <Footer />
     </main>
   );

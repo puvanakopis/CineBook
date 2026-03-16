@@ -5,21 +5,25 @@ import { MdOutlineCancel } from "react-icons/md";
 import { MdOutlineFastfood } from "react-icons/md";
 import { MdOutlineTheaterComedy } from "react-icons/md";
 import { FaRegCheckCircle } from "react-icons/fa";
+import { FaParking } from "react-icons/fa";
+import { FaWheelchair } from "react-icons/fa";
 
 interface Showtime {
     time: string;
     price: number;
-    format?: string;
+    currency: string;
     isSoldOut?: boolean;
 }
 
 interface Theater {
-    id: string;
+    theater_id: string;
     name: string;
     address: string;
     features: {
         mTicket: boolean;
         foodBeverage: boolean;
+        parking: boolean;
+        wheelchair: boolean;
     };
     showtimes: {
         standard: Showtime[];
@@ -42,7 +46,7 @@ const Showtimes = ({ theaters }: ShowtimesProps) => {
     ];
 
     return (
-        <section className="w-full mx-auto px-20 md:px-20 lg:px-30 py-12 relative z-20" id="showtimes">
+        <section className="w-full mx-auto px-4 md:px-20 lg:px-30 py-12 relative z-20" id="showtimes">
             <div className="max-w-[1400px] mx-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -71,38 +75,50 @@ const Showtimes = ({ theaters }: ShowtimesProps) => {
                 <div className="space-y-6">
                     {theaters.map((theater) => (
                         <div
-                            key={theater.id}
+                            key={theater.theater_id}
                             className="bg-surface-dark rounded-xl border border-[#392828] p-6"
                         >
                             {/* Theater Header */}
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-[#392828] pb-4">
                                 <div>
                                     <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-primary"><MdOutlineTheaterComedy /></span>
+                                        <MdOutlineTheaterComedy className="text-primary" />
                                         {theater.name}
                                     </h3>
                                     <p className="text-text-secondary text-sm mt-1 ml-8">{theater.address}</p>
                                 </div>
-                                <div className="flex gap-4 text-sm text-text-secondary">
+                                <div className="flex flex-wrap gap-4 text-sm text-text-secondary">
                                     <span className="flex items-center gap-1">
-                                        <span
-                                            className={`material-symbols-outlined text-sm ${theater.features.mTicket ? 'text-green-500' : 'text-text-secondary/50'
-                                                }`}
-                                        >
-                                            {theater.features.mTicket ? <FaRegCheckCircle /> : <MdOutlineCancel />
-                                            }
-                                        </span>
+                                        {theater.features.mTicket ? (
+                                            <FaRegCheckCircle className="text-green-500" />
+                                        ) : (
+                                            <MdOutlineCancel className="text-text-secondary/50" />
+                                        )}
                                         M-Ticket
                                     </span>
                                     <span className="flex items-center gap-1">
-                                        <span
-                                            className={`material-symbols-outlined text-sm ${theater.features.foodBeverage ? 'text-yellow-500' : 'text-text-secondary/50'
-                                                }`}
-                                        >
-                                            {theater.features.foodBeverage ? <MdOutlineFastfood /> : <MdOutlineCancel />
-                                            }
-                                        </span>
+                                        {theater.features.foodBeverage ? (
+                                            <MdOutlineFastfood className="text-yellow-500" />
+                                        ) : (
+                                            <MdOutlineCancel className="text-text-secondary/50" />
+                                        )}
                                         F&B
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        {theater.features.parking ? (
+                                            <FaParking className="text-blue-500" />
+                                        ) : (
+                                            <MdOutlineCancel className="text-text-secondary/50" />
+                                        )}
+                                        Parking
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        {theater.features.wheelchair ? (
+                                            <FaWheelchair className="text-purple-500" />
+                                        ) : (
+                                            <MdOutlineCancel className="text-text-secondary/50" />
+                                        )}
+                                        Wheelchair
                                     </span>
                                 </div>
                             </div>
@@ -120,7 +136,7 @@ const Showtimes = ({ theaters }: ShowtimesProps) => {
                                                 key={index}
                                                 disabled={showtime.isSoldOut}
                                                 className={`group px-4 py-2 rounded border transition-all text-sm font-medium ${showtime.isSoldOut
-                                                    ? 'opacity-50 cursor-not-allowed hover:bg-[#221a1a] hover:border-[#392828]'
+                                                    ? 'opacity-50 cursor-not-allowed bg-[#221a1a] border-[#392828]'
                                                     : 'border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary'
                                                     }`}
                                             >
@@ -128,7 +144,7 @@ const Showtimes = ({ theaters }: ShowtimesProps) => {
                                                     {showtime.time}
                                                 </span>
                                                 <div className="text-[10px] text-text-secondary group-hover:text-white/80 mt-0.5">
-                                                    {showtime.isSoldOut ? 'Sold Out' : `Rs ${showtime.price.toFixed(2)}`}
+                                                    {showtime.isSoldOut ? 'Sold Out' : `${showtime.currency} ${showtime.price.toFixed(2)}`}
                                                 </div>
                                             </button>
                                         ))}
@@ -145,11 +161,17 @@ const Showtimes = ({ theaters }: ShowtimesProps) => {
                                             {theater.showtimes.imax3d.map((showtime, index) => (
                                                 <button
                                                     key={index}
-                                                    className="group px-4 py-2 rounded border border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary transition-all text-sm font-medium"
+                                                    disabled={showtime.isSoldOut}
+                                                    className={`group px-4 py-2 rounded border transition-all text-sm font-medium ${showtime.isSoldOut
+                                                        ? 'opacity-50 cursor-not-allowed bg-[#221a1a] border-[#392828]'
+                                                        : 'border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary'
+                                                        }`}
                                                 >
-                                                    <span className="text-white">{showtime.time}</span>
+                                                    <span className={showtime.isSoldOut ? 'text-white/50' : 'text-white'}>
+                                                        {showtime.time}
+                                                    </span>
                                                     <div className="text-[10px] text-text-secondary group-hover:text-white/80 mt-0.5">
-                                                        Rs {showtime.price.toFixed(2)}
+                                                        {showtime.isSoldOut ? 'Sold Out' : `${showtime.currency} ${showtime.price.toFixed(2)}`}
                                                     </div>
                                                 </button>
                                             ))}

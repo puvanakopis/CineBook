@@ -13,7 +13,7 @@ import { FiChevronRight } from "react-icons/fi";
 import { movies } from '@/data/movie';
 
 interface Movie {
-    id: number;
+    movie_id: number;
     title: string;
     rating: number;
     genres: string[];
@@ -24,19 +24,63 @@ interface Movie {
     synopsis: string;
     poster: string;
     trailerUrl: string;
-    theaters: any[];
-    cast: any[];
-    reviews: any[];
+    theaters: Theater[];
+    cast: CastMember[];
+    reviews: Review[];
+}
+
+interface Theater {
+    theater_id: string;
+    name: string;
+    address: string;
+    features: {
+        mTicket: boolean;
+        foodBeverage: boolean;
+        parking: boolean;
+        wheelchair: boolean;
+    };
+    showtimes: {
+        standard?: ShowTime[];
+        imax3d?: ShowTime[];
+    };
+}
+
+interface ShowTime {
+    time: string;
+    price: number;
+    currency: string;
+    isSoldOut: boolean;
+}
+
+interface CastMember {
+    cast_id: string;
+    name: string;
+    role: string;
+    type: string;
+    imageUrl: string;
+}
+
+interface Review {
+    review_id: string;
+    user_id: string;
+    author: string;
+    date: string;
+    rating: number;
+    content: string;
+    initials: string;
+    hasPremium: boolean;
+    likes: number;
+    verified: boolean;
 }
 
 const MoviesPage = () => {
     const [selectedDate, setSelectedDate] = useState<string>('');
-    const [selectedGenres, setSelectedGenres] = useState<string[]>(['Action']);
-    const [selectedLanguage, setSelectedLanguage] = useState<string>('English');
+    const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+    const [selectedLanguage, setSelectedLanguage] = useState<string>('All');
     const [selectedRating, setSelectedRating] = useState<string>('');
     const [sortBy, setSortBy] = useState<string>('Popularity');
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [filteredMovies, setFilteredMovies] = useState<Movie[]>(movies);
+    const [filteredMovies, setFilteredMovies] = useState<Movie[]>(movies as Movie[]);
     const moviesPerPage = 9;
 
     const router = useRouter();
@@ -47,21 +91,21 @@ const MoviesPage = () => {
     ).sort();
 
     // Extract unique languages from movies data
-    const allLanguages = Array.from(
+    const allLanguages = ['All', ...Array.from(
         new Set(movies.flatMap(movie => movie.languages.split(',').map(lang => lang.trim())))
-    ).sort();
+    ).sort()];
 
     const ratings = [
-        { value: '5', label: '★★★★★' },
-        { value: '4', label: '★★★★☆' },
-        { value: '3', label: '★★★☆☆' },
-        { value: '2', label: '★★☆☆☆' },
-        { value: '1', label: '★☆☆☆☆' },
+        { value: '4', label: '★★★★★' },
+        { value: '3.2', label: '★★★★☆' },
+        { value: '2.4', label: '★★★☆☆' },
+        { value: '1.6', label: '★★☆☆☆' },
+        { value: '0.8', label: '★☆☆☆☆' },
     ];
 
     // Apply filters whenever filter criteria change
     useEffect(() => {
-        let filtered = [...movies];
+        let filtered = [...movies] as Movie[];
 
         // Apply genre filter
         if (selectedGenres.length > 0) {
@@ -71,7 +115,7 @@ const MoviesPage = () => {
         }
 
         // Apply language filter
-        if (selectedLanguage !== 'English') {
+        if (selectedLanguage !== 'All') {
             filtered = filtered.filter(movie =>
                 movie.languages.toLowerCase().includes(selectedLanguage.toLowerCase())
             );
@@ -79,7 +123,7 @@ const MoviesPage = () => {
 
         // Apply rating filter
         if (selectedRating) {
-            const minRating = parseFloat(selectedRating) * 2;
+            const minRating = parseFloat(selectedRating);
             filtered = filtered.filter(movie => movie.rating >= minRating);
         }
 
@@ -169,6 +213,24 @@ const MoviesPage = () => {
         return pageNumbers;
     };
 
+    // Format rating stars
+    const renderRatingStars = (rating: number) => {
+        const stars = [];
+        const fullStars = Math.floor(rating / 2);
+        const hasHalfStar = (rating % 2) >= 1;
+
+        for (let i = 0; i < 5; i++) {
+            if (i < fullStars) {
+                stars.push(<MdOutlineStarPurple500 key={i} className="text-yellow-500" />);
+            } else if (i === fullStars && hasHalfStar) {
+                stars.push(<IoMdStarOutline key={i} className="text-yellow-500" />); // You can add a half-star icon here
+            } else {
+                stars.push(<IoMdStarOutline key={i} className="text-yellow-500" />);
+            }
+        }
+        return stars;
+    };
+
     return (
         <div className="flex flex-col lg:flex-row max-w-[1400px] mx-auto w-full px-4 md:px-10 lg:px-20 py-10 gap-8">
             {/* Sidebar Filters */}
@@ -177,7 +239,7 @@ const MoviesPage = () => {
                 <div className="pb-6 border-b border-[#392828]">
                     <h3 className="font-bold text-white mb-4 flex items-center justify-between">
                         Show Date
-                        <span className="material-symbols-outlined text-text-secondary text-sm"><MdCalendarMonth /></span>
+                        <MdCalendarMonth className="text-text-secondary text-sm" />
                     </h3>
                     <div className="space-y-2">
                         {['Today', 'Tomorrow', 'This Weekend'].map((date) => (
@@ -206,7 +268,7 @@ const MoviesPage = () => {
                 <div className="pb-6 border-b border-[#392828]">
                     <h3 className="font-bold text-white mb-4 flex items-center justify-between">
                         Genre
-                        <span className="material-symbols-outlined text-text-secondary text-sm"><MdOutlineMovieCreation /></span>
+                        <MdOutlineMovieCreation className="text-text-secondary text-sm" />
                     </h3>
                     <div className="space-y-2">
                         {allGenres.map((genre) => (
@@ -229,7 +291,7 @@ const MoviesPage = () => {
                 <div className="pb-6 border-b border-[#392828]">
                     <h3 className="font-bold text-white mb-4 flex items-center justify-between">
                         Language
-                        <span className="material-symbols-outlined text-text-secondary text-sm"><GrLanguage /></span>
+                        <GrLanguage className="text-text-secondary text-sm" />
                     </h3>
                     <div className="flex flex-wrap gap-2">
                         {allLanguages.map((language) => (
@@ -251,7 +313,7 @@ const MoviesPage = () => {
                 <div>
                     <h3 className="font-bold text-white mb-4 flex items-center justify-between">
                         Rating
-                        <span className="material-symbols-outlined text-text-secondary text-sm"><IoMdStarOutline /></span>
+                        <IoMdStarOutline className="text-text-secondary text-sm" />
                     </h3>
                     <div className="space-y-2">
                         {ratings.map((rating) => (
@@ -265,7 +327,7 @@ const MoviesPage = () => {
                                 />
                                 <div className="flex text-yellow-500 text-sm">
                                     {rating.label.split('').map((char, index) => (
-                                        <span key={index} className="material-symbols-outlined text-[16px]">
+                                        <span key={index}>
                                             {char === '★' ? <MdOutlineStarPurple500 /> : <IoMdStarOutline />}
                                         </span>
                                     ))}
@@ -281,7 +343,7 @@ const MoviesPage = () => {
                 {/* Header with Sort and View Controls */}
                 <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 bg-surface-dark p-4 rounded-xl border border-[#392828]">
                     <span className="text-text-secondary text-sm font-medium">
-                        Showing <strong className="text-white">{indexOfFirstMovie + 1}-{Math.min(indexOfLastMovie, filteredMovies.length)}</strong> of{' '}
+                        Showing <strong className="text-white">{filteredMovies.length > 0 ? indexOfFirstMovie + 1 : 0}-{Math.min(indexOfLastMovie, filteredMovies.length)}</strong> of{' '}
                         <strong className="text-white">{filteredMovies.length}</strong> movies
                     </span>
                     <div className="flex items-center gap-3">
@@ -298,67 +360,91 @@ const MoviesPage = () => {
                                 <option>Rating (Low to High)</option>
                             </select>
                             <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-secondary">
-                                <span className="material-symbols-outlined text-lg"><MdOutlineExpandMore /></span>
+                                <MdOutlineExpandMore className="text-lg" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Movie Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {currentMovies.map((movie) => (
-                        <div
-                            key={movie.id}
-                            className="group bg-surface-dark rounded-xl overflow-hidden border border-[#392828] hover:border-primary/50 transition-all hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col h-full"
-                            onClick={() => router.push(`/movies/${movie.id}`)}
+                {currentMovies.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {currentMovies.map((movie) => (
+                            <div
+                                key={movie.movie_id}
+                                className="group bg-surface-dark rounded-xl overflow-hidden border border-[#392828] hover:border-primary/50 transition-all hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col h-full cursor-pointer"
+                                onClick={() => router.push(`/movies/${movie.movie_id}`)}
+                            >
+                                <div className="relative aspect-[2/3] overflow-hidden bg-gray-800">
+                                    <img
+                                        alt={movie.title}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        src={movie.poster}
+                                        onError={(e) => {
+                                            e.currentTarget.src = 'https://via.placeholder.com/300x450?text=No+Image';
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                                    <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded flex items-center gap-1 border border-white/10">
+                                        <IoMdStarOutline className="text-yellow-500 text-sm" />
+                                        <span className="text-white text-xs font-bold">{movie.rating}</span>
+                                    </div>
+                                </div>
+                                <div className="p-4 flex flex-col flex-1">
+                                    <h3 className="text-white text-lg font-bold truncate group-hover:text-primary transition-colors">
+                                        {movie.title}
+                                    </h3>
+                                    <div className="flex items-center justify-between mt-2 mb-4">
+                                        <p className="text-text-secondary text-xs font-medium bg-[#392828] px-2 py-0.5 rounded">
+                                            {movie.genres.join(' • ')}
+                                        </p>
+                                        <span className="text-text-secondary text-xs flex items-center gap-1">
+                                            <span className="material-symbols-outlined text-[14px]">schedule</span>
+                                            {movie.duration}
+                                        </span>
+                                    </div>
+                                    <div className="mb-3 text-xs text-text-secondary">
+                                        <span className="block truncate">{movie.languages}</span>
+                                        <span className="block mt-1">{movie.formats}</span>
+                                    </div>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            router.push(`/movies/${movie.movie_id}`);
+                                        }}
+                                        className="mt-auto w-full bg-primary hover:bg-red-700 text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                                    >
+                                        Book Now
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-20">
+                        <p className="text-text-secondary text-lg">No movies found matching your criteria.</p>
+                        <button
+                            onClick={() => {
+                                setSelectedGenres([]);
+                                setSelectedLanguage('All');
+                                setSelectedRating('');
+                            }}
+                            className="mt-4 bg-primary hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-colors"
                         >
-                            <div className="relative aspect-[2/3] overflow-hidden bg-gray-800">
-                                <img
-                                    alt={movie.title}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    src={movie.poster}
-                                    onError={(e) => {
-                                        e.currentTarget.src = 'https://via.placeholder.com/300x450?text=No+Image';
-                                    }}
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-                                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded flex items-center gap-1 border border-white/10">
-                                    <span className="material-symbols-outlined text-yellow-500 text-sm"><IoMdStarOutline /></span>
-                                    <span className="text-white text-xs font-bold">{movie.rating}</span>
-                                </div>
-                            </div>
-                            <div className="p-4 flex flex-col flex-1">
-                                <h3 className="text-white text-lg font-bold truncate group-hover:text-primary transition-colors">
-                                    {movie.title}
-                                </h3>
-                                <div className="flex items-center justify-between mt-2 mb-4">
-                                    <p className="text-text-secondary text-xs font-medium bg-[#392828] px-2 py-0.5 rounded">
-                                        {movie.genres.join('/')}
-                                    </p>
-                                    <span className="text-text-secondary text-xs flex items-center gap-1">
-                                        <span className="material-symbols-outlined text-[14px]">schedule</span>
-                                        {movie.duration}
-                                    </span>
-                                </div>
-                                <button
-                                    onClick={() => router.push(`/movies/${movie.id}`)}
-                                    className="mt-auto w-full bg-primary hover:bg-red-700 text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors">
-                                    Book Now
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                            Clear Filters
+                        </button>
+                    </div>
+                )}
 
                 {/* Pagination */}
-                {totalPages > 1 && (
+                {totalPages > 1 && currentMovies.length > 0 && (
                     <div className="flex justify-center mt-12 gap-2">
                         <button
                             className="size-10 flex items-center justify-center rounded-lg border border-[#392828] text-text-secondary hover:text-white hover:border-primary hover:bg-surface-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={currentPage === 1}
                             onClick={() => setCurrentPage(currentPage - 1)}
                         >
-                            <span className="material-symbols-outlined"><FiChevronLeft /></span>
+                            <FiChevronLeft />
                         </button>
 
                         {getPageNumbers().map((pageNumber, index) => (
@@ -388,7 +474,7 @@ const MoviesPage = () => {
                             disabled={currentPage === totalPages}
                             onClick={() => setCurrentPage(currentPage + 1)}
                         >
-                            <span className="material-symbols-outlined"><FiChevronRight /></span>
+                            <FiChevronRight />
                         </button>
                     </div>
                 )}

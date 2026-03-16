@@ -1,6 +1,6 @@
 "use client";
 
-import { StaticImageData } from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { MdOutlineConfirmationNumber } from "react-icons/md";
 import { MdOutlineVideoLabel } from "react-icons/md";
@@ -64,9 +64,7 @@ const MovieHero = ({
 
                             {/* Rating */}
                             <div className="absolute top-4 right-4 bg-black/70 backdrop-blur px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-                                <span className="text-yellow-500 text-base">
-                                    <IoIosStarOutline />
-                                </span>
+                                <IoIosStarOutline className="text-yellow-500 text-base" />
                                 <span className="text-white font-bold">{rating}</span>
                                 <span className="text-xs text-gray-400">/10</span>
                             </div>
@@ -143,7 +141,7 @@ const MovieHero = ({
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors">
                                     <div className="size-16 rounded-full bg-primary/90 text-white flex items-center justify-center pl-1 group-hover:scale-110 transition-transform shadow-[0_0_20px_rgba(236,19,19,0.5)]">
-                                        <span className="text-4xl material-symbols-outlined"><MdPlayArrow /></span>
+                                        <MdPlayArrow className="text-4xl" />
                                     </div>
                                 </div>
                             </a>
@@ -153,13 +151,13 @@ const MovieHero = ({
                         <div className="flex gap-4 mt-auto">
                             <a
                                 href="#showtimes"
-                                className="px-8 py-3 bg-primary text-white font-bold rounded-lg flex items-center gap-2 hover:bg-red-700"
+                                className="px-8 py-3 bg-primary text-white font-bold rounded-lg flex items-center gap-2 hover:bg-red-700 transition-colors"
                             >
                                 <MdOutlineConfirmationNumber />
                                 Book Tickets
                             </a>
 
-                            <button className="px-8 py-3 bg-[#392828] text-white rounded-lg flex items-center gap-2 hover:bg-[#4a3535]">
+                            <button className="px-8 py-3 bg-[#392828] text-white rounded-lg flex items-center gap-2 hover:bg-[#4a3535] transition-colors">
                                 <MdOutlineFavoriteBorder />
                                 Watchlist
                             </button>
