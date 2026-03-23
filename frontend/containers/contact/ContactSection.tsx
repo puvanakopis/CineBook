@@ -6,7 +6,7 @@ import { RiGroupLine } from "react-icons/ri";
 
 const ContactSection: React.FC = () => {
     return (
-        <section className="w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-12 -mt-20 relative z-20">
+        <section className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-20 py-12 -mt-20 relative z-20">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
                 {/* Contact Form */}
                 <div className="lg:col-span-7 flex flex-col">

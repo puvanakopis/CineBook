@@ -49,7 +49,7 @@ const MovieHero = ({
                 <div className="absolute inset-0 bg-gradient-to-r from-background-dark via-transparent to-transparent" />
             </div>
 
-            <div className="relative max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-12 lg:py-16">
+            <div className="relative max-w-[1600px] mx-auto px-4 md:px-10 lg:px-20 py-12 lg:py-16">
                 <div className="flex flex-col lg:flex-row gap-10 lg:gap-16">
                     {/* Poster */}
                     <div className="w-full lg:w-[350px] flex-shrink-0">

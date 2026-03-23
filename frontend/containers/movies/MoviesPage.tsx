@@ -233,7 +233,7 @@ const MoviesPage = () => {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row max-w-[1400px] mx-auto w-full px-4 md:px-10 lg:px-20 py-10 gap-8">
+        <div className="flex flex-col lg:flex-row max-w-[1600px] mx-auto w-full px-4 md:px-10 lg:px-20 py-10 gap-8">
             {/* Sidebar Filters */}
             <aside className="w-full lg:w-64 flex-shrink-0 space-y-8">
                 {/* Show Date */}

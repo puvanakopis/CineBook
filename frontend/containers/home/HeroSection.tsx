@@ -16,7 +16,7 @@ const HeroSection = () => {
             />
 
             {/* Content */}
-            <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 pt-10">
+            <div className="relative z-10 w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-20 pt-10">
                 <div className="max-w-2xl flex flex-col gap-6 animate-fade-in-up">
                     <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-bold uppercase tracking-wider w-fit">
                         <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>

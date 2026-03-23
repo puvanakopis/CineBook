@@ -7,6 +7,18 @@ import Retro from "@/public/movies/retro.jpg"
 import ThugLife from "@/public/movies/thug-life.jpg"
 import CaptainMiller from "@/public/movies/captain-miller.jpg"
 
+// Helper function to get upcoming dates (next 4 days)
+const getUpcomingDates = () => {
+    const dates = [];
+    const today = new Date();
+    for (let i = 0; i < 4; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        dates.push(date.toISOString().split('T')[0]);
+    }
+    return dates;
+};
+
 export const movies = [
     {
         movie_id: 1,
@@ -28,16 +40,80 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true },
                 showtimes: {
                     standard: [
-                        { time: "10:00 AM", price: 1500, currency: "LKR", isSoldOut: false },
-                        { time: "1:30 PM", price: 1500, currency: "LKR", isSoldOut: true },
-                        { time: "4:30 PM", price: 1500, currency: "LKR", isSoldOut: false },
-                        { time: "7:30 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:00 AM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 1500, currency: "LKR", isSoldOut: true },
+                                { time: "4:30 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "7:30 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:00 AM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "4:30 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "7:30 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:00 AM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "4:30 PM", price: 1500, currency: "LKR", isSoldOut: true },
+                                { time: "7:30 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:00 AM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "4:30 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "7:30 PM", price: 1800, currency: "LKR", isSoldOut: true }
+                            ]
+                        }
                     ],
                     imax3d: [
-                        { time: "11:30 AM", price: 2500, currency: "LKR", isSoldOut: false },
-                        { time: "3:00 PM", price: 2500, currency: "LKR", isSoldOut: false },
-                        { time: "6:30 PM", price: 2800, currency: "LKR", isSoldOut: true },
-                        { time: "9:30 PM", price: 2800, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:30 AM", price: 2500, currency: "LKR", isSoldOut: false },
+                                { time: "3:00 PM", price: 2500, currency: "LKR", isSoldOut: false },
+                                { time: "6:30 PM", price: 2800, currency: "LKR", isSoldOut: true },
+                                { time: "9:30 PM", price: 2800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:30 AM", price: 2500, currency: "LKR", isSoldOut: false },
+                                { time: "3:00 PM", price: 2500, currency: "LKR", isSoldOut: true },
+                                { time: "6:30 PM", price: 2800, currency: "LKR", isSoldOut: false },
+                                { time: "9:30 PM", price: 2800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:30 AM", price: 2500, currency: "LKR", isSoldOut: false },
+                                { time: "3:00 PM", price: 2500, currency: "LKR", isSoldOut: false },
+                                { time: "6:30 PM", price: 2800, currency: "LKR", isSoldOut: false },
+                                { time: "9:30 PM", price: 2800, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:30 AM", price: 2500, currency: "LKR", isSoldOut: false },
+                                { time: "3:00 PM", price: 2500, currency: "LKR", isSoldOut: false },
+                                { time: "6:30 PM", price: 2800, currency: "LKR", isSoldOut: true },
+                                { time: "9:30 PM", price: 2800, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -48,15 +124,76 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "11:00 AM", price: 1300, currency: "LKR", isSoldOut: false },
-                        { time: "2:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
-                        { time: "5:00 PM", price: 1300, currency: "LKR", isSoldOut: true },
-                        { time: "8:00 PM", price: 1600, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:00 AM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1300, currency: "LKR", isSoldOut: true },
+                                { time: "8:00 PM", price: 1600, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:00 AM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "8:00 PM", price: 1600, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:00 AM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 1300, currency: "LKR", isSoldOut: true },
+                                { time: "5:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "8:00 PM", price: 1600, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:00 AM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "8:00 PM", price: 1600, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ],
                     imax3d: [
-                        { time: "12:00 PM", price: 2200, currency: "LKR", isSoldOut: false },
-                        { time: "3:30 PM", price: 2200, currency: "LKR", isSoldOut: true },
-                        { time: "7:00 PM", price: 2500, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "12:00 PM", price: 2200, currency: "LKR", isSoldOut: false },
+                                { time: "3:30 PM", price: 2200, currency: "LKR", isSoldOut: true },
+                                { time: "7:00 PM", price: 2500, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "12:00 PM", price: 2200, currency: "LKR", isSoldOut: false },
+                                { time: "3:30 PM", price: 2200, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 2500, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "12:00 PM", price: 2200, currency: "LKR", isSoldOut: true },
+                                { time: "3:30 PM", price: 2200, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 2500, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "12:00 PM", price: 2200, currency: "LKR", isSoldOut: false },
+                                { time: "3:30 PM", price: 2200, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 2500, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -67,10 +204,42 @@ export const movies = [
                 features: { mTicket: false, foodBeverage: true, parking: true, wheelchair: true },
                 showtimes: {
                     standard: [
-                        { time: "10:30 AM", price: 1200, currency: "LKR", isSoldOut: false },
-                        { time: "1:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
-                        { time: "4:45 PM", price: 1200, currency: "LKR", isSoldOut: true },
-                        { time: "7:45 PM", price: 1500, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:30 AM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "4:45 PM", price: 1200, currency: "LKR", isSoldOut: true },
+                                { time: "7:45 PM", price: 1500, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:30 AM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1200, currency: "LKR", isSoldOut: true },
+                                { time: "4:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "7:45 PM", price: 1500, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:30 AM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "4:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "7:45 PM", price: 1500, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:30 AM", price: 1200, currency: "LKR", isSoldOut: true },
+                                { time: "1:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "4:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "7:45 PM", price: 1500, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -81,10 +250,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "11:30 AM", price: 1000, currency: "LKR", isSoldOut: false },
-                        { time: "2:30 PM", price: 1000, currency: "LKR", isSoldOut: false },
-                        { time: "5:30 PM", price: 1200, currency: "LKR", isSoldOut: false },
-                        { time: "8:30 PM", price: 1200, currency: "LKR", isSoldOut: true }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:30 AM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "2:30 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "8:30 PM", price: 1200, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:30 AM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "2:30 PM", price: 1000, currency: "LKR", isSoldOut: true },
+                                { time: "5:30 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "8:30 PM", price: 1200, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:30 AM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "2:30 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1200, currency: "LKR", isSoldOut: true },
+                                { time: "8:30 PM", price: 1200, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:30 AM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "2:30 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "8:30 PM", price: 1200, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -95,10 +296,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: false, parking: true, wheelchair: true },
                 showtimes: {
                     standard: [
-                        { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
-                        { time: "1:00 PM", price: 800, currency: "LKR", isSoldOut: true },
-                        { time: "4:00 PM", price: 1000, currency: "LKR", isSoldOut: false },
-                        { time: "7:00 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:00 PM", price: 800, currency: "LKR", isSoldOut: true },
+                                { time: "4:00 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:00 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "4:00 PM", price: 1000, currency: "LKR", isSoldOut: true },
+                                { time: "7:00 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:00 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "4:00 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 1000, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: true },
+                                { time: "1:00 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "4:00 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -109,10 +342,42 @@ export const movies = [
                 features: { mTicket: false, foodBeverage: true, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
-                        { time: "2:00 PM", price: 900, currency: "LKR", isSoldOut: false },
-                        { time: "5:00 PM", price: 1100, currency: "LKR", isSoldOut: true },
-                        { time: "8:00 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1100, currency: "LKR", isSoldOut: true },
+                                { time: "8:00 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 900, currency: "LKR", isSoldOut: true },
+                                { time: "5:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "8:00 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "8:00 PM", price: 1100, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: true },
+                                { time: "2:00 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "8:00 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             }
@@ -197,10 +462,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true, dolby: true },
                 showtimes: {
                     standard: [
-                        { time: "10:30 AM", price: 1600, currency: "LKR", isSoldOut: false },
-                        { time: "1:45 PM", price: 1600, currency: "LKR", isSoldOut: false },
-                        { time: "5:00 PM", price: 1800, currency: "LKR", isSoldOut: true },
-                        { time: "8:15 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:30 AM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1800, currency: "LKR", isSoldOut: true },
+                                { time: "8:15 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:30 AM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1600, currency: "LKR", isSoldOut: true },
+                                { time: "5:00 PM", price: 1800, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:30 AM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1800, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 1800, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:30 AM", price: 1600, currency: "LKR", isSoldOut: true },
+                                { time: "1:45 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1800, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -211,10 +508,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "11:00 AM", price: 1100, currency: "LKR", isSoldOut: false },
-                        { time: "2:15 PM", price: 1100, currency: "LKR", isSoldOut: false },
-                        { time: "5:30 PM", price: 1300, currency: "LKR", isSoldOut: false },
-                        { time: "8:45 PM", price: 1300, currency: "LKR", isSoldOut: true }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:00 AM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 1300, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:00 AM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 1100, currency: "LKR", isSoldOut: true },
+                                { time: "5:30 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 1300, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:00 AM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1300, currency: "LKR", isSoldOut: true },
+                                { time: "8:45 PM", price: 1300, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:00 AM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 1300, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -225,10 +554,42 @@ export const movies = [
                 features: { mTicket: false, foodBeverage: true, parking: true, wheelchair: true },
                 showtimes: {
                     standard: [
-                        { time: "12:00 PM", price: 900, currency: "LKR", isSoldOut: false },
-                        { time: "3:15 PM", price: 900, currency: "LKR", isSoldOut: true },
-                        { time: "6:30 PM", price: 1100, currency: "LKR", isSoldOut: false },
-                        { time: "9:45 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "12:00 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "3:15 PM", price: 900, currency: "LKR", isSoldOut: true },
+                                { time: "6:30 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "9:45 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "12:00 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "3:15 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "6:30 PM", price: 1100, currency: "LKR", isSoldOut: true },
+                                { time: "9:45 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "12:00 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "3:15 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "6:30 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "9:45 PM", price: 1100, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "12:00 PM", price: 900, currency: "LKR", isSoldOut: true },
+                                { time: "3:15 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "6:30 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "9:45 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -239,10 +600,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: false, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
-                        { time: "1:15 PM", price: 800, currency: "LKR", isSoldOut: false },
-                        { time: "4:30 PM", price: 1000, currency: "LKR", isSoldOut: false },
-                        { time: "7:45 PM", price: 1000, currency: "LKR", isSoldOut: true }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:15 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "4:30 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "7:45 PM", price: 1000, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:15 PM", price: 800, currency: "LKR", isSoldOut: true },
+                                { time: "4:30 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "7:45 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:15 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "4:30 PM", price: 1000, currency: "LKR", isSoldOut: true },
+                                { time: "7:45 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:15 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "4:30 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "7:45 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             }
@@ -313,16 +706,80 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true, imax: true, dolby: true },
                 showtimes: {
                     standard: [
-                        { time: "10:00 AM", price: 1700, currency: "LKR", isSoldOut: false },
-                        { time: "1:30 PM", price: 1700, currency: "LKR", isSoldOut: true },
-                        { time: "5:00 PM", price: 1900, currency: "LKR", isSoldOut: false },
-                        { time: "8:30 PM", price: 1900, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:00 AM", price: 1700, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 1700, currency: "LKR", isSoldOut: true },
+                                { time: "5:00 PM", price: 1900, currency: "LKR", isSoldOut: false },
+                                { time: "8:30 PM", price: 1900, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:00 AM", price: 1700, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 1700, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1900, currency: "LKR", isSoldOut: true },
+                                { time: "8:30 PM", price: 1900, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:00 AM", price: 1700, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 1700, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1900, currency: "LKR", isSoldOut: false },
+                                { time: "8:30 PM", price: 1900, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:00 AM", price: 1700, currency: "LKR", isSoldOut: true },
+                                { time: "1:30 PM", price: 1700, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1900, currency: "LKR", isSoldOut: false },
+                                { time: "8:30 PM", price: 1900, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ],
                     imax3d: [
-                        { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false },
-                        { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: false },
-                        { time: "6:30 PM", price: 3000, currency: "LKR", isSoldOut: true },
-                        { time: "10:00 PM", price: 3000, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false },
+                                { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: false },
+                                { time: "6:30 PM", price: 3000, currency: "LKR", isSoldOut: true },
+                                { time: "10:00 PM", price: 3000, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false },
+                                { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: true },
+                                { time: "6:30 PM", price: 3000, currency: "LKR", isSoldOut: false },
+                                { time: "10:00 PM", price: 3000, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false },
+                                { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: false },
+                                { time: "6:30 PM", price: 3000, currency: "LKR", isSoldOut: false },
+                                { time: "10:00 PM", price: 3000, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: true },
+                                { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: false },
+                                { time: "6:30 PM", price: 3000, currency: "LKR", isSoldOut: false },
+                                { time: "10:00 PM", price: 3000, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -333,15 +790,76 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true, dolby: true },
                 showtimes: {
                     standard: [
-                        { time: "10:30 AM", price: 1400, currency: "LKR", isSoldOut: false },
-                        { time: "2:00 PM", price: 1400, currency: "LKR", isSoldOut: false },
-                        { time: "5:30 PM", price: 1600, currency: "LKR", isSoldOut: false },
-                        { time: "9:00 PM", price: 1600, currency: "LKR", isSoldOut: true }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:30 AM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "9:00 PM", price: 1600, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:30 AM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 1400, currency: "LKR", isSoldOut: true },
+                                { time: "5:30 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "9:00 PM", price: 1600, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:30 AM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1600, currency: "LKR", isSoldOut: true },
+                                { time: "9:00 PM", price: 1600, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:30 AM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "2:00 PM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "9:00 PM", price: 1600, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ],
                     imax3d: [
-                        { time: "12:00 PM", price: 2400, currency: "LKR", isSoldOut: false },
-                        { time: "3:30 PM", price: 2400, currency: "LKR", isSoldOut: true },
-                        { time: "7:00 PM", price: 2600, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "12:00 PM", price: 2400, currency: "LKR", isSoldOut: false },
+                                { time: "3:30 PM", price: 2400, currency: "LKR", isSoldOut: true },
+                                { time: "7:00 PM", price: 2600, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "12:00 PM", price: 2400, currency: "LKR", isSoldOut: false },
+                                { time: "3:30 PM", price: 2400, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 2600, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "12:00 PM", price: 2400, currency: "LKR", isSoldOut: true },
+                                { time: "3:30 PM", price: 2400, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 2600, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "12:00 PM", price: 2400, currency: "LKR", isSoldOut: false },
+                                { time: "3:30 PM", price: 2400, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 2600, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -352,10 +870,42 @@ export const movies = [
                 features: { mTicket: false, foodBeverage: true, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
-                        { time: "2:30 PM", price: 900, currency: "LKR", isSoldOut: true },
-                        { time: "6:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
-                        { time: "9:30 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:30 PM", price: 900, currency: "LKR", isSoldOut: true },
+                                { time: "6:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "9:30 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:30 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1100, currency: "LKR", isSoldOut: true },
+                                { time: "9:30 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:30 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "9:30 PM", price: 1100, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: true },
+                                { time: "2:30 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "9:30 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -366,10 +916,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: false, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
-                        { time: "1:30 PM", price: 800, currency: "LKR", isSoldOut: false },
-                        { time: "5:00 PM", price: 1000, currency: "LKR", isSoldOut: true },
-                        { time: "8:30 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1000, currency: "LKR", isSoldOut: true },
+                                { time: "8:30 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 800, currency: "LKR", isSoldOut: true },
+                                { time: "5:00 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "8:30 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "8:30 PM", price: 1000, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:00 AM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "1:30 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "8:30 PM", price: 1000, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             }
@@ -440,10 +1022,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "10:30 AM", price: 700, currency: "LKR", isSoldOut: false },
-                        { time: "1:45 PM", price: 700, currency: "LKR", isSoldOut: false },
-                        { time: "5:00 PM", price: 900, currency: "LKR", isSoldOut: true },
-                        { time: "8:15 PM", price: 900, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:30 AM", price: 700, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 700, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 900, currency: "LKR", isSoldOut: true },
+                                { time: "8:15 PM", price: 900, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:30 AM", price: 700, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 700, currency: "LKR", isSoldOut: true },
+                                { time: "5:00 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 900, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:30 AM", price: 700, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 700, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 900, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:30 AM", price: 700, currency: "LKR", isSoldOut: true },
+                                { time: "1:45 PM", price: 700, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 900, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -454,10 +1068,42 @@ export const movies = [
                 features: { mTicket: false, foodBeverage: true, parking: true, wheelchair: true },
                 showtimes: {
                     standard: [
-                        { time: "11:00 AM", price: 600, currency: "LKR", isSoldOut: false },
-                        { time: "2:15 PM", price: 600, currency: "LKR", isSoldOut: false },
-                        { time: "5:30 PM", price: 800, currency: "LKR", isSoldOut: false },
-                        { time: "8:45 PM", price: 800, currency: "LKR", isSoldOut: true }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:00 AM", price: 600, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 600, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 800, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:00 AM", price: 600, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 600, currency: "LKR", isSoldOut: true },
+                                { time: "5:30 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:00 AM", price: 600, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 600, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 800, currency: "LKR", isSoldOut: true },
+                                { time: "8:45 PM", price: 800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:00 AM", price: 600, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 600, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 800, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 800, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -468,10 +1114,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: false, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "10:00 AM", price: 550, currency: "LKR", isSoldOut: false },
-                        { time: "1:15 PM", price: 550, currency: "LKR", isSoldOut: true },
-                        { time: "4:30 PM", price: 750, currency: "LKR", isSoldOut: false },
-                        { time: "7:45 PM", price: 750, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:00 AM", price: 550, currency: "LKR", isSoldOut: false },
+                                { time: "1:15 PM", price: 550, currency: "LKR", isSoldOut: true },
+                                { time: "4:30 PM", price: 750, currency: "LKR", isSoldOut: false },
+                                { time: "7:45 PM", price: 750, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:00 AM", price: 550, currency: "LKR", isSoldOut: false },
+                                { time: "1:15 PM", price: 550, currency: "LKR", isSoldOut: false },
+                                { time: "4:30 PM", price: 750, currency: "LKR", isSoldOut: true },
+                                { time: "7:45 PM", price: 750, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:00 AM", price: 550, currency: "LKR", isSoldOut: false },
+                                { time: "1:15 PM", price: 550, currency: "LKR", isSoldOut: false },
+                                { time: "4:30 PM", price: 750, currency: "LKR", isSoldOut: false },
+                                { time: "7:45 PM", price: 750, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:00 AM", price: 550, currency: "LKR", isSoldOut: true },
+                                { time: "1:15 PM", price: 550, currency: "LKR", isSoldOut: false },
+                                { time: "4:30 PM", price: 750, currency: "LKR", isSoldOut: false },
+                                { time: "7:45 PM", price: 750, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -482,10 +1160,42 @@ export const movies = [
                 features: { mTicket: false, foodBeverage: true, parking: false, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "11:30 AM", price: 500, currency: "LKR", isSoldOut: false },
-                        { time: "2:45 PM", price: 500, currency: "LKR", isSoldOut: false },
-                        { time: "6:00 PM", price: 700, currency: "LKR", isSoldOut: true },
-                        { time: "9:15 PM", price: 700, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:30 AM", price: 500, currency: "LKR", isSoldOut: false },
+                                { time: "2:45 PM", price: 500, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 700, currency: "LKR", isSoldOut: true },
+                                { time: "9:15 PM", price: 700, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:30 AM", price: 500, currency: "LKR", isSoldOut: false },
+                                { time: "2:45 PM", price: 500, currency: "LKR", isSoldOut: true },
+                                { time: "6:00 PM", price: 700, currency: "LKR", isSoldOut: false },
+                                { time: "9:15 PM", price: 700, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:30 AM", price: 500, currency: "LKR", isSoldOut: false },
+                                { time: "2:45 PM", price: 500, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 700, currency: "LKR", isSoldOut: false },
+                                { time: "9:15 PM", price: 700, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:30 AM", price: 500, currency: "LKR", isSoldOut: false },
+                                { time: "2:45 PM", price: 500, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 700, currency: "LKR", isSoldOut: false },
+                                { time: "9:15 PM", price: 700, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             }
@@ -532,10 +1242,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true },
                 showtimes: {
                     standard: [
-                        { time: "11:00 AM", price: 1500, currency: "LKR", isSoldOut: false },
-                        { time: "2:15 PM", price: 1500, currency: "LKR", isSoldOut: false },
-                        { time: "5:30 PM", price: 1700, currency: "LKR", isSoldOut: true },
-                        { time: "8:45 PM", price: 1700, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:00 AM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1700, currency: "LKR", isSoldOut: true },
+                                { time: "8:45 PM", price: 1700, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:00 AM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 1500, currency: "LKR", isSoldOut: true },
+                                { time: "5:30 PM", price: 1700, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 1700, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:00 AM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1700, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 1700, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:00 AM", price: 1500, currency: "LKR", isSoldOut: true },
+                                { time: "2:15 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1700, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 1700, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -546,10 +1288,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true },
                 showtimes: {
                     standard: [
-                        { time: "10:30 AM", price: 1400, currency: "LKR", isSoldOut: false },
-                        { time: "1:45 PM", price: 1400, currency: "LKR", isSoldOut: false },
-                        { time: "5:00 PM", price: 1600, currency: "LKR", isSoldOut: false },
-                        { time: "8:15 PM", price: 1600, currency: "LKR", isSoldOut: true }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:30 AM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 1600, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:30 AM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1400, currency: "LKR", isSoldOut: true },
+                                { time: "5:00 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 1600, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:30 AM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1600, currency: "LKR", isSoldOut: true },
+                                { time: "8:15 PM", price: 1600, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:30 AM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 1600, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -560,10 +1334,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "11:30 AM", price: 1000, currency: "LKR", isSoldOut: false },
-                        { time: "2:45 PM", price: 1000, currency: "LKR", isSoldOut: true },
-                        { time: "6:00 PM", price: 1200, currency: "LKR", isSoldOut: false },
-                        { time: "9:15 PM", price: 1200, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:30 AM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "2:45 PM", price: 1000, currency: "LKR", isSoldOut: true },
+                                { time: "6:00 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "9:15 PM", price: 1200, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:30 AM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "2:45 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1200, currency: "LKR", isSoldOut: true },
+                                { time: "9:15 PM", price: 1200, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:30 AM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "2:45 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "9:15 PM", price: 1200, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:30 AM", price: 1000, currency: "LKR", isSoldOut: true },
+                                { time: "2:45 PM", price: 1000, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "9:15 PM", price: 1200, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             }
@@ -608,10 +1414,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "12:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
-                        { time: "3:30 PM", price: 1300, currency: "LKR", isSoldOut: false },
-                        { time: "7:00 PM", price: 1500, currency: "LKR", isSoldOut: true },
-                        { time: "10:30 PM", price: 1500, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "12:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "3:30 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 1500, currency: "LKR", isSoldOut: true },
+                                { time: "10:30 PM", price: 1500, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "12:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "3:30 PM", price: 1300, currency: "LKR", isSoldOut: true },
+                                { time: "7:00 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "10:30 PM", price: 1500, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "12:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "3:30 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "10:30 PM", price: 1500, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "12:00 PM", price: 1300, currency: "LKR", isSoldOut: true },
+                                { time: "3:30 PM", price: 1300, currency: "LKR", isSoldOut: false },
+                                { time: "7:00 PM", price: 1500, currency: "LKR", isSoldOut: false },
+                                { time: "10:30 PM", price: 1500, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -622,10 +1460,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true },
                 showtimes: {
                     standard: [
-                        { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
-                        { time: "2:30 PM", price: 900, currency: "LKR", isSoldOut: true },
-                        { time: "6:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
-                        { time: "9:30 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:30 PM", price: 900, currency: "LKR", isSoldOut: true },
+                                { time: "6:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "9:30 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:30 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1100, currency: "LKR", isSoldOut: true },
+                                { time: "9:30 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:30 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "9:30 PM", price: 1100, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: true },
+                                { time: "2:30 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "9:30 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             }
@@ -656,10 +1526,42 @@ export const movies = [
                 features: { mTicket: false, foodBeverage: true, parking: true, wheelchair: true },
                 showtimes: {
                     standard: [
-                        { time: "10:30 AM", price: 1200, currency: "LKR", isSoldOut: false },
-                        { time: "1:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
-                        { time: "5:00 PM", price: 1400, currency: "LKR", isSoldOut: true },
-                        { time: "8:15 PM", price: 1400, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "10:30 AM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1400, currency: "LKR", isSoldOut: true },
+                                { time: "8:15 PM", price: 1400, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "10:30 AM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1200, currency: "LKR", isSoldOut: true },
+                                { time: "5:00 PM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 1400, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "10:30 AM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "1:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 1400, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "10:30 AM", price: 1200, currency: "LKR", isSoldOut: true },
+                                { time: "1:45 PM", price: 1200, currency: "LKR", isSoldOut: false },
+                                { time: "5:00 PM", price: 1400, currency: "LKR", isSoldOut: false },
+                                { time: "8:15 PM", price: 1400, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             },
@@ -670,10 +1572,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: false, parking: true, wheelchair: false },
                 showtimes: {
                     standard: [
-                        { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
-                        { time: "2:15 PM", price: 900, currency: "LKR", isSoldOut: false },
-                        { time: "5:30 PM", price: 1100, currency: "LKR", isSoldOut: false },
-                        { time: "8:45 PM", price: 1100, currency: "LKR", isSoldOut: true }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 1100, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 900, currency: "LKR", isSoldOut: true },
+                                { time: "5:30 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1100, currency: "LKR", isSoldOut: true },
+                                { time: "8:45 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:00 AM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "2:15 PM", price: 900, currency: "LKR", isSoldOut: false },
+                                { time: "5:30 PM", price: 1100, currency: "LKR", isSoldOut: false },
+                                { time: "8:45 PM", price: 1100, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             }
@@ -704,10 +1638,42 @@ export const movies = [
                 features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true },
                 showtimes: {
                     standard: [
-                        { time: "11:30 AM", price: 1600, currency: "LKR", isSoldOut: false },
-                        { time: "2:45 PM", price: 1600, currency: "LKR", isSoldOut: false },
-                        { time: "6:00 PM", price: 1800, currency: "LKR", isSoldOut: true },
-                        { time: "9:15 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                        {
+                            date: "2026-03-23",
+                            times: [
+                                { time: "11:30 AM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "2:45 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1800, currency: "LKR", isSoldOut: true },
+                                { time: "9:15 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-24",
+                            times: [
+                                { time: "11:30 AM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "2:45 PM", price: 1600, currency: "LKR", isSoldOut: true },
+                                { time: "6:00 PM", price: 1800, currency: "LKR", isSoldOut: false },
+                                { time: "9:15 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                            ]
+                        },
+                        {
+                            date: "2026-03-25",
+                            times: [
+                                { time: "11:30 AM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "2:45 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1800, currency: "LKR", isSoldOut: false },
+                                { time: "9:15 PM", price: 1800, currency: "LKR", isSoldOut: true }
+                            ]
+                        },
+                        {
+                            date: "2026-03-26",
+                            times: [
+                                { time: "11:30 AM", price: 1600, currency: "LKR", isSoldOut: true },
+                                { time: "2:45 PM", price: 1600, currency: "LKR", isSoldOut: false },
+                                { time: "6:00 PM", price: 1800, currency: "LKR", isSoldOut: false },
+                                { time: "9:15 PM", price: 1800, currency: "LKR", isSoldOut: false }
+                            ]
+                        }
                     ]
                 }
             }

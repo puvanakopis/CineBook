@@ -27,7 +27,6 @@ export default function MovieDetail() {
 
   return (
     <main>
-      <Navbar />
       <MovieHero
         title={movie.title}
         rating={movie.rating}
@@ -43,7 +42,6 @@ export default function MovieDetail() {
       <Showtimes theaters={movie.theaters} />
       <CastCrew cast={movie.cast} />
       <Reviews reviews={movie.reviews} movieTitle={movie.title} movieId={movie.movie_id.toString()} />
-      <Footer />
     </main>
   );
 }

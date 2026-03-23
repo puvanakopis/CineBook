@@ -5,7 +5,7 @@ import { MdHistoryEdu, MdOutlineDiversity3, MdOutlineMovie, MdOutlineVisibility 
 
 const AboutSection: React.FC = () => {
     return (
-        <section className="w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 pb-20 relative ">
+        <section className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-20 pb-20 relative ">
             {/* Our Story */}
             <div className="bg-surface-dark rounded-xl overflow-hidden border border-[#392828] shadow-2xl mb-12">
                 <div className="grid grid-cols-1 lg:grid-cols-2">
