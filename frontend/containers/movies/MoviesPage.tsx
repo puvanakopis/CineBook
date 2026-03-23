@@ -377,13 +377,11 @@ const MoviesPage = () => {
                                 onClick={() => router.push(`/movies/${movie.movie_id}`)}
                             >
                                 <div className="relative aspect-[2/3] overflow-hidden bg-gray-800">
-                                    <Image  
-                                        alt={movie.title}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    <Image
                                         src={movie.poster}
-                                        onError={(e) => {
-                                            e.currentTarget.src = 'https://via.placeholder.com/300x450?text=No+Image';
-                                        }}
+                                        alt={movie.title}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
                                     <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded flex items-center gap-1 border border-white/10">

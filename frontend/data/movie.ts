@@ -1,3 +1,12 @@
+import Coolie from "@/public/movies/coolie-movie.jpg"
+import GoodBadUgly from "@/public/movies/good-bad-ugly.jpg"
+import Goat from "@/public/movies/goat.jpg"
+import Madharasi from "@/public/movies/madharasi.jpg"
+import Vidaamuyarchi from "@/public/movies/vidamuyarchi.jpg"
+import Retro from "@/public/movies/retro.jpg"
+import ThugLife from "@/public/movies/thug-life.jpg"
+import CaptainMiller from "@/public/movies/captain-miller.jpg"
+
 export const movies = [
     {
         movie_id: 1,
@@ -9,7 +18,7 @@ export const movies = [
         languages: "Tamil, Telugu, Hindi, Sinhala",
         formats: "2D, IMAX 3D",
         synopsis: "Coolie is a high-octane action thriller featuring a powerful protagonist who rises against systemic injustice, blending intense drama, mass action, and Rajinikanth's signature screen presence. Set against the backdrop of Colombo's underworld, a humble dock worker's quest for justice sparks an epic battle against corruption.",
-        poster: "https://www.wallsnapy.com/img_gallery/coolie-movie-rajini--poster-4k-download-9445507.jpg",
+        poster: Coolie,
         trailerUrl: "https://www.youtube.com/watch?v=qeVfT2iLiu0&t=14s",
         theaters: [
             {
@@ -109,13 +118,13 @@ export const movies = [
             }
         ],
         cast: [
-            { cast_id: "c1", name: "Rajinikanth", role: "Coolie / Velu", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/coolie-movie-rajini--poster-4k-download-9445507.jpg" },
-            { cast_id: "c2", name: "Kajal Aggarwal", role: "Meera", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/coolie-movie-rajini--poster-4k-download-9445507.jpg" },
-            { cast_id: "c3", name: "S. Shankar", role: "Director", type: "director", imageUrl: "https://www.wallsnapy.com/img_gallery/coolie-movie-rajini--poster-4k-download-9445507.jpg" },
-            { cast_id: "c4", name: "A. R. Rahman", role: "Music Composer", type: "composer", imageUrl: "https://www.wallsnapy.com/img_gallery/coolie-movie-rajini--poster-4k-download-9445507.jpg" },
-            { cast_id: "c5", name: "Vijay Sethupathi", role: "Antagonist", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/coolie-movie-rajini--poster-4k-download-9445507.jpg" },
-            { cast_id: "c6", name: "Nayanthara", role: "Supporting Role", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/coolie-movie-rajini--poster-4k-download-9445507.jpg" },
-            { cast_id: "c7", name: "Anirudh Ravichander", role: "Background Score", type: "composer", imageUrl: "https://www.wallsnapy.com/img_gallery/coolie-movie-rajini--poster-4k-download-9445507.jpg" }
+            { cast_id: "c1", name: "Rajinikanth", role: "Coolie / Velu", type: "actor", imageUrl: Coolie },
+            { cast_id: "c2", name: "Kajal Aggarwal", role: "Meera", type: "actor", imageUrl: Coolie },
+            { cast_id: "c3", name: "S. Shankar", role: "Director", type: "director", imageUrl: Coolie },
+            { cast_id: "c4", name: "A. R. Rahman", role: "Music Composer", type: "composer", imageUrl: Coolie },
+            { cast_id: "c5", name: "Vijay Sethupathi", role: "Antagonist", type: "actor", imageUrl: Coolie },
+            { cast_id: "c6", name: "Nayanthara", role: "Supporting Role", type: "actor", imageUrl: Coolie },
+            { cast_id: "c7", name: "Anirudh Ravichander", role: "Background Score", type: "composer", imageUrl: Coolie }
         ],
         reviews: [
             {
@@ -178,7 +187,7 @@ export const movies = [
         languages: "Tamil, Hindi, Sinhala",
         formats: "2D",
         synopsis: "A gritty biographical drama following the life of an unconventional hero who navigates through moral ambiguities in a world divided between good, bad, and ugly choices. Based on true events, this film explores the complexities of human nature and redemption.",
-        poster: "https://www.wallsnapy.com/img_gallery/top-good-bad-ugly-first-look-poster-hd-4k-download-4272458.jpg",
+        poster: GoodBadUgly,
         trailerUrl: "https://www.youtube.com/watch?v=sample1",
         theaters: [
             {
@@ -239,11 +248,11 @@ export const movies = [
             }
         ],
         cast: [
-            { cast_id: "c8", name: "Vijay", role: "Lead Role / Karthik", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/top-good-bad-ugly-first-look-poster-hd-4k-download-4272458.jpg" },
-            { cast_id: "c9", name: "Trisha", role: "Female Lead / Anjali", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/top-good-bad-ugly-first-look-poster-hd-4k-download-4272458.jpg" },
-            { cast_id: "c10", name: "Venkat Prabhu", role: "Director", type: "director", imageUrl: "https://www.wallsnapy.com/img_gallery/top-good-bad-ugly-first-look-poster-hd-4k-download-4272458.jpg" },
-            { cast_id: "c11", name: "Yuvan Shankar Raja", role: "Music Composer", type: "composer", imageUrl: "https://www.wallsnapy.com/img_gallery/top-good-bad-ugly-first-look-poster-hd-4k-download-4272458.jpg" },
-            { cast_id: "c12", name: "Prakash Raj", role: "Antagonist", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/top-good-bad-ugly-first-look-poster-hd-4k-download-4272458.jpg" }
+            { cast_id: "c8", name: "Vijay", role: "Lead Role / Karthik", type: "actor", imageUrl: GoodBadUgly },
+            { cast_id: "c9", name: "Trisha", role: "Female Lead / Anjali", type: "actor", imageUrl: GoodBadUgly },
+            { cast_id: "c10", name: "Venkat Prabhu", role: "Director", type: "director", imageUrl: GoodBadUgly },
+            { cast_id: "c11", name: "Yuvan Shankar Raja", role: "Music Composer", type: "composer", imageUrl: GoodBadUgly },
+            { cast_id: "c12", name: "Prakash Raj", role: "Antagonist", type: "actor", imageUrl: GoodBadUgly }
         ],
         reviews: [
             {
@@ -294,7 +303,7 @@ export const movies = [
         languages: "Tamil, Telugu, English, Sinhala",
         formats: "2D, 3D, IMAX 3D",
         synopsis: "In a futuristic world, a legendary fighter must come out of retirement to save humanity from an alien threat, proving why he's considered the Greatest Of All Time. With stunning visual effects and heart-pounding action sequences, this sci-fi epic pushes the boundaries of storytelling.",
-        poster: "https://www.wallsnapy.com/img_gallery/new-goat-poster-4k-4123382.jpg",
+        poster: Goat,
         trailerUrl: "https://www.youtube.com/watch?v=sample2",
         theaters: [
             {
@@ -366,11 +375,11 @@ export const movies = [
             }
         ],
         cast: [
-            { cast_id: "c13", name: "Vijay Sethupathi", role: "The GOAT / Veera", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/new-goat-poster-4k-4123382.jpg" },
-            { cast_id: "c14", name: "Samantha", role: "Scientist / Dr. Nila", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/new-goat-poster-4k-4123382.jpg" },
-            { cast_id: "c15", name: "Lokesh Kanagaraj", role: "Director", type: "director", imageUrl: "https://www.wallsnapy.com/img_gallery/new-goat-poster-4k-4123382.jpg" },
-            { cast_id: "c16", name: "Anirudh", role: "Music Composer", type: "composer", imageUrl: "https://www.wallsnapy.com/img_gallery/new-goat-poster-4k-4123382.jpg" },
-            { cast_id: "c17", name: "Fahadh Faasil", role: "Alien Commander", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/new-goat-poster-4k-4123382.jpg" }
+            { cast_id: "c13", name: "Vijay Sethupathi", role: "The GOAT / Veera", type: "actor", imageUrl: Goat },
+            { cast_id: "c14", name: "Samantha", role: "Scientist / Dr. Nila", type: "actor", imageUrl: Goat },
+            { cast_id: "c15", name: "Lokesh Kanagaraj", role: "Director", type: "director", imageUrl: Goat },
+            { cast_id: "c16", name: "Anirudh", role: "Music Composer", type: "composer", imageUrl: Goat },
+            { cast_id: "c17", name: "Fahadh Faasil", role: "Alien Commander", type: "actor", imageUrl: Goat }
         ],
         reviews: [
             {
@@ -421,7 +430,7 @@ export const movies = [
         languages: "Tamil, Sinhala",
         formats: "2D",
         synopsis: "A rural drama with intense action sequences, exploring the life of a village leader who fights against corruption and injustice in his community. Set in the 1980s, this powerful narrative showcases the triumph of the human spirit against oppressive systems.",
-        poster: "https://www.wallsnapy.com/img_gallery/madharasi-movie-first-look-poster-4k-3608222.jpg",
+        poster: Madharasi,
         trailerUrl: "https://www.youtube.com/watch?v=sample3",
         theaters: [
             {
@@ -482,11 +491,11 @@ export const movies = [
             }
         ],
         cast: [
-            { cast_id: "c18", name: "Sivakarthikeyan", role: "Madharasi", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/madharasi-movie-first-look-poster-4k-3608222.jpg" },
-            { cast_id: "c19", name: "Sai Pallavi", role: "Female Lead", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/madharasi-movie-first-look-poster-4k-3608222.jpg" },
-            { cast_id: "c20", name: "Sudha Kongara", role: "Director", type: "director", imageUrl: "https://www.wallsnapy.com/img_gallery/madharasi-movie-first-look-poster-4k-3608222.jpg" },
-            { cast_id: "c21", name: "GV Prakash", role: "Music Composer", type: "composer", imageUrl: "https://www.wallsnapy.com/img_gallery/madharasi-movie-first-look-poster-4k-3608222.jpg" },
-            { cast_id: "c22", name: "Prakash Raj", role: "Villain", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/madharasi-movie-first-look-poster-4k-3608222.jpg" }
+            { cast_id: "c18", name: "Sivakarthikeyan", role: "Madharasi", type: "actor", imageUrl: Madharasi },
+            { cast_id: "c19", name: "Sai Pallavi", role: "Female Lead", type: "actor", imageUrl: Madharasi },
+            { cast_id: "c20", name: "Sudha Kongara", role: "Director", type: "director", imageUrl: Madharasi },
+            { cast_id: "c21", name: "GV Prakash", role: "Music Composer", type: "composer", imageUrl: Madharasi },
+            { cast_id: "c22", name: "Prakash Raj", role: "Villain", type: "actor", imageUrl: Madharasi }
         ],
         reviews: [
             {
@@ -513,7 +522,7 @@ export const movies = [
         languages: "Tamil, Sinhala",
         formats: "2D",
         synopsis: "A corporate thriller about a brilliant strategist who uses his intellect to navigate dangerous business wars and personal vendettas. When a hostile takeover threatens his family's legacy, he must outsmart powerful enemies in a high-stakes game of deception.",
-        poster: "https://www.wallsnapy.com/img_gallery/vidamuyarchi-ajith-first-look-poster-4k-wallpaper-7913453.jpg",
+        poster: Vidaamuyarchi,
         trailerUrl: "https://www.youtube.com/watch?v=sample4",
         theaters: [
             {
@@ -560,9 +569,9 @@ export const movies = [
             }
         ],
         cast: [
-            { cast_id: "c23", name: "Ajith Kumar", role: "Lead Role", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/vidamuyarchi-ajith-first-look-poster-4k-wallpaper-7913453.jpg" },
-            { cast_id: "c24", name: "Trisha", role: "Female Lead", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/vidamuyarchi-ajith-first-look-poster-4k-wallpaper-7913453.jpg" },
-            { cast_id: "c25", name: "Magesh", role: "Director", type: "director", imageUrl: "https://www.wallsnapy.com/img_gallery/vidamuyarchi-ajith-first-look-poster-4k-wallpaper-7913453.jpg" }
+            { cast_id: "c23", name: "Ajith Kumar", role: "Lead Role", type: "actor", imageUrl: Vidaamuyarchi },
+            { cast_id: "c24", name: "Trisha", role: "Female Lead", type: "actor", imageUrl: Vidaamuyarchi },
+            { cast_id: "c25", name: "Magesh", role: "Director", type: "director", imageUrl: Vidaamuyarchi }
         ],
         reviews: [
             {
@@ -589,7 +598,7 @@ export const movies = [
         languages: "Tamil, Sinhala",
         formats: "2D",
         synopsis: "A period drama set in the 80s, following a musician's journey through love, loss, and redemption in the vibrant music scene of Madras. With a soulful soundtrack and emotional narrative, this film celebrates the golden era of music.",
-        poster: "https://www.wallsnapy.com/img_gallery/new-retro-surya-4k-images-5102165.jpg",
+        poster: Retro,
         trailerUrl: "https://www.youtube.com/watch?v=sample5",
         theaters: [
             {
@@ -622,8 +631,8 @@ export const movies = [
             }
         ],
         cast: [
-            { cast_id: "c26", name: "Suriya", role: "Musician", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/new-retro-surya-4k-images-5102165.jpg" },
-            { cast_id: "c27", name: "Aishwarya Rai", role: "Female Lead", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/new-retro-surya-4k-images-5102165.jpg" }
+            { cast_id: "c26", name: "Suriya", role: "Musician", type: "actor", imageUrl: Retro },
+            { cast_id: "c27", name: "Aishwarya Rai", role: "Female Lead", type: "actor", imageUrl: Retro }
         ],
         reviews: []
     },
@@ -637,7 +646,7 @@ export const movies = [
         languages: "Tamil, Sinhala",
         formats: "2D",
         synopsis: "Inspired by true events, this sports drama follows a struggling cricket team's journey to victory under an unconventional captain's leadership. Against all odds, they must overcome personal demons and societal pressures to achieve their dreams.",
-        poster: "https://www.wallsnapy.com/img_gallery/top-captain-miller-dhanush-hd-poster-wallpaper-1080px-7975672.jpg",
+        poster: CaptainMiller,
         trailerUrl: "https://www.youtube.com/watch?v=sample6",
         theaters: [
             {
@@ -670,8 +679,8 @@ export const movies = [
             }
         ],
         cast: [
-            { cast_id: "c28", name: "Dhanush", role: "Captain Miller", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/top-captain-miller-dhanush-hd-poster-wallpaper-1080px-7975672.jpg" },
-            { cast_id: "c29", name: "Priyanka Mohan", role: "Female Lead", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/top-captain-miller-dhanush-hd-poster-wallpaper-1080px-7975672.jpg" }
+            { cast_id: "c28", name: "Dhanush", role: "Captain Miller", type: "actor", imageUrl: CaptainMiller },
+            { cast_id: "c29", name: "Priyanka Mohan", role: "Female Lead", type: "actor", imageUrl: CaptainMiller }
         ],
         reviews: []
     },
@@ -685,7 +694,7 @@ export const movies = [
         languages: "Tamil, Sinhala",
         formats: "2D",
         synopsis: "A fantasy adventure where a modern-day thief discovers ancient powers and must prevent a mythical artifact from falling into wrong hands. His journey takes him through hidden temples and magical realms in a race against time.",
-        poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
+        poster: ThugLife,
         trailerUrl: "https://www.youtube.com/watch?v=sample7",
         theaters: [
             {
@@ -704,279 +713,9 @@ export const movies = [
             }
         ],
         cast: [
-            { cast_id: "c30", name: "STR", role: "Thief", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" },
-            { cast_id: "c31", name: "Gautham Menon", role: "Director", type: "director", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" }
+            { cast_id: "c30", name: "STR", role: "Thief", type: "actor", imageUrl: ThugLife },
+            { cast_id: "c31", name: "Gautham Menon", role: "Director", type: "director", imageUrl: ThugLife }
         ],
         reviews: []
-    },
-    {
-        movie_id: 9,
-        title: "Kalki",
-        rating: 8.7,
-        genres: ["Sci-Fi", "Action", "Mythology"],
-        duration: "2h 45m",
-        releaseDate: "2024",
-        languages: "Tamil, Telugu, Hindi, Sinhala",
-        formats: "2D, 3D, IMAX 3D",
-        synopsis: "A mythological sci-fi epic set in a dystopian future where the final avatar must emerge to restore cosmic balance. Blending ancient prophecies with futuristic technology, this spectacle reimagines the concept of divinity in a world on the brink of destruction.",
-        poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        trailerUrl: "https://www.youtube.com/watch?v=sample8",
-        theaters: [
-            {
-                theater_id: "t27",
-                name: "IMAX Theater - Colombo",
-                address: "Level 3, Colombo City Centre, Colombo 02",
-                features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true, imax: true },
-                showtimes: {
-                    standard: [
-                        { time: "10:00 AM", price: 1700, currency: "LKR", isSoldOut: false },
-                        { time: "1:30 PM", price: 1700, currency: "LKR", isSoldOut: false },
-                        { time: "5:00 PM", price: 1900, currency: "LKR", isSoldOut: true },
-                        { time: "8:30 PM", price: 1900, currency: "LKR", isSoldOut: false }
-                    ],
-                    imax3d: [
-                        { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false },
-                        { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: false },
-                        { time: "6:30 PM", price: 3000, currency: "LKR", isSoldOut: true },
-                        { time: "10:00 PM", price: 3000, currency: "LKR", isSoldOut: false }
-                    ]
-                }
-            },
-            {
-                theater_id: "t28",
-                name: "Scope Cinemas - Colombo",
-                address: "No. 123, Galle Road, Colombo 03",
-                features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true },
-                showtimes: {
-                    standard: [
-                        { time: "10:30 AM", price: 1500, currency: "LKR", isSoldOut: false },
-                        { time: "2:00 PM", price: 1500, currency: "LKR", isSoldOut: false },
-                        { time: "5:30 PM", price: 1700, currency: "LKR", isSoldOut: false },
-                        { time: "9:00 PM", price: 1700, currency: "LKR", isSoldOut: true }
-                    ]
-                }
-            }
-        ],
-        cast: [
-            { cast_id: "c32", name: "Prabhas", role: "Kalki", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" },
-            { cast_id: "c33", name: "Deepika Padukone", role: "Female Lead", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" }
-        ],
-        reviews: []
-    },
-    {
-        movie_id: 10,
-        title: "Pushpa 2",
-        rating: 8.4,
-        genres: ["Action", "Drama", "Crime"],
-        duration: "2h 50m",
-        releaseDate: "2024",
-        languages: "Telugu, Tamil, Hindi, Sinhala",
-        formats: "2D",
-        synopsis: "The continuation of Pushpa's story as he faces new challenges in the red sandalwood smuggling world while dealing with personal demons. With higher stakes and more intense action, this sequel expands the universe of the original.",
-        poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        trailerUrl: "https://www.youtube.com/watch?v=sample9",
-        theaters: [
-            {
-                theater_id: "t29",
-                name: "Cinecity - Kandy",
-                address: "No. 345, Kandy City Center, Kandy",
-                features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true },
-                showtimes: {
-                    standard: [
-                        { time: "11:00 AM", price: 1400, currency: "LKR", isSoldOut: false },
-                        { time: "2:30 PM", price: 1400, currency: "LKR", isSoldOut: false },
-                        { time: "6:00 PM", price: 1600, currency: "LKR", isSoldOut: true },
-                        { time: "9:30 PM", price: 1600, currency: "LKR", isSoldOut: false }
-                    ]
-                }
-            }
-        ],
-        cast: [
-            { cast_id: "c34", name: "Allu Arjun", role: "Pushpa", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" },
-            { cast_id: "c35", name: "Rashmika", role: "Female Lead", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" }
-        ],
-        reviews: []
-    },
-    {
-        movie_id: 11,
-        title: "Salaar 2",
-        rating: 8.6,
-        genres: ["Action", "Thriller", "Period"],
-        duration: "2h 55m",
-        releaseDate: "2025",
-        languages: "Telugu, Tamil, Hindi, Sinhala",
-        formats: "2D, IMAX 3D",
-        synopsis: "The explosive sequel follows Salaar's journey as he confronts a powerful international syndicate threatening his homeland. With larger-than-life action and political intrigue, this chapter raises the stakes to global proportions.",
-        poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        trailerUrl: "https://www.youtube.com/watch?v=sample10",
-        theaters: [
-            {
-                theater_id: "t30",
-                name: "IMAX Theater - Colombo",
-                address: "Level 3, Colombo City Centre, Colombo 02",
-                features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true, imax: true },
-                showtimes: {
-                    standard: [
-                        { time: "10:30 AM", price: 1700, currency: "LKR", isSoldOut: false },
-                        { time: "2:00 PM", price: 1700, currency: "LKR", isSoldOut: false },
-                        { time: "5:30 PM", price: 1900, currency: "LKR", isSoldOut: true },
-                        { time: "9:00 PM", price: 1900, currency: "LKR", isSoldOut: false }
-                    ],
-                    imax3d: [
-                        { time: "12:00 PM", price: 2800, currency: "LKR", isSoldOut: false },
-                        { time: "3:30 PM", price: 2800, currency: "LKR", isSoldOut: false },
-                        { time: "7:00 PM", price: 3000, currency: "LKR", isSoldOut: true }
-                    ]
-                }
-            }
-        ],
-        cast: [
-            { cast_id: "c36", name: "Prabhas", role: "Salaar", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" },
-            { cast_id: "c37", name: "Shruti Haasan", role: "Female Lead", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" }
-        ],
-        reviews: []
-    },
-    {
-        movie_id: 12,
-        title: "Vikram 2",
-        rating: 8.9,
-        genres: ["Action", "Thriller", "Espionage"],
-        duration: "2h 40m",
-        releaseDate: "2025",
-        languages: "Tamil, Sinhala",
-        formats: "2D, IMAX 3D",
-        synopsis: "Agent Vikram returns for another high-stakes mission involving international espionage and a deadly new terrorist organization. With Kamal Haasan reprising his iconic role, this sequel promises more mind-blowing action sequences and intricate plot twists.",
-        poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        trailerUrl: "https://www.youtube.com/watch?v=sample11",
-        theaters: [
-            {
-                theater_id: "t31",
-                name: "Scope Cinemas - Colombo",
-                address: "No. 123, Galle Road, Colombo 03",
-                features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true },
-                showtimes: {
-                    standard: [
-                        { time: "11:00 AM", price: 1500, currency: "LKR", isSoldOut: false },
-                        { time: "2:30 PM", price: 1500, currency: "LKR", isSoldOut: false },
-                        { time: "6:00 PM", price: 1700, currency: "LKR", isSoldOut: false },
-                        { time: "9:30 PM", price: 1700, currency: "LKR", isSoldOut: true }
-                    ],
-                    imax3d: [
-                        { time: "12:30 PM", price: 2600, currency: "LKR", isSoldOut: false },
-                        { time: "4:00 PM", price: 2600, currency: "LKR", isSoldOut: true },
-                        { time: "7:30 PM", price: 2800, currency: "LKR", isSoldOut: false }
-                    ]
-                }
-            },
-            {
-                theater_id: "t32",
-                name: "PVR Cinemas - Colombo",
-                address: "No. 478, Colombo City Centre, Colombo 02",
-                features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: true, dolby: true },
-                showtimes: {
-                    standard: [
-                        { time: "10:00 AM", price: 1600, currency: "LKR", isSoldOut: false },
-                        { time: "1:30 PM", price: 1600, currency: "LKR", isSoldOut: true },
-                        { time: "5:00 PM", price: 1800, currency: "LKR", isSoldOut: false },
-                        { time: "8:30 PM", price: 1800, currency: "LKR", isSoldOut: false }
-                    ]
-                }
-            }
-        ],
-        cast: [
-            { cast_id: "c38", name: "Kamal Haasan", role: "Vikram", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" },
-            { cast_id: "c39", name: "Fahadh Faasil", role: "Agent", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" }
-        ],
-        reviews: []
-    },
-    {
-        movie_id: 13,
-        title: "Leo 2",
-        rating: 8.3,
-        genres: ["Action", "Drama", "Crime"],
-        duration: "2h 48m",
-        releaseDate: "2025",
-        languages: "Tamil, Sinhala",
-        formats: "2D",
-        synopsis: "The sequel to the blockbuster, continuing Leo's story as he faces new threats while trying to protect his family and identity. Past sins catch up with him as a new enemy emerges from the shadows.",
-        poster: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg",
-        trailerUrl: "https://www.youtube.com/watch?v=sample12",
-        theaters: [
-            {
-                theater_id: "t33",
-                name: "Liberty By Scope - Colombo",
-                address: "No. 45, Liberty Plaza, Colombo 03",
-                features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: false },
-                showtimes: {
-                    standard: [
-                        { time: "11:30 AM", price: 1300, currency: "LKR", isSoldOut: false },
-                        { time: "3:00 PM", price: 1300, currency: "LKR", isSoldOut: false },
-                        { time: "6:30 PM", price: 1500, currency: "LKR", isSoldOut: true },
-                        { time: "10:00 PM", price: 1500, currency: "LKR", isSoldOut: false }
-                    ]
-                }
-            },
-            {
-                theater_id: "t34",
-                name: "Savoy 3D Cinema - Colombo",
-                address: "No. 78, Galle Road, Colombo 04",
-                features: { mTicket: false, foodBeverage: true, parking: true, wheelchair: true },
-                showtimes: {
-                    standard: [
-                        { time: "10:00 AM", price: 1200, currency: "LKR", isSoldOut: false },
-                        { time: "1:30 PM", price: 1200, currency: "LKR", isSoldOut: false },
-                        { time: "5:00 PM", price: 1400, currency: "LKR", isSoldOut: false },
-                        { time: "8:30 PM", price: 1400, currency: "LKR", isSoldOut: true }
-                    ]
-                }
-            },
-            {
-                theater_id: "t35",
-                name: "Empire Cinema - Kandy",
-                address: "No. 156, Peradeniya Road, Kandy",
-                features: { mTicket: true, foodBeverage: true, parking: true, wheelchair: false },
-                showtimes: {
-                    standard: [
-                        { time: "12:00 PM", price: 1000, currency: "LKR", isSoldOut: false },
-                        { time: "3:30 PM", price: 1000, currency: "LKR", isSoldOut: true },
-                        { time: "7:00 PM", price: 1200, currency: "LKR", isSoldOut: false },
-                        { time: "10:30 PM", price: 1200, currency: "LKR", isSoldOut: false }
-                    ]
-                }
-            }
-        ],
-        cast: [
-            { cast_id: "c40", name: "Vijay", role: "Leo", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" },
-            { cast_id: "c41", name: "Lokesh Kanagaraj", role: "Director", type: "director", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" },
-            { cast_id: "c42", name: "Anirudh", role: "Music Composer", type: "composer", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" },
-            { cast_id: "c43", name: "Sanjay Dutt", role: "Antagonist", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" },
-            { cast_id: "c44", name: "Trisha", role: "Female Lead", type: "actor", imageUrl: "https://www.wallsnapy.com/img_gallery/thug-life-str-simbu-movie-photos-4359369.jpg" }
-        ],
-        reviews: [
-            {
-                review_id: "r13",
-                user_id: "u113",
-                author: "Vijayakanth",
-                date: "2026-01-02",
-                rating: 5,
-                content: "Worth the wait! Vijay's performance was outstanding. The action sequences were brilliantly choreographed. A perfect sequel.",
-                initials: "VK",
-                hasPremium: true,
-                likes: 421,
-                verified: true
-            },
-            {
-                review_id: "r14",
-                user_id: "u114",
-                author: "Lakshmi Narayan",
-                date: "2026-01-01",
-                rating: 4,
-                content: "Good entertainer. The first half was gripping. Second half could have been trimmed. Music by Anirudh was top-notch.",
-                initials: "LN",
-                hasPremium: false,
-                likes: 187,
-                verified: true
-            }
-        ]
     }
 ];
