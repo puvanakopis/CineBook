@@ -1,6 +1,8 @@
 'use client';
 
 import { MdOutlineExpandMore } from "react-icons/md";
+import { MdGridView } from "react-icons/md";
+import { HiOutlineViewList } from "react-icons/hi";
 
 interface SortControlsProps {
     filteredMoviesCount: number;
@@ -8,6 +10,8 @@ interface SortControlsProps {
     indexOfLastMovie: number;
     sortBy: string;
     setSortBy: (sort: string) => void;
+    viewMode: 'grid' | 'list';
+    setViewMode: (mode: 'grid' | 'list') => void;
 }
 
 const SortControls = ({
@@ -16,6 +20,8 @@ const SortControls = ({
     indexOfLastMovie,
     sortBy,
     setSortBy,
+    viewMode,
+    setViewMode,
 }: SortControlsProps) => {
     return (
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 bg-surface-dark p-4 rounded-xl border border-[#392828]">
@@ -39,6 +45,24 @@ const SortControls = ({
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-secondary">
                         <MdOutlineExpandMore className="text-lg" />
                     </div>
+                </div>
+                <div className="flex bg-input-bg rounded-lg p-1 border border-[#392828]">
+                    <button
+                        className={`p-1.5 rounded transition-colors ${viewMode === 'grid' ? 'bg-primary text-white' : 'text-text-secondary hover:text-white'}`}
+                        onClick={() => setViewMode('grid')}
+                    >
+                        <span className="material-symbols-outlined text-[20px]">
+                            <MdGridView />
+                        </span>
+                    </button>
+                    <button
+                        className={`p-1.5 rounded transition-colors ${viewMode === 'list' ? 'bg-primary text-white' : 'text-text-secondary hover:text-white'}`}
+                        onClick={() => setViewMode('list')}
+                    >
+                        <span className="material-symbols-outlined text-[20px]">
+                            <HiOutlineViewList />
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>

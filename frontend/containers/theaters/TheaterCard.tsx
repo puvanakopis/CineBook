@@ -51,14 +51,14 @@ const TheaterCard = ({ theater, viewMode }: TheaterCardProps) => {
                         <span className="line-clamp-2">{theater.address}</span>
                     </div>
                     <div className="flex flex-wrap gap-2 mb-4">
-                        {theater.amenities.slice(0, 3).map((amenity) => (
+                        {theater.amenities.slice(0, 5).map((amenity) => (
                             <span key={amenity} className="text-[10px] font-medium text-text-secondary bg-[#392828] px-2 py-1 rounded flex items-center gap-1">
                                 {amenity}
                             </span>
                         ))}
-                        {theater.amenities.length > 3 && (
+                        {theater.amenities.length > 5 && (
                             <span className="text-[10px] font-medium text-text-secondary bg-[#392828] px-2 py-1 rounded">
-                                +{theater.amenities.length - 3}
+                                +{theater.amenities.length - 5}
                             </span>
                         )}
                     </div>

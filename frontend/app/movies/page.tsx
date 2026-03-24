@@ -16,6 +16,7 @@ export default function Movies() {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All');
   const [selectedRating, setSelectedRating] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('Popularity');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>(movies as Movie[]);
 
@@ -121,11 +122,13 @@ export default function Movies() {
             indexOfLastMovie={indexOfLastMovie}
             sortBy={sortBy}
             setSortBy={setSortBy}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
           />
 
           {currentMovies.length > 0 ? (
             <>
-              <MovieGrid movies={currentMovies} />
+              <MovieGrid movies={currentMovies} viewMode={viewMode} />
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
