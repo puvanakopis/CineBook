@@ -65,7 +65,7 @@ const movies: MovieCardProps[] = [
 
 const MovieGrid: React.FC = () => {
     return (
-        <section className="w-full max-w-[1600px] mx-auto px-4 mt-8 md:px-10 lg:px-20 py-16">
+        <section className="w-full max-w-[1400px] mx-auto px-4 mt-8 md:px-10 lg:px-20 py-16">
             {/* Header & Filters */}
             <div className="flex flex-col md:flex-row items-end justify-between gap-4 mb-10">
                 <div>

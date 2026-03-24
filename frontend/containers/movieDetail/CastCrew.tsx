@@ -23,7 +23,7 @@ const CastCrew = ({ cast }: CastCrewProps) => {
 
   return (
     <section className="w-full mx-auto px-4 md:px-20 lg:px-30 py-12 relative z-20 bg-surface-dark">
-      <div className="max-w-[1600px] mx-auto">
+      <div className="max-w-[1400px] mx-auto">
         <h2 className="text-2xl font-bold text-white mb-8 border-l-4 border-primary pl-4">
           Cast & Crew
         </h2>

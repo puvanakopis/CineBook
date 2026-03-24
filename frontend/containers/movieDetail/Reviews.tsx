@@ -22,17 +22,7 @@ interface ReviewsProps {
     setIsSubmitting: (isSubmitting: boolean) => void;
 }
 
-const Reviews = ({
-    reviews,
-    movieTitle,
-    userRating,
-    reviewText,
-    isSubmitting,
-    onRatingSelect,
-    onReviewTextChange,
-    onSubmitReview,
-    setIsSubmitting
-}: ReviewsProps) => {
+const Reviews = ({ reviews, movieTitle, userRating, reviewText, isSubmitting, onRatingSelect, onReviewTextChange, onSubmitReview, setIsSubmitting }: ReviewsProps) => {
     const handleRatingSelect = (rating: number) => {
         onRatingSelect(rating);
     };
@@ -87,7 +77,7 @@ const Reviews = ({
 
     return (
         <section className="w-full mx-auto px-4 md:px-20 lg:px-30 py-12 relative z-20" id="reviews">
-            <div className="max-w-[1600px] mx-auto">
+            <div className="max-w-[1400px] mx-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <h2 className="text-3xl font-bold text-white border-l-4 border-primary pl-4">

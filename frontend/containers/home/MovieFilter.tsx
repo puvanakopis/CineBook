@@ -7,7 +7,7 @@ import { MdOutlineLocationOn } from "react-icons/md";
 
 const MovieFilter = () => {
     return (
-        <div className="w-full max-w-[1600px] mx-auto px-4 md:px-10 lg:px-20 -mt-8 relative z-20">
+        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 -mt-8 relative z-20">
             <div className="bg-surface-dark rounded-xl p-4 md:p-6 border border-[#392828] shadow-2xl flex flex-col lg:flex-row gap-4 lg:gap-6 items-center">
                 {/* Filters */}
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 w-full">

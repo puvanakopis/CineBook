@@ -1,6 +1,6 @@
 "use client";
 
-import TheaterHeader from "@/containers/theater/Header";
+import TheaterHeader from "@/containers/theater/TheaterHeader";
 
 export default function Theater() {
   return (
