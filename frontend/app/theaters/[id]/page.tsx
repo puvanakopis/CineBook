@@ -6,6 +6,8 @@ import { theaters } from "@/data/theater";
 import { Theater, Screen, MovieShowtime, TimeSlot } from "@/interface/theater";
 import TheaterHero from "@/containers/theaterDetail/TheaterHero";
 import TheaterShowtimes from "@/containers/theaterDetail/TheaterShowtimes";
+import TheaterInfo from "@/containers/theaterDetail/TheaterInfo";
+import LocationMap from "@/containers/theaterDetail/LocationMap";
 
 export default function TheaterDetailPage() {
     const params = useParams();
@@ -160,6 +162,20 @@ export default function TheaterDetailPage() {
                         />
                     </div>
 
+                    <div className="lg:w-1/3 space-y-8">
+                        <TheaterInfo
+                            description={theater.description}
+                            phone={theater.phone}
+                            email={theater.email}
+                            features={theater.features}
+                            amenities={theater.amenities}
+                        />
+                        <LocationMap
+                            address={theater.address}
+                            location={theater.location}
+                            name={theater.name}
+                        />
+                    </div>
                 </div>
             </div>
         </main>
