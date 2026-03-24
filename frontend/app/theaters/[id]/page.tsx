@@ -5,6 +5,7 @@ import { useState, useMemo } from "react";
 import { theaters } from "@/data/theater";
 import { Theater, Screen, MovieShowtime, TimeSlot } from "@/interface/theater";
 import TheaterHero from "@/containers/theaterDetail/TheaterHero";
+import TheaterShowtimes from "@/containers/theaterDetail/TheaterShowtimes";
 
 export default function TheaterDetailPage() {
     const params = useParams();
@@ -143,7 +144,24 @@ export default function TheaterDetailPage() {
                 amenities={theater.amenities}
             />
 
-      
+            <div className="max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-12 relative z-20">
+                <div className="flex flex-col lg:flex-row gap-8">
+                    <div className="lg:w-2/3">
+                        <TheaterShowtimes
+                            screens={theater.screens}
+                            selectedDate={selectedDate}
+                            allDates={allDates}
+                            onDateSelect={setSelectedDate}
+                            formatDateDisplay={formatDateDisplay}
+                            uniqueMovies={uniqueMovies}
+                            selectedMovieFilter={selectedMovieFilter}
+                            onMovieFilterChange={setSelectedMovieFilter}
+                            filteredMoviesWithShowtimes={filteredMoviesWithShowtimes}
+                        />
+                    </div>
+
+                </div>
+            </div>
         </main>
     );
 }
