@@ -7,18 +7,6 @@ import Retro from "@/public/movies/retro.jpg"
 import ThugLife from "@/public/movies/thug-life.jpg"
 import CaptainMiller from "@/public/movies/captain-miller.jpg"
 
-// Helper function to get upcoming dates (next 4 days)
-const getUpcomingDates = () => {
-    const dates = [];
-    const today = new Date();
-    for (let i = 0; i < 4; i++) {
-        const date = new Date(today);
-        date.setDate(today.getDate() + i);
-        dates.push(date.toISOString().split('T')[0]);
-    }
-    return dates;
-};
-
 export const movies = [
     {
         movie_id: 1,

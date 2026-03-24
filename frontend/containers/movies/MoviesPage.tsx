@@ -86,12 +86,10 @@ const MoviesPage = () => {
 
     const router = useRouter();
 
-    // Extract unique genres from movies data
     const allGenres = Array.from(
         new Set(movies.flatMap(movie => movie.genres))
     ).sort();
 
-    // Extract unique languages from movies data
     const allLanguages = ['All', ...Array.from(
         new Set(movies.flatMap(movie => movie.languages.split(',').map(lang => lang.trim())))
     ).sort()];
@@ -104,31 +102,26 @@ const MoviesPage = () => {
         { value: '0.8', label: '★☆☆☆☆' },
     ];
 
-    // Apply filters whenever filter criteria change
     useEffect(() => {
         let filtered = [...movies] as Movie[];
 
-        // Apply genre filter
         if (selectedGenres.length > 0) {
             filtered = filtered.filter(movie =>
                 movie.genres.some(genre => selectedGenres.includes(genre))
             );
         }
 
-        // Apply language filter
         if (selectedLanguage !== 'All') {
             filtered = filtered.filter(movie =>
                 movie.languages.toLowerCase().includes(selectedLanguage.toLowerCase())
             );
         }
 
-        // Apply rating filter
         if (selectedRating) {
             const minRating = parseFloat(selectedRating);
             filtered = filtered.filter(movie => movie.rating >= minRating);
         }
 
-        // Apply sorting
         filtered.sort((a, b) => {
             switch (sortBy) {
                 case 'Popularity':
@@ -148,10 +141,8 @@ const MoviesPage = () => {
         setCurrentPage(1);
     }, [selectedGenres, selectedLanguage, selectedRating, sortBy]);
 
-    // Calculate total pages
     const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
 
-    // Get current movies to display
     const indexOfLastMovie = currentPage * moviesPerPage;
     const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
     const currentMovies = filteredMovies.slice(indexOfFirstMovie, indexOfLastMovie);
@@ -164,72 +155,44 @@ const MoviesPage = () => {
         }
     };
 
-    // Generate page numbers for pagination
     const getPageNumbers = () => {
         const pageNumbers = [];
         const maxVisiblePages = 5;
 
         if (totalPages <= maxVisiblePages) {
-            // Show all pages
             for (let i = 1; i <= totalPages; i++) {
                 pageNumbers.push(i);
             }
         } else {
-            // Always show first page
             pageNumbers.push(1);
 
-            // Calculate start and end of visible pages
             let startPage = Math.max(2, currentPage - 1);
             let endPage = Math.min(totalPages - 1, currentPage + 1);
 
-            // Adjust if we're at the beginning
             if (currentPage <= 3) {
                 endPage = 4;
             }
 
-            // Adjust if we're at the end
             if (currentPage >= totalPages - 2) {
                 startPage = totalPages - 3;
             }
 
-            // Add ellipsis after first page if needed
             if (startPage > 2) {
                 pageNumbers.push('...');
             }
 
-            // Add middle pages
             for (let i = startPage; i <= endPage; i++) {
                 pageNumbers.push(i);
             }
 
-            // Add ellipsis before last page if needed
             if (endPage < totalPages - 1) {
                 pageNumbers.push('...');
             }
 
-            // Always show last page
             pageNumbers.push(totalPages);
         }
 
         return pageNumbers;
-    };
-
-    // Format rating stars
-    const renderRatingStars = (rating: number) => {
-        const stars = [];
-        const fullStars = Math.floor(rating / 2);
-        const hasHalfStar = (rating % 2) >= 1;
-
-        for (let i = 0; i < 5; i++) {
-            if (i < fullStars) {
-                stars.push(<MdOutlineStarPurple500 key={i} className="text-yellow-500" />);
-            } else if (i === fullStars && hasHalfStar) {
-                stars.push(<IoMdStarOutline key={i} className="text-yellow-500" />); // You can add a half-star icon here
-            } else {
-                stars.push(<IoMdStarOutline key={i} className="text-yellow-500" />);
-            }
-        }
-        return stars;
     };
 
     return (

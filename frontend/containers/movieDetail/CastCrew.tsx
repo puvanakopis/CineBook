@@ -1,17 +1,10 @@
 "use client";
 
-import Image, { StaticImageData } from "next/image";
-
-interface CastMember {
-  cast_id: string;
-  name: string;
-  role: string;
-  type: 'actor' | 'director' | 'composer';
-  imageUrl?: string | StaticImageData;
-}
+import Image from "next/image";
+import { Cast } from "@/interface/movie";
 
 interface CastCrewProps {
-  cast: CastMember[];
+  cast: Cast[];
 }
 
 const CastCrew = ({ cast }: CastCrewProps) => {
@@ -34,7 +27,7 @@ const CastCrew = ({ cast }: CastCrewProps) => {
         <h2 className="text-2xl font-bold text-white mb-8 border-l-4 border-primary pl-4">
           Cast & Crew
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+        <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-2">
           {cast.map((member) => (
             <div key={member.cast_id} className="text-center group cursor-pointer">
               <div className="w-24 h-24 mx-auto rounded-full overflow-hidden border-2 border-[#392828] group-hover:border-primary transition-colors mb-3 relative">

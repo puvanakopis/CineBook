@@ -1,83 +1,52 @@
 "use client";
 
 import { MdOutlineReviews } from "react-icons/md";
-import { useState, FormEvent } from 'react';
+import { FormEvent } from 'react';
 import { MdOutlineRateReview } from "react-icons/md";
 import { IoSendOutline } from "react-icons/io5";
 import { MdOutlineStar } from "react-icons/md";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
-
-interface Review {
-    review_id: string;
-    user_id: string;
-    author: string;
-    date: string;
-    rating: number;
-    content: string;
-    initials: string;
-    hasPremium?: boolean;
-    likes: number;
-    verified: boolean;
-}
+import { Review } from "@/interface/movie";
 
 interface ReviewsProps {
     reviews: Review[];
     movieTitle: string;
-    movieId: string;
+    userRating: number;
+    reviewText: string;
+    isSubmitting: boolean;
+    onRatingSelect: (rating: number) => void;
+    onReviewTextChange: (text: string) => void;
+    onSubmitReview: (rating: number, reviewText: string) => Promise<void>;
+    setIsSubmitting: (isSubmitting: boolean) => void;
 }
 
-const Reviews = ({ reviews, movieTitle }: ReviewsProps) => {
-    const [userRating, setUserRating] = useState<number>(0);
-    const [reviewText, setReviewText] = useState<string>('');
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [localReviews, setLocalReviews] = useState<Review[]>(reviews);
-
+const Reviews = ({
+    reviews,
+    movieTitle,
+    userRating,
+    reviewText,
+    isSubmitting,
+    onRatingSelect,
+    onReviewTextChange,
+    onSubmitReview,
+    setIsSubmitting
+}: ReviewsProps) => {
     const handleRatingSelect = (rating: number) => {
-        setUserRating(rating);
+        onRatingSelect(rating);
     };
 
     const handleSubmitReview = async (e: FormEvent) => {
         e.preventDefault();
 
-        if (!userRating || !reviewText.trim()) {
-            alert('Please provide both a rating and review text');
-            return;
-        }
-
-        if (reviewText.length < 50) {
-            alert('Review must be at least 50 characters long');
-            return;
-        }
-
         setIsSubmitting(true);
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            const newReview: Review = {
-                review_id: Date.now().toString(),
-                user_id: 'current-user',
-                author: 'You',
-                date: new Date().toISOString().split('T')[0],
-                rating: userRating,
-                content: reviewText,
-                initials: 'YU',
-                hasPremium: true,
-                likes: 0,
-                verified: true
-            };
-
-            setLocalReviews(prev => [newReview, ...prev]);
-
-            setUserRating(0);
-            setReviewText('');
-
+            await onSubmitReview(userRating, reviewText);
             alert('Review submitted successfully!');
         } catch (error) {
-            console.error('Error submitting review:', error);
-            alert('Failed to submit review. Please try again.');
+            alert(error instanceof Error ? error.message : 'Failed to submit review. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -165,7 +134,7 @@ const Reviews = ({ reviews, movieTitle }: ReviewsProps) => {
                                     <textarea
                                         id="review-text"
                                         value={reviewText}
-                                        onChange={(e) => setReviewText(e.target.value)}
+                                        onChange={(e) => onReviewTextChange(e.target.value)}
                                         placeholder="Share your thoughts on the movie, direction, and performances..."
                                         rows={5}
                                         className="w-full bg-[#221a1a] border border-[#392828] rounded-lg p-4 text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-text-secondary/50 resize-none"
@@ -212,14 +181,14 @@ const Reviews = ({ reviews, movieTitle }: ReviewsProps) => {
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="text-center">
                                     <div className="text-3xl font-bold text-white mb-1">
-                                        {localReviews.length}
+                                        {reviews.length}
                                     </div>
                                     <div className="text-text-secondary text-sm">Total Reviews</div>
                                 </div>
                                 <div className="text-center">
                                     <div className="text-3xl font-bold text-white mb-1">
-                                        {localReviews.length > 0
-                                            ? (localReviews.reduce((acc, review) => acc + review.rating, 0) / localReviews.length).toFixed(1)
+                                        {reviews.length > 0
+                                            ? (reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length).toFixed(1)
                                             : '0.0'
                                         }
                                     </div>
@@ -232,7 +201,7 @@ const Reviews = ({ reviews, movieTitle }: ReviewsProps) => {
                     {/* User Reviews Section */}
                     <div className="w-full lg:w-1/2">
                         <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#392828] scrollbar-track-transparent">
-                            {localReviews.map((review) => (
+                            {reviews.map((review) => (
                                 <div
                                     key={review.review_id}
                                     className="bg-surface-dark rounded-xl border border-[#392828] p-6 hover:border-primary/50 transition-colors"
@@ -290,7 +259,7 @@ const Reviews = ({ reviews, movieTitle }: ReviewsProps) => {
                         </div>
 
                         {/* No Reviews State */}
-                        {localReviews.length === 0 && (
+                        {reviews.length === 0 && (
                             <div className="bg-surface-dark rounded-xl border border-[#392828] p-8 text-center">
                                 <span className="material-symbols-outlined text-4xl text-text-secondary/50 mb-4">
                                     <MdOutlineReviews />

@@ -1,96 +1,30 @@
 "use client";
 
-import { useState } from 'react';
 import { MdOutlineCancel } from "react-icons/md";
 import { MdOutlineFastfood } from "react-icons/md";
 import { MdOutlineTheaterComedy } from "react-icons/md";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaParking } from "react-icons/fa";
 import { FaWheelchair } from "react-icons/fa";
-
-interface Showtime {
-    time: string;
-    price: number;
-    currency: string;
-    isSoldOut?: boolean;
-}
-
-interface DateShowtimes {
-    date: string;
-    times: Showtime[];
-}
-
-interface TheaterShowtimes {
-    standard: DateShowtimes[];
-    imax3d?: DateShowtimes[];
-}
-
-interface Theater {
-    theater_id: string;
-    name: string;
-    address: string;
-    features: {
-        mTicket: boolean;
-        foodBeverage: boolean;
-        parking: boolean;
-        wheelchair: boolean;
-    };
-    showtimes: TheaterShowtimes;
-}
+import { Theater, TimeSlot } from "@/interface/movie";
 
 interface ShowtimesProps {
     theaters: Theater[];
+    selectedDate: string;
+    allDates: string[];
+    onDateSelect: (date: string) => void;
+    formatDateDisplay: (dateString: string) => { day: string; month: string; weekday: string };
+    getShowtimesForDate: (theater: Theater, date: string) => { standard: TimeSlot[]; imax3d: TimeSlot[] };
 }
 
-const Showtimes = ({ theaters }: ShowtimesProps) => {
-    const [selectedDate, setSelectedDate] = useState<string>('2026-03-23');
-
-    const getAllDates = () => {
-        const dateSet = new Set<string>();
-        theaters.forEach(theater => {
-            theater.showtimes.standard.forEach(dateShowtime => {
-                dateSet.add(dateShowtime.date);
-            });
-            if (theater.showtimes.imax3d) {
-                theater.showtimes.imax3d.forEach(dateShowtime => {
-                    dateSet.add(dateShowtime.date);
-                });
-            }
-        });
-        return Array.from(dateSet).sort();
-    };
-
-    const allDates = getAllDates();
-
-    const formatDateDisplay = (dateString: string) => {
-        const date = new Date(dateString);
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
-
-        if (date.toDateString() === today.toDateString()) {
-            return { day: date.getDate().toString(), month: date.toLocaleString('default', { month: 'short' }).toUpperCase(), weekday: 'Today' };
-        } else if (date.toDateString() === tomorrow.toDateString()) {
-            return { day: date.getDate().toString(), month: date.toLocaleString('default', { month: 'short' }).toUpperCase(), weekday: 'Tomorrow' };
-        } else {
-            return {
-                day: date.getDate().toString(),
-                month: date.toLocaleString('default', { month: 'short' }).toUpperCase(),
-                weekday: date.toLocaleString('default', { weekday: 'short' })
-            };
-        }
-    };
-
-    const getShowtimesForDate = (theater: Theater, date: string) => {
-        const standardShowtimes = theater.showtimes.standard.find(d => d.date === date);
-        const imax3dShowtimes = theater.showtimes.imax3d?.find(d => d.date === date);
-
-        return {
-            standard: standardShowtimes?.times || [],
-            imax3d: imax3dShowtimes?.times || []
-        };
-    };
-
+const Showtimes = ({
+    theaters,
+    selectedDate,
+    allDates,
+    onDateSelect,
+    formatDateDisplay,
+    getShowtimesForDate
+}: ShowtimesProps) => {
     return (
         <section className="w-full mx-auto px-4 md:px-20 lg:px-30 py-12 relative z-20" id="showtimes">
             <div className="max-w-[1600px] mx-auto">
@@ -105,7 +39,7 @@ const Showtimes = ({ theaters }: ShowtimesProps) => {
                             return (
                                 <button
                                     key={date}
-                                    onClick={() => setSelectedDate(date)}
+                                    onClick={() => onDateSelect(date)}
                                     className={`flex flex-col items-center justify-center min-w-[80px] h-16 rounded-lg border transition-all ${selectedDate === date
                                         ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20'
                                         : 'bg-surface-dark text-text-secondary border-[#392828] hover:border-primary hover:text-white'
