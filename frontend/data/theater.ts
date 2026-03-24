@@ -1,19 +1,23 @@
-import LuxeCinemas from "@/public/movies/captain-miller.jpg";
-import SathyamCinemas from "@/public/movies/captain-miller.jpg";
-import KgCinemas from "@/public/movies/captain-miller.jpg";
-import VetriTheatres from "@/public/movies/captain-miller.jpg";
-import RohiniScreens from "@/public/movies/captain-miller.jpg";
-import AgsCinemas from "@/public/movies/captain-miller.jpg";
+import Coolie from "@/public/movies/goat.jpg"
 
-export const theaters = [
+import { Theater } from "@/interface/theater";
+
+
+export const theaters: Theater[] = [
     {
-        theater_id: "t1",
-        name: "Scope Cinemas",
-        address: "Colombo City Centre, Sir James Pieris Mawatha, Colombo 02",
+        theater_id: "1",
+        name: "Scope Cinemas - Colombo",
+        address: "No. 123, Galle Road, Colombo 03",
         city: "Colombo",
         chain: "Scope Cinemas",
-        rating: 9.5,
-        amenities: ["IMAX", "Dolby Atmos", "4K Laser", "Recliners", "Parking", "Food Court"],
+        rating: 4.6,
+        totalVotes: 10250,
+        amenities: ["IMAX", "Dolby Atmos", "4K Laser", "Recliners", "Parking", "Food Court", "Wheelchair Access"],
+        image: Coolie,
+        description: "Premium cinema experience with IMAX and luxury seating. Located in the heart of Colombo, Scope Cinemas offers state-of-the-art projection and sound systems for an unparalleled movie experience.",
+        phone: "+94 11 235 3355",
+        email: "info@scopecinemas.lk",
+        location: { lat: 6.9271, lng: 79.8612 },
         features: {
             mTicket: true,
             foodBeverage: true,
@@ -22,258 +26,539 @@ export const theaters = [
             dolby: true,
             imax: true,
             recliners: true,
-            fourK: true,
+            fourK: true
         },
-        image: LuxeCinemas,
-        description: "Premium cinema experience in the heart of Colombo with IMAX and Dolby Atmos. Located in Colombo City Centre, offering luxury recliners and gourmet dining options.",
+        screens: [
+            {
+                screen_id: "1-1",
+                name: "Standard Screen",
+                type: "Standard",
+                seatingCapacity: 250,
+                features: ["4K Digital", "Dolby Sound", "Comfort Seating"],
+                currentMovies: [
+                    {
+                        movie_id: 1,
+                        title: "Coolie",
+                        rating: 8.8,
+                        genres: ["Action", "Thriller"],
+                        duration: "2h 45m",
+                        certificate: "U/A",
+                        poster: Coolie,
+                        showtimes: [
+                            {
+                                date: "2026-03-23",
+                                times: [
+                                    { time: "10:00 AM", price: 1500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "1:30 PM", price: 1500, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "4:30 PM", price: 1500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "7:30 PM", price: 1800, currency: "LKR", isSoldOut: false, status: "fast-filling" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-24",
+                                times: [
+                                    { time: "10:00 AM", price: 1500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "1:30 PM", price: 1500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "4:30 PM", price: 1500, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "7:30 PM", price: 1800, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-25",
+                                times: [
+                                    { time: "10:00 AM", price: 1500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "1:30 PM", price: 1500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "4:30 PM", price: 1500, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "7:30 PM", price: 1800, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-26",
+                                times: [
+                                    { time: "10:00 AM", price: 1500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "1:30 PM", price: 1500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "4:30 PM", price: 1500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "7:30 PM", price: 1800, currency: "LKR", isSoldOut: true, status: "sold-out" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                screen_id: "1-2",
+                name: "IMAX 3D Screen",
+                type: "IMAX 3D",
+                seatingCapacity: 300,
+                features: ["IMAX", "3D", "Dolby Atmos", "4K Laser", "Recliners"],
+                currentMovies: [
+                    {
+                        movie_id: 1,
+                        title: "Coolie",
+                        rating: 8.8,
+                        genres: ["Action", "Thriller"],
+                        duration: "2h 45m",
+                        certificate: "U/A",
+                        poster: Coolie,
+                        showtimes: [
+                            {
+                                date: "2026-03-23",
+                                times: [
+                                    { time: "11:30 AM", price: 2500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:00 PM", price: 2500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "6:30 PM", price: 2800, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "9:30 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "fast-filling" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-24",
+                                times: [
+                                    { time: "11:30 AM", price: 2500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:00 PM", price: 2500, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "6:30 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "9:30 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-25",
+                                times: [
+                                    { time: "11:30 AM", price: 2500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:00 PM", price: 2500, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "6:30 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "9:30 PM", price: 2800, currency: "LKR", isSoldOut: true, status: "sold-out" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-26",
+                                times: [
+                                    { time: "11:30 AM", price: 2500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:00 PM", price: 2500, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "6:30 PM", price: 2800, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "9:30 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        movie_id: 3,
+                        title: "The GOAT",
+                        rating: 7.9,
+                        genres: ["Sci-Fi", "Action", "Adventure"],
+                        duration: "2h 59m",
+                        certificate: "U/A",
+                        poster: Coolie,
+                        showtimes: [
+                            {
+                                date: "2026-03-23",
+                                times: [
+                                    { time: "12:30 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "4:00 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "7:30 PM", price: 3000, currency: "LKR", isSoldOut: false, status: "fast-filling" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-24",
+                                times: [
+                                    { time: "12:30 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "4:00 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "7:30 PM", price: 3000, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-25",
+                                times: [
+                                    { time: "12:30 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "4:00 PM", price: 2800, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "7:30 PM", price: 3000, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     },
     {
-        theater_id: "t2",
-        name: "Majestic Cinemas",
-        address: "Majestic City, 10 Station Road, Colombo 04",
+        theater_id: "2",
+        name: "Liberty By Scope - Colombo",
+        address: "No. 45, Liberty Plaza, Colombo 03",
         city: "Colombo",
-        chain: "Majestic Cinemas",
-        rating: 9.0,
-        amenities: ["Dolby 7.1", "3D Screens", "Snacks", "Parking"],
-        features: {
-            mTicket: true,
-            foodBeverage: true,
-            parking: true,
-            wheelchair: true,
-            fourK: true,
-        },
-        image: SathyamCinemas,
-        description: "Popular cinema in Colombo known for its comfortable seating and excellent sound quality. Features multiple screens with 3D capabilities.",
-    },
-    {
-        theater_id: "t3",
-        name: "Liberty Cinemas",
-        address: "Liberty Plaza, R. A. De Mel Mawatha, Colombo 03",
-        city: "Colombo",
-        chain: "Independent",
-        rating: 8.7,
-        amenities: ["4K", "Digital Cinema", "Parking", "Snack Bar"],
-        features: {
-            mTicket: true,
-            foodBeverage: true,
-            parking: true,
-            wheelchair: false,
-            fourK: true,
-        },
-        image: KgCinemas,
-        description: "Classic cinema in Colombo with modern digital projection. Great location in the heart of the city with easy access.",
-    },
-    {
-        theater_id: "t4",
-        name: "Kandy City Center Cinema",
-        address: "Kandy City Centre, Kandy 20000",
-        city: "Kandy",
         chain: "Scope Cinemas",
-        rating: 9.2,
-        amenities: ["Dolby Atmos", "4K Laser", "Recliners", "Parking", "Food Court"],
-        features: {
-            mTicket: true,
-            foodBeverage: true,
-            parking: true,
-            wheelchair: true,
-            dolby: true,
-            recliners: true,
-            fourK: true,
-        },
-        image: VetriTheatres,
-        description: "Premium cinema in the cultural capital of Sri Lanka. Features Dolby Atmos sound and luxury recliners in the heart of Kandy.",
-    },
-    {
-        theater_id: "t5",
-        name: "Enderamulla Cinema",
-        address: "Negombo Road, Enderamulla, Wattala",
-        city: "Wattala",
-        chain: "Independent",
-        rating: 8.4,
-        amenities: ["Digital Screens", "Parking", "Snacks"],
+        rating: 4.3,
+        totalVotes: 7800,
+        amenities: ["Dolby Atmos", "4K Digital", "Parking", "Food Court"],
+        image: Coolie,
+        description: "Modern cinema in the heart of Colombo with comfortable seating and excellent sound quality. Perfect for a casual movie outing with friends and family.",
+        phone: "+94 11 257 4466",
+        email: "info@scopecinemas.lk",
+        location: { lat: 6.9145, lng: 79.8502 },
         features: {
             mTicket: true,
             foodBeverage: true,
             parking: true,
             wheelchair: false,
+            dolby: true,
+            imax: false,
+            recliners: false,
+            fourK: true
         },
-        image: RohiniScreens,
-        description: "Local favorite in the Western Province offering comfortable seating and great entertainment at affordable prices.",
+        screens: [
+            {
+                screen_id: "2-1",
+                name: "Standard Screen",
+                type: "Standard",
+                seatingCapacity: 180,
+                features: ["4K Digital", "Dolby Sound"],
+                currentMovies: [
+                    {
+                        movie_id: 1,
+                        title: "Coolie",
+                        rating: 8.8,
+                        genres: ["Action", "Thriller"],
+                        duration: "2h 45m",
+                        certificate: "U/A",
+                        poster: Coolie,
+                        showtimes: [
+                            {
+                                date: "2026-03-23",
+                                times: [
+                                    { time: "11:00 AM", price: 1300, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "2:00 PM", price: 1300, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "5:00 PM", price: 1300, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "8:00 PM", price: 1600, currency: "LKR", isSoldOut: false, status: "fast-filling" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-24",
+                                times: [
+                                    { time: "11:00 AM", price: 1300, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "2:00 PM", price: 1300, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "5:00 PM", price: 1300, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "8:00 PM", price: 1600, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-25",
+                                times: [
+                                    { time: "11:00 AM", price: 1300, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "2:00 PM", price: 1300, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "5:00 PM", price: 1300, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "8:00 PM", price: 1600, currency: "LKR", isSoldOut: true, status: "sold-out" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                screen_id: "2-2",
+                name: "IMAX 3D Screen",
+                type: "IMAX 3D",
+                seatingCapacity: 220,
+                features: ["IMAX 3D", "Dolby Atmos"],
+                currentMovies: [
+                    {
+                        movie_id: 2,
+                        title: "Good Bad Ugly",
+                        rating: 8.5,
+                        genres: ["Biography", "Action", "Drama"],
+                        duration: "2h 32m",
+                        certificate: "U/A",
+                        poster: Coolie,
+                        showtimes: [
+                            {
+                                date: "2026-03-23",
+                                times: [
+                                    { time: "12:00 PM", price: 2200, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:30 PM", price: 2200, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "7:00 PM", price: 2500, currency: "LKR", isSoldOut: false, status: "fast-filling" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-24",
+                                times: [
+                                    { time: "12:00 PM", price: 2200, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:30 PM", price: 2200, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "7:00 PM", price: 2500, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-25",
+                                times: [
+                                    { time: "12:00 PM", price: 2200, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "3:30 PM", price: 2200, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "7:00 PM", price: 2500, currency: "LKR", isSoldOut: true, status: "sold-out" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     },
     {
-        theater_id: "t6",
-        name: "Savoy Premier",
-        address: "Galle Road, Colombo 03",
+        theater_id: "3",
+        name: "PVR Cinemas - Colombo City Centre",
+        address: "No. 478, Colombo City Centre, Colombo 02",
         city: "Colombo",
-        chain: "Savoy",
-        rating: 9.1,
-        amenities: ["Premium Lounge", "Valet Parking", "Gourmet Food", "Dolby Atmos"],
+        chain: "PVR Cinemas",
+        rating: 4.5,
+        totalVotes: 8900,
+        amenities: ["IMAX", "Dolby Atmos", "4K Laser", "Recliners", "Parking", "Food Court"],
+        image: Coolie,
+        description: "Premium multiplex with state-of-the-art facilities. Experience movies like never before with our cutting-edge technology and luxurious seating options.",
+        phone: "+94 11 789 7897",
+        email: "info@pvrcinemas.lk",
+        location: { lat: 6.9275, lng: 79.8615 },
         features: {
             mTicket: true,
             foodBeverage: true,
             parking: true,
             wheelchair: true,
             dolby: true,
+            imax: true,
             recliners: true,
+            fourK: true
         },
-        image: AgsCinemas,
-        description: "Luxury cinema experience with premium lounge access and valet parking. Features gourmet dining options and superior sound quality.",
+        screens: [
+            {
+                screen_id: "3-1",
+                name: "Standard Screen",
+                type: "Standard",
+                seatingCapacity: 200,
+                features: ["4K Digital", "Dolby Atmos"],
+                currentMovies: [
+                    {
+                        movie_id: 2,
+                        title: "Good Bad Ugly",
+                        rating: 8.5,
+                        genres: ["Biography", "Action", "Drama"],
+                        duration: "2h 32m",
+                        certificate: "U/A",
+                        poster: Coolie,
+                        showtimes: [
+                            {
+                                date: "2026-03-23",
+                                times: [
+                                    { time: "10:30 AM", price: 1600, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "1:45 PM", price: 1600, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "5:00 PM", price: 1800, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "8:15 PM", price: 1800, currency: "LKR", isSoldOut: false, status: "fast-filling" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-24",
+                                times: [
+                                    { time: "10:30 AM", price: 1600, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "1:45 PM", price: 1600, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "5:00 PM", price: 1800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "8:15 PM", price: 1800, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-25",
+                                times: [
+                                    { time: "10:30 AM", price: 1600, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "1:45 PM", price: 1600, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "5:00 PM", price: 1800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "8:15 PM", price: 1800, currency: "LKR", isSoldOut: false, status: "fast-filling" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                screen_id: "3-2",
+                name: "IMAX Screen",
+                type: "IMAX",
+                seatingCapacity: 280,
+                features: ["IMAX", "Dolby Atmos", "4K Laser"],
+                currentMovies: [
+                    {
+                        movie_id: 1,
+                        title: "Coolie",
+                        rating: 8.8,
+                        genres: ["Action", "Thriller"],
+                        duration: "2h 45m",
+                        certificate: "U/A",
+                        poster: Coolie,
+                        showtimes: [
+                            {
+                                date: "2026-03-23",
+                                times: [
+                                    { time: "11:00 AM", price: 2400, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "2:30 PM", price: 2400, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "6:00 PM", price: 2600, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "9:30 PM", price: 2600, currency: "LKR", isSoldOut: true, status: "sold-out" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-24",
+                                times: [
+                                    { time: "11:00 AM", price: 2400, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "2:30 PM", price: 2400, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "6:00 PM", price: 2600, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "9:30 PM", price: 2600, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     },
     {
-        theater_id: "t7",
-        name: "Regal Cinema",
-        address: "Galle, Sri Lanka",
-        city: "Galle",
-        chain: "Independent",
-        rating: 8.2,
-        amenities: ["Digital Cinema", "Snacks", "Parking"],
-        features: {
-            mTicket: false,
-            foodBeverage: true,
-            parking: true,
-            wheelchair: false,
-        },
-        image: LuxeCinemas,
-        description: "Historic cinema in Galle offering modern digital projection. A favorite among locals and tourists alike.",
-    },
-    {
-        theater_id: "t8",
-        name: "Jaffna City Cinema",
-        address: "Hospital Road, Jaffna 40000",
-        city: "Jaffna",
-        chain: "Independent",
-        rating: 8.0,
-        amenities: ["Digital Screens", "Snacks", "Parking"],
-        features: {
-            mTicket: false,
-            foodBeverage: true,
-            parking: true,
-            wheelchair: false,
-        },
-        image: SathyamCinemas,
-        description: "Northern Sri Lanka's premier cinema featuring comfortable seating and quality entertainment.",
-    },
-    {
-        theater_id: "t9",
-        name: "Negombo Cineplex",
-        address: "Negombo, Sri Lanka",
-        city: "Negombo",
-        chain: "Independent",
-        rating: 8.5,
-        amenities: ["4K", "Dolby 7.1", "Parking", "Snack Bar"],
-        features: {
-            mTicket: true,
-            foodBeverage: true,
-            parking: true,
-            wheelchair: false,
-            fourK: true,
-        },
-        image: KgCinemas,
-        description: "Modern cinema in Negombo with 4K projection and good sound system. Popular among beach visitors.",
-    },
-    {
-        theater_id: "t10",
-        name: "Kurunegala Cinema",
-        address: "Kurunegala, Sri Lanka",
-        city: "Kurunegala",
-        chain: "Independent",
-        rating: 8.1,
-        amenities: ["Digital Screens", "Parking", "Snacks"],
-        features: {
-            mTicket: false,
-            foodBeverage: true,
-            parking: true,
-            wheelchair: false,
-        },
-        image: VetriTheatres,
-        description: "Entertainment hub in the North Western Province featuring comfortable seating and great movie experience.",
-    },
-    {
-        theater_id: "t11",
-        name: "Anuradhapura Cinema",
-        address: "Anuradhapura, Sri Lanka",
-        city: "Anuradhapura",
-        chain: "Independent",
-        rating: 7.9,
-        amenities: ["Digital Cinema", "Snacks"],
-        features: {
-            mTicket: false,
-            foodBeverage: true,
-            parking: false,
-            wheelchair: false,
-        },
-        image: AgsCinemas,
-        description: "Cultural city's primary cinema offering quality entertainment with modern digital projection.",
-    },
-    {
-        theater_id: "t12",
-        name: "Batticaloa Cineplex",
-        address: "Batticaloa, Sri Lanka",
-        city: "Batticaloa",
-        chain: "Independent",
-        rating: 8.0,
-        amenities: ["Digital Screens", "Parking", "Snacks"],
-        features: {
-            mTicket: false,
-            foodBeverage: true,
-            parking: true,
-            wheelchair: false,
-        },
-        image: LuxeCinemas,
-        description: "Eastern Province's modern cinema complex offering quality entertainment and comfortable seating.",
-    },
-    {
-        theater_id: "t13",
-        name: "MC Urban Entertainment",
-        address: "Marino Mall, Colombo 02",
+        theater_id: "4",
+        name: "IMAX Theater - Colombo City Centre",
+        address: "Level 3, Colombo City Centre, Colombo 02",
         city: "Colombo",
-        chain: "MC Urban",
-        rating: 9.3,
-        amenities: ["4K Laser", "Dolby Atmos", "Recliners", "Food Court", "Arcade Games"],
+        chain: "IMAX",
+        rating: 4.8,
+        totalVotes: 12500,
+        amenities: ["IMAX", "IMAX 3D", "Dolby Atmos", "4K Laser", "Recliners", "Premium Lounge"],
+        image: Coolie,
+        description: "Sri Lanka's premier IMAX theater with crystal clear projection and immersive sound. The ultimate destination for blockbuster movies with the largest screen in the country.",
+        phone: "+94 11 235 3355",
+        email: "imax@colombocitycentre.lk",
+        location: { lat: 6.9275, lng: 79.8615 },
         features: {
             mTicket: true,
             foodBeverage: true,
             parking: true,
             wheelchair: true,
+            imax: true,
             dolby: true,
             recliners: true,
-            fourK: true,
+            fourK: true
         },
-        image: LuxeCinemas,
-        description: "Complete entertainment destination in Colombo with luxury cinema, arcade games, and premium dining options.",
-    },
-    {
-        theater_id: "t14",
-        name: "Nuwara Eliya Cinema",
-        address: "Nuwara Eliya, Sri Lanka",
-        city: "Nuwara Eliya",
-        chain: "Independent",
-        rating: 7.8,
-        amenities: ["Digital Screens", "Snacks"],
-        features: {
-            mTicket: false,
-            foodBeverage: true,
-            parking: false,
-            wheelchair: false,
-        },
-        image: SathyamCinemas,
-        description: "Hill country's charming cinema offering entertainment with scenic views of the surrounding tea plantations.",
-    },
-    {
-        theater_id: "t15",
-        name: "Ratnapura City Cinema",
-        address: "Ratnapura, Sri Lanka",
-        city: "Ratnapura",
-        chain: "Independent",
-        rating: 8.0,
-        amenities: ["Digital Cinema", "Parking", "Snacks"],
-        features: {
-            mTicket: false,
-            foodBeverage: true,
-            parking: true,
-            wheelchair: false,
-        },
-        image: KgCinemas,
-        description: "Gem city's premier cinema featuring quality entertainment and comfortable viewing experience.",
-    },
+        screens: [
+            {
+                screen_id: "4-1",
+                name: "Standard Screen",
+                type: "Standard",
+                seatingCapacity: 150,
+                features: ["4K Digital", "Dolby Atmos"],
+                currentMovies: [
+                    {
+                        movie_id: 3,
+                        title: "The GOAT",
+                        rating: 7.9,
+                        genres: ["Sci-Fi", "Action", "Adventure"],
+                        duration: "2h 59m",
+                        certificate: "U/A",
+                        poster: Coolie,
+                        showtimes: [
+                            {
+                                date: "2026-03-23",
+                                times: [
+                                    { time: "10:00 AM", price: 1700, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "1:30 PM", price: 1700, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "5:00 PM", price: 1900, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "8:30 PM", price: 1900, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-24",
+                                times: [
+                                    { time: "10:00 AM", price: 1700, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "1:30 PM", price: 1700, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "5:00 PM", price: 1900, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "8:30 PM", price: 1900, currency: "LKR", isSoldOut: false, status: "fast-filling" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-25",
+                                times: [
+                                    { time: "10:00 AM", price: 1700, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "1:30 PM", price: 1700, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "5:00 PM", price: 1900, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "8:30 PM", price: 1900, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                screen_id: "4-2",
+                name: "IMAX 3D Screen",
+                type: "IMAX 3D",
+                seatingCapacity: 350,
+                features: ["IMAX", "IMAX 3D", "Dolby Atmos", "4K Laser"],
+                currentMovies: [
+                    {
+                        movie_id: 3,
+                        title: "The GOAT",
+                        rating: 7.9,
+                        genres: ["Sci-Fi", "Action", "Adventure"],
+                        duration: "2h 59m",
+                        certificate: "U/A",
+                        poster: Coolie,
+                        showtimes: [
+                            {
+                                date: "2026-03-23",
+                                times: [
+                                    { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "6:30 PM", price: 3000, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "10:00 PM", price: 3000, currency: "LKR", isSoldOut: false, status: "fast-filling" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-24",
+                                times: [
+                                    { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "6:30 PM", price: 3000, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "10:00 PM", price: 3000, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-25",
+                                times: [
+                                    { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false, status: "fast-filling" },
+                                    { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: true, status: "sold-out" },
+                                    { time: "6:30 PM", price: 3000, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "10:00 PM", price: 3000, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        movie_id: 1,
+                        title: "Coolie",
+                        rating: 8.8,
+                        genres: ["Action", "Thriller"],
+                        duration: "2h 45m",
+                        certificate: "U/A",
+                        poster: Coolie,
+                        showtimes: [
+                            {
+                                date: "2026-03-24",
+                                times: [
+                                    { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-25",
+                                times: [
+                                    { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: false, status: "fast-filling" }
+                                ]
+                            },
+                            {
+                                date: "2026-03-26",
+                                times: [
+                                    { time: "11:30 AM", price: 2800, currency: "LKR", isSoldOut: false, status: "available" },
+                                    { time: "3:00 PM", price: 2800, currency: "LKR", isSoldOut: true, status: "sold-out" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
 ];
