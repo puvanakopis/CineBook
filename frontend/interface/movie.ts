@@ -1,11 +1,50 @@
-import { StaticImageData } from 'next/image';
+import { StaticImageData } from "next/image";
+
+export interface TimeSlot {
+    time: string;
+    price: number;
+    currency: string;
+    isSoldOut: boolean;
+}
+
+export interface DateShowtime {
+    date: string;
+    times: TimeSlot[];
+}
+
+export interface Showtimes {
+    standard?: DateShowtime[];
+    imax3d?: DateShowtime[];
+}
+
+export interface TheaterFeatures {
+    mTicket: boolean;
+    foodBeverage: boolean;
+    parking: boolean;
+    wheelchair: boolean;
+    dolby?: boolean;
+    imax?: boolean;
+}
+
+export interface Theater {
+    theater_id: string;
+    name: string;
+    address: string;
+    city: string;
+    rating: number;
+    amenities: string[];
+    features: TheaterFeatures;
+    image: string | StaticImageData;
+    description: string;
+    showtimes: Showtimes;
+}
 
 export interface Cast {
     cast_id: string;
     name: string;
     role: string;
-    type: 'actor' | 'director' | 'composer';
-    imageUrl: StaticImageData;
+    type: string;
+    imageUrl: string | StaticImageData;
 }
 
 export interface Review {
@@ -21,39 +60,6 @@ export interface Review {
     verified: boolean;
 }
 
-export interface TimeSlot {
-    time: string;
-    price: number;
-    currency: string;
-    isSoldOut: boolean;
-}
-
-export interface ShowtimeDay {
-    date: string;
-    times: TimeSlot[];
-}
-
-export interface Showtimes {
-    standard?: ShowtimeDay[];
-    imax3d?: ShowtimeDay[];
-    [key: string]: ShowtimeDay[] | undefined;
-}
-
-export interface Theater {
-    theater_id: string;
-    name: string;
-    address: string;
-    features: {
-        mTicket: boolean;
-        foodBeverage: boolean;
-        parking: boolean;
-        wheelchair: boolean;
-        imax?: boolean;
-        dolby?: boolean;
-    };
-    showtimes: Showtimes;
-}
-
 export interface Movie {
     movie_id: number;
     title: string;
@@ -64,7 +70,7 @@ export interface Movie {
     languages: string;
     formats: string;
     synopsis: string;
-    poster: StaticImageData;
+    poster: string | StaticImageData;
     trailerUrl: string;
     theaters: Theater[];
     cast: Cast[];
