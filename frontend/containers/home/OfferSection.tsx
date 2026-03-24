@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React from "react";
 import { IoMdArrowForward } from "react-icons/io";
 
@@ -48,10 +49,12 @@ const OfferSection: React.FC = () => {
                             key={index}
                             className="relative rounded-xl overflow-hidden h-64 group cursor-pointer"
                         >
-                            <img
+                            <Image
                                 src={offer.imageUrl}
                                 alt={offer.title}
-                                className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
+                                width={500}
+                                height={256}
+                                className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
                             />
                             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent"></div>
                             <div className="relative z-10 h-full flex flex-col justify-center p-8 max-w-lg">

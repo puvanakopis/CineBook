@@ -18,7 +18,7 @@ const MovieFilter = () => {
                         </span>
                         <div className="relative">
                             <select className="w-full appearance-none rounded-lg bg-input-bg border-none text-white h-12 px-4 pr-10 focus:ring-2 focus:ring-primary transition-all cursor-pointer font-medium">
-                                <option>Today, 24 Oct</option>
+                                <option >Today, 24 Oct</option>
                                 <option>Tomorrow, 25 Oct</option>
                                 <option>Sat, 26 Oct</option>
                                 <option>Sun, 27 Oct</option>

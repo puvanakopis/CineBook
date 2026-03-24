@@ -6,19 +6,20 @@ import { MdOutlineMovieFilter } from "react-icons/md";
 import { IoMdSearch } from "react-icons/io";
 import { usePathname } from "next/navigation";
 
-export default function Navbar() {
+const Navbar = () => {
     const [search, setSearch] = useState("");
-    const pathname = usePathname(); 
+    const pathname = usePathname();
 
     const navLinks = [
         { href: "/", label: "Home" },
         { href: "/movies", label: "Movies" },
+        { href: "/theaters", label: "Theaters" },
         { href: "/about", label: "About" },
         { href: "/contact", label: "Contact" },
     ];
 
     return (
-        <header className="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-[#392828] bg-[#181111]/95 backdrop-blur-sm px-4 mx-16 lg:px-10 py-3">
+        <header className="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-[#392828] bg-[#181111]/95 backdrop-blur-sm px-10 lg:px-20 py-3">
             {/* Left section */}
             <div className="flex items-center gap-8">
                 {/* Logo */}
@@ -37,11 +38,10 @@ export default function Navbar() {
                         <Link
                             key={link.href}
                             href={link.href}
-                            className={`text-base font-medium leading-normal transition-colors ${
-                                pathname === link.href
-                                    ? "text-[#ec1313] font-bold"
-                                    : "text-white hover:text-[#ec1313]"
-                            }`}
+                            className={`text-base font-medium leading-normal transition-colors ${pathname === link.href
+                                ? "text-[#ec1313] font-bold"
+                                : "text-white hover:text-[#ec1313]"
+                                }`}
                         >
                             {link.label}
                         </Link>
@@ -73,18 +73,13 @@ export default function Navbar() {
                 {/* Auth links */}
                 <Link
                     href="/login"
-                    className="hidden sm:block text-white hover:text-[#ec1313] transition-colors text-base font-medium"
-                >
-                    Login
-                </Link>
-
-                <Link
-                    href="/register"
                     className="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-6 bg-[#ec1313] hover:bg-red-700 transition-colors text-white text-base font-bold shadow-lg hover:shadow-[#ec1313]/20"
                 >
-                    Register
+                    Login
                 </Link>
             </div>
         </header>
     );
 }
+
+export default Navbar;

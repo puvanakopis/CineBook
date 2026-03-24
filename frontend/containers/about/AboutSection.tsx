@@ -58,10 +58,9 @@ const AboutSection: React.FC = () => {
                     </div>
 
                     {/* Right */}
-                    {/* Right */}
                     <div className="relative h-[300px] lg:h-auto bg-[#1a1111] overflow-hidden">
                         {/* Background gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-surface-dark via-transparent to-transparent lg:bg-gradient-to-r" />
+                        <div className="absolute inset-0 bg-surface-dark" />
 
                         {/* Content */}
                         <div className="relative z-10 h-full flex flex-col justify-end p-8 gap-6">
