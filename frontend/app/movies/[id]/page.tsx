@@ -2,10 +2,10 @@
 
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import MovieHero from "@/containers/movieDetail/MovieHero";
-import Showtimes from "@/containers/movieDetail/Showtimes";
-import CastCrew from "@/containers/movieDetail/CastCrew";
-import Reviews from "@/containers/movieDetail/Reviews";
+import MovieHero from "./_components/MovieHero";
+import Showtimes from "./_components/Showtimes";
+import CastCrew from "./_components/CastCrew";
+import Reviews from "./_components/Reviews";
 import { movies } from "@/data/movie";
 import { Review, Theater, TimeSlot } from "@/interface/movie";
 

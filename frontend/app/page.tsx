@@ -1,15 +1,15 @@
-import HeroSection from "@/containers/home/HeroSection";
-import MovieFilter from "@/containers/home/MovieFilter";
-import MovieGrid from "@/containers/home/MovieGrid";
-import OfferSection from "@/containers/home/OfferSection";
+import HomeHeroSection from "./_components/HomeHeroSection";
+import HomeMovieFilter from "./_components/HomeMovieFilter";
+import HomeMovieGrid from "./_components/HomeMovieGrid";
+import HomeOfferSection from "./_components/HomeOfferSection";
 
 export default function Home() {
   return (
     <div>
-      <HeroSection />
-      <MovieFilter />
-      <MovieGrid />
-      <OfferSection />
+      <HomeHeroSection />
+      <HomeMovieFilter />
+      <HomeMovieGrid />
+      <HomeOfferSection />
     </div>
   );
 }
