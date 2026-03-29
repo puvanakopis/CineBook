@@ -2,7 +2,6 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MdOutlineCheckCircleOutline } from "react-icons/md";
 
 import PaymentHeader from "./_components/PaymentHeader";
 import PaymentForm from "./_components/PaymentForm";
@@ -77,32 +76,16 @@ function PaymentContent() {
 
         // Mock API call delay
         setTimeout(() => {
-            setIsProcessing(false);
             if (Math.random() > 0.1) {
-                setPaymentStatus("success");
+                router.push(`/tickets?data=${encodeURIComponent(JSON.stringify(orderData))}`);
             } else {
+                setIsProcessing(false);
                 setPaymentStatus("error");
             }
         }, 2500);
     };
 
-    if (paymentStatus === "success") {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-                <MdOutlineCheckCircleOutline className="w-24 h-24 text-green-500 mb-6" />
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Payment Successful!</h2>
-                <p className="text-[var(--color-text-secondary)] mb-8 max-w-md">
-                    Your tickets have been booked successfully. A confirmation email will be sent shortly. Enjoy the movie!
-                </p>
-                <button
-                    onClick={() => router.push('/')}
-                    className="bg-[var(--color-primary)] hover:bg-[#d01010] text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-lg"
-                >
-                    Return to Home
-                </button>
-            </div>
-        );
-    }
+
 
     if (!orderData || orderData.seats.length === 0) {
         return (
