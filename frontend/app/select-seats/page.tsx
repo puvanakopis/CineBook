@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import SelectSeatsHeader from "./_components/SelectSeatsHeader";
 import SeatSelection from "./_components/SelectSeats";
 import MovieInfoPanel from "./_components/SelectMovie";
@@ -74,6 +75,8 @@ const initialSeats: Seat[] = [
 export default function SelectSeatsPage() {
     const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
 
+    const router = useRouter();
+
     const standardCount = selectedSeats.filter(seat => seat.type === "standard").length;
     const vipCount = selectedSeats.filter(seat => seat.type === "vip").length;
     const subtotal = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
@@ -85,8 +88,15 @@ export default function SelectSeatsPage() {
     };
 
     const handleProceedToPay = () => {
-        // Handle payment navigation
-        console.log("Proceeding to payment with seats:", selectedSeats);
+        if(selectedSeats.length === 0) return;
+        const orderData = {
+            seats: selectedSeats,
+            subtotal,
+            convenienceFee,
+            total
+        };
+        const searchString = encodeURIComponent(JSON.stringify(orderData));
+        router.push(`/payment?data=${searchString}`);
     };
 
     return (
