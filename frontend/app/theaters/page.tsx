@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import TheaterHeader from "@/containers/theaters/TheaterHeader";
-import TheaterFilters from "@/containers/theaters/TheaterFilters";
-import TheaterGrid from "@/containers/theaters/TheaterGrid";
-import SortControls from "@/containers/theaters/SortControls";
-import Pagination from "@/containers/theaters/Pagination";
-import EmptyState from "@/containers/theaters/EmptyState";
+import TheaterHeader from "./_components/TheaterHeader";
+import TheaterFilters from "./_components/TheaterFilters";
+import TheaterGrid from "./_components/TheaterGrid";
+import TheaterSortControls from "./_components/TheaterSortControls";
+import Pagination from "./_components/Pagination";
+import TheaterEmptyState from "./_components/TheaterEmptyState";
 import { theaters } from '@/data/theater';
 import { Theater } from '@/interface/theater';
 
@@ -109,7 +109,7 @@ export default function Theaters() {
         />
 
         <div className="flex-1">
-          <SortControls
+          <TheaterSortControls
             filteredTheatersCount={filteredTheaters.length}
             indexOfFirstTheater={indexOfFirstTheater}
             indexOfLastTheater={indexOfLastTheater}
@@ -129,7 +129,7 @@ export default function Theaters() {
               />
             </>
           ) : (
-            <EmptyState onClearFilters={handleClearFilters} />
+            <TheaterEmptyState onClearFilters={handleClearFilters} />
           )}
         </div>
       </div>

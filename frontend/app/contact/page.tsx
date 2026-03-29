@@ -1,10 +1,10 @@
-import HeroSection from "@/containers/contact/HeroSection";
-import ContactSection from "@/containers/contact/ContactSection";
+import ContactHeroSection from "./_components/ContactHeroSection";
+import ContactSection from "./_components/ContactSection";
 
 export default function Contact() {
   return (
     <div>
-      <HeroSection />
+      <ContactHeroSection />
       <ContactSection />
     </div>
   );

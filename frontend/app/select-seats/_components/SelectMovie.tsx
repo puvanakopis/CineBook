@@ -12,7 +12,7 @@ interface Seat {
     isAvailable: boolean;
 }
 
-interface MovieInfoPanelProps {
+interface SelectMovieProps {
     posterUrl: string;
     title: string;
     genre: string;
@@ -27,7 +27,7 @@ interface MovieInfoPanelProps {
     onProceedToPay: () => void;
 }
 
-const MovieInfoPanel: React.FC<MovieInfoPanelProps> = ({
+const SelectMovie: React.FC<SelectMovieProps> = ({
     posterUrl,
     title,
     genre,
@@ -150,4 +150,4 @@ const MovieInfoPanel: React.FC<MovieInfoPanelProps> = ({
     );
 };
 
-export default MovieInfoPanel;
+export default SelectMovie;

@@ -1,10 +1,10 @@
 'use client';
 
-interface EmptyStateProps {
+interface TheaterEmptyStateProps {
     onClearFilters: () => void;
 }
 
-const EmptyState = ({ onClearFilters }: EmptyStateProps) => {
+const TheaterEmptyState = ({ onClearFilters }: TheaterEmptyStateProps) => {
     return (
         <div className="text-center py-20">
             <p className="text-text-secondary text-lg">No theaters found matching your criteria.</p>
@@ -18,4 +18,4 @@ const EmptyState = ({ onClearFilters }: EmptyStateProps) => {
     );
 };
 
-export default EmptyState;
+export default TheaterEmptyState;

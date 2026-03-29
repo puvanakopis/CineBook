@@ -4,30 +4,30 @@ import { MdOutlineExpandMore } from "react-icons/md";
 import { MdGridView } from "react-icons/md";
 import { HiOutlineViewList } from "react-icons/hi";
 
-interface SortControlsProps {
-    filteredTheatersCount: number;
-    indexOfFirstTheater: number;
-    indexOfLastTheater: number;
+interface MovieSortControlsProps {
+    filteredMoviesCount: number;
+    indexOfFirstMovie: number;
+    indexOfLastMovie: number;
     sortBy: string;
     setSortBy: (sort: string) => void;
     viewMode: 'grid' | 'list';
     setViewMode: (mode: 'grid' | 'list') => void;
 }
 
-const SortControls = ({
-    filteredTheatersCount,
-    indexOfFirstTheater,
-    indexOfLastTheater,
+const MovieSortControls = ({
+    filteredMoviesCount,
+    indexOfFirstMovie,
+    indexOfLastMovie,
     sortBy,
     setSortBy,
     viewMode,
     setViewMode,
-}: SortControlsProps) => {
+}: MovieSortControlsProps) => {
     return (
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 bg-surface-dark p-4 rounded-xl border border-[#392828]">
             <span className="text-text-secondary text-sm font-medium">
-                Showing <strong className="text-white">{filteredTheatersCount > 0 ? indexOfFirstTheater + 1 : 0}-{Math.min(indexOfLastTheater, filteredTheatersCount)}</strong> of{' '}
-                <strong className="text-white">{filteredTheatersCount}</strong> theaters
+                Showing <strong className="text-white">{filteredMoviesCount > 0 ? indexOfFirstMovie + 1 : 0}-{Math.min(indexOfLastMovie, filteredMoviesCount)}</strong> of{' '}
+                <strong className="text-white">{filteredMoviesCount}</strong> movies
             </span>
             <div className="flex items-center gap-3">
                 <span className="text-text-secondary text-sm hidden sm:inline">Sort by:</span>
@@ -38,8 +38,7 @@ const SortControls = ({
                         onChange={(e) => setSortBy(e.target.value)}
                     >
                         <option>Popularity</option>
-                        <option>Name (A-Z)</option>
-                        <option>Name (Z-A)</option>
+                        <option>Release Date</option>
                         <option>Rating (High to Low)</option>
                         <option>Rating (Low to High)</option>
                     </select>
@@ -70,4 +69,4 @@ const SortControls = ({
     );
 };
 
-export default SortControls;
+export default MovieSortControls;

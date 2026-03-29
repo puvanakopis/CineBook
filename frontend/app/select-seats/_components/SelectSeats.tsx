@@ -10,13 +10,13 @@ interface Seat {
     isAvailable: boolean;
 }
 
-interface SeatSelectionProps {
+interface SelectSeatsProps {
     seats: Seat[];
     selectedSeats: Seat[];
     onSeatSelect: (seats: Seat[]) => void;
 }
 
-const SeatSelection: React.FC<SeatSelectionProps> = ({
+const SelectSeats: React.FC<SelectSeatsProps> = ({
     seats,
     selectedSeats,
     onSeatSelect,
@@ -185,4 +185,4 @@ const SeatSelection: React.FC<SeatSelectionProps> = ({
     );
 };
 
-export default SeatSelection;
+export default SelectSeats;

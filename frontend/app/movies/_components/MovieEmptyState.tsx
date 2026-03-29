@@ -1,10 +1,10 @@
 'use client';
 
-interface EmptyStateProps {
+interface MovieEmptyStateProps {
     onClearFilters: () => void;
 }
 
-const EmptyState = ({ onClearFilters }: EmptyStateProps) => {
+const MovieEmptyState = ({ onClearFilters }: MovieEmptyStateProps) => {
     return (
         <div className="text-center py-20">
             <p className="text-text-secondary text-lg">No movies found matching your criteria.</p>
@@ -18,4 +18,4 @@ const EmptyState = ({ onClearFilters }: EmptyStateProps) => {
     );
 };
 
-export default EmptyState;
+export default MovieEmptyState;

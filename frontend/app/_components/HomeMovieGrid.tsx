@@ -63,7 +63,7 @@ const movies: MovieCardProps[] = [
     }
 ];
 
-const MovieGrid: React.FC = () => {
+const HomeMovieGrid = () => {
     return (
         <section className="w-full max-w-[1400px] mx-auto px-4 mt-8 md:px-10 lg:px-20 py-16">
             {/* Header & Filters */}
@@ -114,4 +114,4 @@ const MovieGrid: React.FC = () => {
     );
 };
 
-export default MovieGrid;
+export default HomeMovieGrid;

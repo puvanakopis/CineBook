@@ -9,7 +9,7 @@ import CaptainMiller from "@/public/movies/captain-miller.jpg"
 
 export const movies = [
     {
-        movie_id: 1,
+        movie_id: "1",
         title: "Coolie",
         rating: 8.8,
         genres: ["Action", "Thriller"],
@@ -431,7 +431,7 @@ export const movies = [
         ]
     },
     {
-        movie_id: 2,
+        movie_id: "2",
         title: "Good Bad Ugly",
         rating: 8.5,
         genres: ["Biography", "Action", "Drama"],
@@ -675,7 +675,7 @@ export const movies = [
         ]
     },
     {
-        movie_id: 3,
+        movie_id: "3",
         title: "The GOAT",
         rating: 7.9,
         genres: ["Sci-Fi", "Action", "Adventure"],
@@ -991,7 +991,7 @@ export const movies = [
         ]
     },
     {
-        movie_id: 4,
+        movie_id: "4",
         title: "Madharasi",
         rating: 8.5,
         genres: ["Action", "Drama", "Period"],
@@ -1211,7 +1211,7 @@ export const movies = [
         ]
     },
     {
-        movie_id: 5,
+        movie_id: "5",
         title: "Vidaamuyarchi",
         rating: 8.2,
         genres: ["Action", "Thriller", "Corporate"],
@@ -1383,7 +1383,7 @@ export const movies = [
         ]
     },
     {
-        movie_id: 6,
+        movie_id: "6",
         title: "Retro",
         rating: 7.8,
         genres: ["Drama", "Action", "Musical"],
@@ -1495,7 +1495,7 @@ export const movies = [
         reviews: []
     },
     {
-        movie_id: 7,
+        movie_id: "7",
         title: "Captain Miller",
         rating: 8.3,
         genres: ["Sports", "Drama", "Biography"],
@@ -1607,7 +1607,7 @@ export const movies = [
         reviews: []
     },
     {
-        movie_id: 8,
+        movie_id: "8",
         title: "Thug Life",
         rating: 7.5,
         genres: ["Fantasy", "Action", "Adventure"],

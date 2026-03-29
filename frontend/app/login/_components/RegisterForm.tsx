@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { FcGoogle } from "react-icons/fc";
 import { IoArrowForward } from "react-icons/io5";
 
 export default function RegisterForm() {
@@ -58,12 +58,7 @@ export default function RegisterForm() {
             {/* Social */}
             <div className="grid gap-4">
                 <button className="h-12 flex items-center justify-center gap-3 bg-white dark:bg-[#392828] rounded-lg text-sm font-bold">
-                    <Image
-                        src="https://www.svgrepo.com/show/475656/google-color.svg"
-                        alt="Google"
-                        width={20}
-                        height={20}
-                    />
+                    <FcGoogle size={24} />
                     Google
                 </button>
             </div>

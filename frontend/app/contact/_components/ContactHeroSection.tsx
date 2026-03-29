@@ -1,14 +1,18 @@
 import React from "react";
+import backgroundImage from "@/public/backgroundImage.png";
 
-const HeroSection: React.FC = () => {
+const ContactHeroSection = () => {
   return (
     <section className="relative w-full h-[400px] flex items-center justify-center overflow-hidden">
       {/* Background */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center"
         style={{
-          backgroundImage:
-            'linear-gradient(to bottom, rgba(24, 17, 17, 0.3) 0%, rgba(24, 17, 17, 1) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAK49iY6bGVGGnvRJupkSyJazYWcBODgGWLZGl234FWP4n932kMbFWNdIDFCbUgCDL3IHtVUtev2b25IdJOJNrkGgi-TXB8TB8QTTv0Kl-IFIrSS5UKtOf6IIWVKXJQRV4qWzVqPQw7HTut9n6-nt34b2bMLwPKA-Zt2wNgRCcnjS8_dNdKyfJiTCkEBSctkVzVsR6U7ZISbKTsUWtL04LCLEsyLCsXt2zK0TF0b64mJ95C-DZsillERnc_KSXWYG88w_MsHqMJXm_9")',
+          backgroundImage: `linear-gradient(
+                        to bottom,
+                        rgba(24, 17, 17, 0.3) 0%,
+                        rgba(24, 17, 17, 1) 100%
+                    ), url(${backgroundImage.src})`,
         }}
         aria-label="Dark moody cinema theater interior with red velvet seats"
       >
@@ -30,4 +34,4 @@ const HeroSection: React.FC = () => {
   );
 };
 
-export default HeroSection;
+export default ContactHeroSection;

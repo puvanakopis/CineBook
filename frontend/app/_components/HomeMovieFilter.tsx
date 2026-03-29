@@ -5,7 +5,7 @@ import { MdOutlineCalendarToday } from "react-icons/md";
 import { MdOutlineMovie } from "react-icons/md";
 import { MdOutlineLocationOn } from "react-icons/md";
 
-const MovieFilter = () => {
+const HomeMovieFilter = () => {
     return (
         <div className="w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 -mt-8 relative z-20">
             <div className="bg-surface-dark rounded-xl p-4 md:p-6 border border-[#392828] shadow-2xl flex flex-col lg:flex-row gap-4 lg:gap-6 items-center">
@@ -84,4 +84,4 @@ const MovieFilter = () => {
     );
 };
 
-export default MovieFilter;
+export default HomeMovieFilter;

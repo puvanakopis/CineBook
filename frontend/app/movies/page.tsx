@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import MovieHeader from "@/containers/movies/MovieHeader";
-import MovieFilters from "@/containers/movies/MovieFilters";
-import MovieGrid from "@/containers/movies/MovieGrid";
-import SortControls from "@/containers/movies/SortControls";
-import Pagination from "@/containers/movies/Pagination";
-import EmptyState from "@/containers/movies/EmptyState";
+import { useState, useMemo } from "react";
+import MovieHeader from "./_components/MovieHeader";
+import MovieFilters from "./_components/MovieFilters";
+import MovieGrid from "./_components/MovieGrid";
+import MovieSortControls from "./_components/MovieSortControls";
+import Pagination from "./_components/Pagination";
+import EmptyState from "./_components/MovieEmptyState";
 import { movies } from '@/data/movie';
 import { Movie } from '@/interface/movie';
 
@@ -18,7 +18,6 @@ export default function Movies() {
   const [sortBy, setSortBy] = useState<string>('Popularity');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [filteredMovies, setFilteredMovies] = useState<Movie[]>(movies as Movie[]);
 
   const moviesPerPage = 9;
 
@@ -36,27 +35,22 @@ export default function Movies() {
     { value: '0.8', label: '★☆☆☆☆' },
   ];
 
-  useEffect(() => {
-    let filtered = [...movies] as Movie[];
+  const filteredMovies = useMemo<Movie[]>(() => {
+    const filtered = movies.slice();
 
-    if (selectedGenres.length > 0) {
-      filtered = filtered.filter(movie =>
-        movie.genres.some(genre => selectedGenres.includes(genre))
-      );
-    }
+    const genreFiltered = selectedGenres.length > 0
+      ? filtered.filter(movie => movie.genres.some(genre => selectedGenres.includes(genre)))
+      : filtered;
 
-    if (selectedLanguage !== 'All') {
-      filtered = filtered.filter(movie =>
-        movie.languages.toLowerCase().includes(selectedLanguage.toLowerCase())
-      );
-    }
+    const languageFiltered = selectedLanguage !== 'All'
+      ? genreFiltered.filter(movie => movie.languages.toLowerCase().includes(selectedLanguage.toLowerCase()))
+      : genreFiltered;
 
-    if (selectedRating) {
-      const minRating = parseFloat(selectedRating);
-      filtered = filtered.filter(movie => movie.rating >= minRating);
-    }
+    const ratingFiltered = selectedRating
+      ? languageFiltered.filter(movie => movie.rating >= parseFloat(selectedRating))
+      : languageFiltered;
 
-    filtered.sort((a, b) => {
+    return ratingFiltered.sort((a, b) => {
       switch (sortBy) {
         case 'Popularity':
           return b.rating - a.rating;
@@ -70,12 +64,10 @@ export default function Movies() {
           return 0;
       }
     });
-
-    setFilteredMovies(filtered);
-    setCurrentPage(1);
   }, [selectedGenres, selectedLanguage, selectedRating, sortBy]);
 
   const handleGenreToggle = (genre: string) => {
+    setCurrentPage(1);
     if (selectedGenres.includes(genre)) {
       setSelectedGenres(selectedGenres.filter(g => g !== genre));
     } else {
@@ -83,10 +75,26 @@ export default function Movies() {
     }
   };
 
+  const handleLanguageChange = (language: string) => {
+    setSelectedLanguage(language);
+    setCurrentPage(1);
+  };
+
+  const handleRatingChange = (rating: string) => {
+    setSelectedRating(rating);
+    setCurrentPage(1);
+  };
+
+  const handleDateChange = (date: string) => {
+    setSelectedDate(date);
+    setCurrentPage(1);
+  };
+
   const handleClearFilters = () => {
     setSelectedGenres([]);
     setSelectedLanguage('All');
     setSelectedRating('');
+    setCurrentPage(1);
   };
 
   const indexOfLastMovie = currentPage * moviesPerPage;
@@ -96,12 +104,12 @@ export default function Movies() {
 
   const filterProps = {
     selectedDate,
-    setSelectedDate,
+    setSelectedDate: handleDateChange,
     selectedGenres,
     selectedLanguage,
-    setSelectedLanguage,
+    setSelectedLanguage: handleLanguageChange,
     selectedRating,
-    setSelectedRating,
+    setSelectedRating: handleRatingChange,
     allGenres,
     allLanguages,
     ratings,
@@ -116,7 +124,7 @@ export default function Movies() {
         <MovieFilters {...filterProps} />
 
         <div className="flex-1">
-          <SortControls
+          <MovieSortControls
             filteredMoviesCount={filteredMovies.length}
             indexOfFirstMovie={indexOfFirstMovie}
             indexOfLastMovie={indexOfLastMovie}

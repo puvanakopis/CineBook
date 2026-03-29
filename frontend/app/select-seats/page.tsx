@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Header from "@/containers/seat-selection/Header";
-import SeatSelection from "@/containers/seat-selection/SeatSelection";
-import MovieInfoPanel from "@/containers/seat-selection/MovieInfoPanel";
+import SelectSeatsHeader from "./_components/SelectSeatsHeader";
+import SeatSelection from "./_components/SelectSeats";
+import MovieInfoPanel from "./_components/SelectMovie";
 
 interface Seat {
     id: string;
@@ -91,7 +91,7 @@ export default function SelectSeatsPage() {
 
     return (
         <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-8">
-            <Header
+            <SelectSeatsHeader
                 movie="Cyber Chronicles"
                 theater="Cineplex Downtown"
                 hall="4 - IMAX"

@@ -4,18 +4,10 @@ import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { IoMdStarOutline } from "react-icons/io";
 import { MdOutlineSchedule } from "react-icons/md";
+import { Movie } from '@/interface/movie';
 
 interface MovieCardProps {
-    movie: {
-        movie_id: string;
-        title: string;
-        poster: string;
-        rating: number;
-        genres: string[];
-        duration: string;
-        languages: string;
-        formats: string;
-    };
+    movie: Movie;
     viewMode: 'grid' | 'list';
 }
 

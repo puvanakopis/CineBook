@@ -30,13 +30,13 @@ export interface Theater {
     theater_id: string;
     name: string;
     address: string;
-    city: string;
-    rating: number;
-    amenities: string[];
     features: TheaterFeatures;
-    image: string | StaticImageData;
-    description: string;
     showtimes: Showtimes;
+    city?: string;
+    rating?: number;
+    amenities?: string[];
+    image?: string | StaticImageData;
+    description?: string;
 }
 
 export interface Cast {
@@ -61,7 +61,7 @@ export interface Review {
 }
 
 export interface Movie {
-    movie_id: number;
+    movie_id: string;
     title: string;
     rating: number;
     genres: string[];

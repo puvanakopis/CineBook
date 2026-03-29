@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FiTarget } from "react-icons/fi";
 import { MdHistoryEdu, MdOutlineDiversity3, MdOutlineMovie, MdOutlineVisibility } from "react-icons/md";
 
-const AboutSection: React.FC = () => {
+const AboutSection = () => {
     return (
         <section className="w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 pb-20 relative ">
             {/* Our Story */}

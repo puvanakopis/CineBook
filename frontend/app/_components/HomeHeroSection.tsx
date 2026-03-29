@@ -3,7 +3,7 @@
 import { MdOutlineConfirmationNumber } from "react-icons/md";
 import { FaRegPlayCircle } from "react-icons/fa";
 
-const HeroSection = () => {
+const HomeHeroSection = () => {
     return (
         <div className="relative w-full h-[600px] flex items-center overflow-hidden">
             {/* Background */}
@@ -54,4 +54,4 @@ const HeroSection = () => {
     );
 };
 
-export default HeroSection;
+export default HomeHeroSection;

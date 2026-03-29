@@ -4,10 +4,10 @@ import { useParams } from "next/navigation";
 import { useState, useMemo } from "react";
 import { theaters } from "@/data/theater";
 import { Theater, Screen, MovieShowtime, TimeSlot } from "@/interface/theater";
-import TheaterHero from "@/containers/theaterDetail/TheaterHero";
-import TheaterShowtimes from "@/containers/theaterDetail/TheaterShowtimes";
-import TheaterInfo from "@/containers/theaterDetail/TheaterInfo";
-import LocationMap from "@/containers/theaterDetail/LocationMap";
+import TheaterHero from "./_components/TheaterHero";
+import TheaterShowtimes from "./_components/TheaterShowtimes";
+import TheaterInfo from "./_components/TheaterInfo";
+import LocationMap from "./_components/LocationMap";
 
 export default function TheaterDetailPage() {
     const params = useParams();
