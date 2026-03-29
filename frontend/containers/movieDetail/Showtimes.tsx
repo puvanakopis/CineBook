@@ -1,11 +1,8 @@
 "use client";
 
-import { MdOutlineCancel } from "react-icons/md";
-import { MdOutlineFastfood } from "react-icons/md";
-import { MdOutlineTheaterComedy } from "react-icons/md";
-import { FaRegCheckCircle } from "react-icons/fa";
-import { FaParking } from "react-icons/fa";
-import { FaWheelchair } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { MdOutlineCancel, MdOutlineFastfood, MdOutlineTheaterComedy } from "react-icons/md";
+import { FaRegCheckCircle, FaParking, FaWheelchair } from "react-icons/fa";
 import { Theater, TimeSlot } from "@/interface/movie";
 
 interface ShowtimesProps {
@@ -18,6 +15,14 @@ interface ShowtimesProps {
 }
 
 const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateDisplay, getShowtimesForDate }: ShowtimesProps) => {
+    const router = useRouter();
+
+    const handleShowtimeClick = (showtime: TimeSlot) => {
+        if (!showtime.isSoldOut) {
+            router.push("/select-seats");
+        }
+    };
+
     return (
         <section className="w-full mx-auto px-4 md:px-20 lg:px-30 py-12 relative z-20" id="showtimes">
             <div className="max-w-[1400px] mx-auto">
@@ -118,6 +123,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                                     <button
                                                         key={index}
                                                         disabled={showtime.isSoldOut}
+                                                        onClick={() => handleShowtimeClick(showtime)}
                                                         className={`group px-4 py-2 rounded border transition-all text-sm font-medium ${showtime.isSoldOut
                                                             ? 'opacity-50 cursor-not-allowed bg-[#221a1a] border-[#392828]'
                                                             : 'border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary'
@@ -146,6 +152,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                                     <button
                                                         key={index}
                                                         disabled={showtime.isSoldOut}
+                                                        onClick={() => handleShowtimeClick(showtime)}
                                                         className={`group px-4 py-2 rounded border transition-all text-sm font-medium ${showtime.isSoldOut
                                                             ? 'opacity-50 cursor-not-allowed bg-[#221a1a] border-[#392828]'
                                                             : 'border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary'
