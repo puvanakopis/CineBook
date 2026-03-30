@@ -1,6 +1,8 @@
 import { ProfileSidebar } from "@/components/Sidebar";
 import { ProfileHeader } from "./_components/ProfileHeader";
 import { PersonalInfoForm } from "./_components/PersonalInfoForm";
+import { PreferencesSection } from "./_components/PreferencesSection";
+import { ProfileActions } from "./_components/ProfileActions";
 
 
 export default function ProfilePage() {
@@ -11,6 +13,8 @@ export default function ProfilePage() {
         <div className="max-w-4xl mx-auto space-y-10">
           <ProfileHeader />
           <PersonalInfoForm />
+          <PreferencesSection />
+          <ProfileActions />
         </div>
       </main>
     </div>
