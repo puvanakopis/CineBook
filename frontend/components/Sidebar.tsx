@@ -18,13 +18,13 @@ import {
 
 const navItems = [
     { name: "My Profile", href: "/profile", icon: IoPersonOutline, activeIcon: IoPerson },
-    { name: "My Bookings", href: "/bookings", icon: IoTicketOutline, activeIcon: IoTicket },
+    { name: "My Bookings", href: "/my-bookings", icon: IoTicketOutline, activeIcon: IoTicket },
     { name: "Payment Methods", href: "/payments", icon: IoCardOutline, activeIcon: IoCard },
     { name: "Security", href: "/security", icon: IoShieldOutline, activeIcon: IoShield },
     { name: "Settings", href: "/settings", icon: IoSettingsOutline, activeIcon: IoSettings },
 ];
 
-export function ProfileSidebar() {
+export function Sidebar() {
     const pathname = usePathname();
 
     const isActive = (href: string) => {
