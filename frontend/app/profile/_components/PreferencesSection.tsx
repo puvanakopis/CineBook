@@ -1,6 +1,6 @@
 'use client';
 
-import { IoChevronDown } from "react-icons/io5";
+import { IoChevronDown, IoSettingsOutline } from "react-icons/io5";
 import { useState } from "react";
 
 const genres = ["Action", "Comedy", "Sci-Fi", "Horror", "Drama", "Thriller", "Romance", "Animation"];
@@ -27,7 +27,10 @@ export function PreferencesSection() {
     return (
         <section>
             <div className="flex justify-between items-center mb-6">
-                <h3 className="text-white text-xl font-bold">Preferences</h3>
+                <div className="flex items-center gap-3">
+                    <IoSettingsOutline className="text-2xl text-primary" />
+                    <h3 className="text-white text-xl font-bold">Preferences</h3>
+                </div>
             </div>
             <div className="bg-[#291e1e]/30 p-6 rounded-xl border border-[#392828]/50 space-y-8">
                 <div>
@@ -40,8 +43,8 @@ export function PreferencesSection() {
                                     key={genre}
                                     onClick={() => toggleGenre(genre)}
                                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${isSelected
-                                            ? "bg-primary text-white border border-primary shadow-[0_0_10px_rgba(236,19,19,0.3)]"
-                                            : "bg-surface-dark text-text-secondary border border-[#392828] hover:border-text-secondary hover:text-white"
+                                        ? "bg-primary text-white border border-primary shadow-[0_0_10px_rgba(236,19,19,0.3)]"
+                                        : "bg-surface-dark text-text-secondary border border-[#392828] hover:border-text-secondary hover:text-white"
                                         }`}
                                 >
                                     {genre}

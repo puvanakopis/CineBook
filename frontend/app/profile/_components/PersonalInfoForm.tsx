@@ -1,12 +1,15 @@
 'use client';
 
-import { IoMailOutline, IoCallOutline } from "react-icons/io5";
+import { IoMailOutline, IoCallOutline, IoPersonOutline } from "react-icons/io5";
 
 export function PersonalInfoForm() {
     return (
         <section>
             <div className="flex justify-between items-center mb-6">
-                <h3 className="text-white text-xl font-bold">Personal Information</h3>
+                <div className="flex items-center gap-3">
+                    <IoPersonOutline className="text-2xl text-primary" />
+                    <h3 className="text-white text-xl font-bold">Personal Information</h3>
+                </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#291e1e]/30 p-6 rounded-xl border border-[#392828]/50">
                 <label className="flex flex-col gap-2">

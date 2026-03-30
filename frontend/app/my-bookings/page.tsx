@@ -2,12 +2,13 @@
 
 import { Sidebar } from "@/components/Sidebar";
 import { BookingsHeader } from "./_components/BookingsHeader";
+import { BookingFilters } from "./_components/BookingFilters";
 import { BookingList } from "./_components/BookingList";
 import { BookingEmptyState } from "./_components/BookingEmptyState";
 
 import { useState, useMemo } from "react";
 
-interface Booking {
+export interface Booking {
   id: string;
   movieTitle: string;
   genres: string[];
@@ -134,13 +135,18 @@ export default function Bookings() {
       <Sidebar />
       <main className="flex-1 p-6 md:p-10 lg:px-16 overflow-y-auto">
         <div className="max-w-6xl mx-auto space-y-10">
-          <BookingsHeader 
-            activeTab={activeTab} 
+          <BookingsHeader
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+
+          <BookingFilters
+            activeTab={activeTab}
             setActiveTab={setActiveTab}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
-          
+
           <div className="flex-1">
             {filteredBookings.length > 0 ? (
               <BookingList
