@@ -28,9 +28,9 @@ export default function PaymentForm({
     onSubmit
 }: PaymentFormProps) {
     return (
-        <div className="flex-1 w-full bg-[var(--color-surface-dark)] p-6 md:p-8 rounded-2xl border border-[var(--color-input-bg)] shadow-2xl">
+        <div className="flex-1 w-full bg-[#291e1e]/30 rounded-xl border border-[#392828] shadow-lg hover:shadow-primary/5 transition-all duration-300 p-6 md:p-8">
             {paymentStatus === "error" && (
-                <div className="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-lg flex items-start gap-3 mb-6">
+                <div className="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-xl flex items-start gap-3 mb-6">
                     <MdErrorOutline className="w-6 h-6 flex-shrink-0 mt-0.5" />
                     <div>
                         <p className="font-semibold">Payment Failed</p>
@@ -40,18 +40,18 @@ export default function PaymentForm({
             )}
 
             <div className="flex flex-col gap-4 sm:flex-row mb-8">
-                <button type="button" className="flex-1 flex items-center justify-center gap-2 bg-black hover:bg-black/80 text-white py-3 px-4 rounded-xl border border-[var(--color-input-bg)] transition-colors">
+                <button type="button" className="flex-1 flex items-center justify-center gap-2 bg-black hover:bg-black/80 text-white py-3 px-4 rounded-xl border border-[#392828] transition-colors">
                     <FaApplePay className="w-10 h-10" />
                 </button>
-                <button type="button" className="flex-1 flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black py-3 px-4 rounded-xl transition-colors">
+                <button type="button" className="flex-1 flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black py-3 px-4 rounded-xl border border-[#392828] transition-colors">
                     <FaGooglePay className="w-10 h-10" />
                 </button>
             </div>
 
             <div className="relative flex items-center py-5 mb-4">
-                <div className="flex-grow border-t border-[var(--color-input-bg)]"></div>
+                <div className="flex-grow border-t border-[#392828]"></div>
                 <span className="flex-shrink-0 mx-4 text-[var(--color-text-secondary)] text-sm">or pay with card</span>
-                <div className="flex-grow border-t border-[var(--color-input-bg)]"></div>
+                <div className="flex-grow border-t border-[#392828]"></div>
             </div>
 
             <form onSubmit={onSubmit} className="space-y-6">
@@ -63,7 +63,7 @@ export default function PaymentForm({
                         value={formData.cardName}
                         onChange={onInputChange}
                         placeholder="John Doe"
-                        className={`w-full bg-[var(--color-background-dark)] border ${errors.cardName ? 'border-red-500' : 'border-[var(--color-input-bg)]'} text-white rounded-xl px-4 py-3 placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-[var(--color-primary)] transition-colors`}
+                        className={`w-full bg-black/20 border ${errors.cardName ? 'border-red-500' : 'border-[#392828]'} text-white rounded-xl px-4 py-3 placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-primary/50 transition-colors`}
                     />
                     {errors.cardName && <p className="text-red-500 text-xs mt-1">{errors.cardName}</p>}
                 </div>
@@ -79,7 +79,7 @@ export default function PaymentForm({
                             onChange={onInputChange}
                             placeholder="0000 0000 0000 0000"
                             maxLength={19}
-                            className={`w-full bg-[var(--color-background-dark)] border ${errors.cardNumber ? 'border-red-500' : 'border-[var(--color-input-bg)]'} text-white rounded-xl pl-12 pr-4 py-3 placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-[var(--color-primary)] transition-colors`}
+                            className={`w-full bg-black/20 border ${errors.cardNumber ? 'border-red-500' : 'border-[#392828]'} text-white rounded-xl pl-12 pr-4 py-3 placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-primary/50 transition-colors`}
                         />
                     </div>
                     {errors.cardNumber && <p className="text-red-500 text-xs mt-1">{errors.cardNumber}</p>}
@@ -95,7 +95,7 @@ export default function PaymentForm({
                             onChange={onInputChange}
                             placeholder="MM/YY"
                             maxLength={5}
-                            className={`w-full bg-[var(--color-background-dark)] border ${errors.expiry ? 'border-red-500' : 'border-[var(--color-input-bg)]'} text-white rounded-xl px-4 py-3 placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-[var(--color-primary)] transition-colors`}
+                            className={`w-full bg-black/20 border ${errors.expiry ? 'border-red-500' : 'border-[#392828]'} text-white rounded-xl px-4 py-3 placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-primary/50 transition-colors`}
                         />
                         {errors.expiry && <p className="text-red-500 text-xs mt-1">{errors.expiry}</p>}
                     </div>
@@ -108,7 +108,7 @@ export default function PaymentForm({
                             onChange={onInputChange}
                             placeholder="123"
                             maxLength={4}
-                            className={`w-full bg-[var(--color-background-dark)] border ${errors.cvv ? 'border-red-500' : 'border-[var(--color-input-bg)]'} text-white rounded-xl px-4 py-3 placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-[var(--color-primary)] transition-colors`}
+                            className={`w-full bg-black/20 border ${errors.cvv ? 'border-red-500' : 'border-[#392828]'} text-white rounded-xl px-4 py-3 placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-primary/50 transition-colors`}
                         />
                         {errors.cvv && <p className="text-red-500 text-xs mt-1">{errors.cvv}</p>}
                     </div>
@@ -117,11 +117,11 @@ export default function PaymentForm({
                 <button
                     type="submit"
                     disabled={isProcessing}
-                    className="w-full bg-[var(--color-primary)] hover:bg-[#d01010] disabled:bg-[var(--color-input-bg)] disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl mt-4 transition-colors flex items-center justify-center gap-2 shadow-lg"
+                    className="w-full bg-primary hover:bg-red-700 disabled:bg-[#392828] disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl mt-4 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:-translate-y-0.5"
                 >
                     {isProcessing ? (
                         <>
-                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-xl animate-spin"></div>
                             Processing...
                         </>
                     ) : (
