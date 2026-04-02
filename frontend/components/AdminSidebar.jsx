@@ -24,7 +24,7 @@ const navItems = [
 ];
 
 const settingsItems = [
-    { name: 'Users', path: '/users', icon: MdManageAccounts },
+    { name: 'Users', path: '/admin/users', icon: MdManageAccounts },
 ];
 
 export function AdminSidebar() {
