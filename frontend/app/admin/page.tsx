@@ -8,7 +8,8 @@ import { TopGenres } from './_components/TopGenres';
 import { RecentBookings } from './_components/RecentBookings';
 import { HallStatus } from './_components/HallStatus';
 
-export default function Dashboard() {
+
+export default function AdminDashboard () {
     return (
         <div className="flex h-screen w-full bg-background-light dark:bg-background-dark overflow-hidden">
             <main className="flex-1 flex flex-col h-full overflow-hidden relative">

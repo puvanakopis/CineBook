@@ -27,7 +27,7 @@ const getReleaseStatus = (releaseDate: string) => {
   return 'Archived';
 };
 
-export default function AdminMoviesPage() {
+export default function AdminMovies() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('All Genres');
   const [selectedRating, setSelectedRating] = useState('All Ratings');
