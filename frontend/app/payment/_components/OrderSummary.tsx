@@ -17,7 +17,7 @@ interface OrderSummaryProps {
     total: number;
 }
 
-const OrderSummary: React.FC<OrderSummaryProps> = ({ seats, subtotal, convenienceFee, total }) => {
+const OrderSummary: React.FC<OrderSummaryProps> = ({ seats, convenienceFee, total }) => {
     const formatLKR = (amount: number) =>
         `LKR ${amount.toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -25,7 +25,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ seats, subtotal, convenienc
     const vipCount = seats.filter(s => s.type === "vip").length;
 
     return (
-        <div className="bg-[var(--color-surface-dark)] border border-[#392828] rounded-xl overflow-hidden sticky top-24 shadow-2xl">
+        <div className="bg-[#291e1e]/30 border border-[#392828] rounded-2xl overflow-hidden sticky top-24 shadow-lg hover:shadow-primary/5 transition-all duration-300">
             <div className="p-6 border-b border-[#392828] bg-black/20 flex gap-4">
                 <Image
                     alt="Cyber Chronicles"
@@ -40,7 +40,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ seats, subtotal, convenienc
                         Sci-Fi • 2h 15m
                     </p>
                     <div className="flex items-center gap-1 bg-black/40 w-fit px-2 py-0.5 rounded text-xs border border-white/5">
-                        <span className="material-symbols-outlined text-yellow-500 text-sm"><IoIosStarOutline /></span>
+                        <IoIosStarOutline className="text-yellow-500 text-sm" />
                         <span className="text-white font-bold">8.9</span>
                     </div>
                 </div>
@@ -55,7 +55,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ seats, subtotal, convenienc
                         {seats.map(seat => (
                             <div
                                 key={seat.id}
-                                className={`px-3 py-1.5 bg-[#392828] text-white text-sm font-bold rounded flex items-center justify-between gap-2 border ${seat.type === "vip"
+                                className={`px-3 py-1.5 bg-[#392828] text-white text-sm font-bold rounded-lg flex items-center justify-between gap-2 border ${seat.type === "vip"
                                     ? "border-yellow-500/30 shadow-[0_2px_8px_rgba(234,179,8,0.1)]"
                                     : "border-primary/30 shadow-[0_2px_8px_rgba(236,19,19,0.1)]"
                                     }`}
@@ -70,13 +70,13 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ seats, subtotal, convenienc
                     {standardCount > 0 && (
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-[var(--color-text-secondary)]">Standard Seat (x{standardCount})</span>
-                            <span className="text-white font-medium">{formatLKR(standardCount * 14)}</span>
+                            <span className="text-white font-medium">{formatLKR(standardCount * 1400)}</span>
                         </div>
                     )}
-                     {vipCount > 0 && (
+                    {vipCount > 0 && (
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-[var(--color-text-secondary)]">VIP Seat (x{vipCount})</span>
-                            <span className="text-white font-medium">{formatLKR(vipCount * 20)}</span>
+                            <span className="text-white font-medium">{formatLKR(vipCount * 2000)}</span>
                         </div>
                     )}
                     <div className="flex justify-between items-center text-sm">
@@ -92,7 +92,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ seats, subtotal, convenienc
                         <span className="text-[var(--color-text-secondary)] text-xs uppercase font-bold tracking-wider">
                             Total Amount
                         </span>
-                        <p className="text-3xl font-bold text-[var(--color-primary)] mt-1">{formatLKR(total)}</p>
+                        <p className="text-3xl font-bold text-primary mt-1">{formatLKR(total)}</p>
                     </div>
                 </div>
             </div>

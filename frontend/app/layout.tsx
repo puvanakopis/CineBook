@@ -1,8 +1,6 @@
 import { Be_Vietnam_Pro, Noto_Sans } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import CineBotChat from "@/components/CineBotChat"; 
+import RouteGuard from "@/route/RouteGuard";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
@@ -28,12 +26,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+      </head>
       <body className={`${beVietnamPro.variable} ${notoSans.variable}`}>
-        <Navbar />
-        {children}
-        <Footer />
-
-        <CineBotChat />
+        <RouteGuard>{children}</RouteGuard>
       </body>
     </html>
   );

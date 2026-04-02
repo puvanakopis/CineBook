@@ -1,5 +1,4 @@
 import { IoMdArrowBack } from "react-icons/io";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function PaymentHeader({ movie, theater, hall, date, time }: { movie?: string, theater?: string, hall?: string, date?: string, time?: string }) {
