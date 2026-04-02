@@ -17,9 +17,7 @@ import {
 const navItems = [
     { name: 'Dashboard', path: '/admin', icon: MdDashboard, active: true },
     { name: 'Movies', path: '/admin/movies', icon: MdMovie, badge: null },
-    { name: 'Showtimes', path: '/admin/showtimes', icon: MdCalendarMonth, badge: null },
     { name: 'Bookings', path: '/admin/bookings', icon: MdConfirmationNumber, badge: '12' },
-    { name: 'Halls & Seats', path: '/admin/halls', icon: MdEventSeat, badge: null },
     { name: 'Reports', path: '/admin/reports', icon: MdBarChart, badge: null },
 ];
 
