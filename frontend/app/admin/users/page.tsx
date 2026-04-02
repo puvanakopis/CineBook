@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { DashboardHeader } from '../_components/DashboardHeader';
 import { UserHeader } from './_components/UserHeader';
 import { UserStatsGrid } from './_components/UserStatsGrid';
 import { UserFilters } from './_components/UserFilters';
@@ -43,40 +42,33 @@ export default function AdminUsers() {
   }, []);
 
   return (
-    <div className="flex h-screen w-full bg-background-light dark:bg-background-dark overflow-hidden">
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
-        <DashboardHeader />
+    <>
+      <UserHeader />
+      
+      <UserStatsGrid
+        total={stats.total}
+        active={stats.active}
+        managers={stats.managers}
+        suspended={stats.suspended}
+      />
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
-          <div className="max-w-[1200px] mx-auto flex flex-col gap-8 pb-10">
-            <UserHeader />
-            
-            <UserStatsGrid
-              total={stats.total}
-              active={stats.active}
-              managers={stats.managers}
-              suspended={stats.suspended}
-            />
+      <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
+        <UserFilters
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          selectedRole={selectedRole}
+          setSelectedRole={setSelectedRole}
+          selectedStatus={selectedStatus}
+          setSelectedStatus={setSelectedStatus}
+          roles={roles}
+          statuses={statuses}
+        />
 
-            <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
-              <UserFilters
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                selectedRole={selectedRole}
-                setSelectedRole={setSelectedRole}
-                selectedStatus={selectedStatus}
-                setSelectedStatus={setSelectedStatus}
-                roles={roles}
-                statuses={statuses}
-              />
-
-              <UserTable
-                users={filteredUsers}
-              />
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+        <UserTable
+          users={filteredUsers}
+        />
+      </div>
+    </>
   );
 }
+

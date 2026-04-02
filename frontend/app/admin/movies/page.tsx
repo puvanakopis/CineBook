@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { DashboardHeader } from '../_components/DashboardHeader';
 import { MovieHeader } from './_components/MovieHeader';
 import { MovieStatsGrid } from './_components/MovieStatsGrid';
 import { MovieFilters } from './_components/MovieFilters';
@@ -63,44 +62,37 @@ export default function AdminMovies() {
   const archived = movies.filter((movie) => getReleaseStatus(movie.releaseDate) === 'Archived').length;
 
   return (
-    <div className="flex h-screen w-full bg-background-light dark:bg-background-dark overflow-hidden">
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
-        <DashboardHeader />
+    <>
+      <MovieHeader />
+      <MovieStatsGrid
+        total={movies.length}
+        nowShowing={nowShowing}
+        comingSoon={comingSoon}
+        archived={archived}
+      />
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
-          <div className="max-w-[1200px] mx-auto flex flex-col gap-8 pb-10">
-            <MovieHeader />
-            <MovieStatsGrid
-              total={movies.length}
-              nowShowing={nowShowing}
-              comingSoon={comingSoon}
-              archived={archived}
-            />
+      <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
+        <MovieFilters
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          selectedGenre={selectedGenre}
+          setSelectedGenre={setSelectedGenre}
+          selectedRating={selectedRating}
+          setSelectedRating={setSelectedRating}
+          selectedStatus={selectedStatus}
+          setSelectedStatus={setSelectedStatus}
+          genres={allGenres}
+          ageRatings={ageRatings}
+          releaseStatuses={releaseStatuses}
+        />
 
-            <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
-              <MovieFilters
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                selectedGenre={selectedGenre}
-                setSelectedGenre={setSelectedGenre}
-                selectedRating={selectedRating}
-                setSelectedRating={setSelectedRating}
-                selectedStatus={selectedStatus}
-                setSelectedStatus={setSelectedStatus}
-                genres={allGenres}
-                ageRatings={ageRatings}
-                releaseStatuses={releaseStatuses}
-              />
-
-              <MovieTable
-                movies={filteredMovies}
-                getReleaseStatus={getReleaseStatus}
-                getAgeRating={getAgeRating}
-              />
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+        <MovieTable
+          movies={filteredMovies}
+          getReleaseStatus={getReleaseStatus}
+          getAgeRating={getAgeRating}
+        />
+      </div>
+    </>
   );
 }
+
