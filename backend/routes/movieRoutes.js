@@ -3,6 +3,9 @@ const router = express.Router();
 const movieController = require('../controllers/movieController');
 const { protect, authorize } = require('../middlewares/authMiddleware');
 
+router.get('/', protect, movieController.getMovies);
+router.get('/:id', protect, movieController.getMovieById);
+
 router.post('/', protect, authorize('admin'), movieController.createMovie);
 
 module.exports = router;
