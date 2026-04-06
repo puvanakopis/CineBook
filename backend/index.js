@@ -6,6 +6,7 @@ const connectDB = require('./config/db');
 const cors = require('cors');
 const path = require('path');
 const authRoutes = require('./routes/authRoutes');
+const movieRoutes = require('./routes/movieRoutes');
 connectDB();
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_URL }));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/movies', movieRoutes);
 
 app.get('/', (req, res) => res.send('Hello from CineBook!'));
 
