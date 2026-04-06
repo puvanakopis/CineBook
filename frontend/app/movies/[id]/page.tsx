@@ -7,11 +7,11 @@ import Showtimes from "./_components/Showtimes";
 import CastCrew from "./_components/CastCrew";
 import Reviews from "./_components/Reviews";
 import { movies } from "@/data/movie";
-import { Review, Theater, TimeSlot } from "@/interface/movie";
+import { Review, Theater, TimeSlot } from "@/interfaces/movie";
 
 export default function MovieDetail() {
   const params = useParams();
-  const movieId = params?.id ? parseInt(params.id as string) : null;
+  const movieId = params?.id as string;
   const movie = movies.find((m) => m.movie_id === movieId);
 
   const [localReviews, setLocalReviews] = useState<Review[]>(movie?.reviews || []);

@@ -8,7 +8,7 @@ import MovieSortControls from "./_components/MovieSortControls";
 import Pagination from "./_components/Pagination";
 import EmptyState from "./_components/MovieEmptyState";
 import { movies } from '@/data/movie';
-import { Movie } from '@/interface/movie';
+import { Movie } from '@/interfaces/movie';
 
 export default function Movies() {
   const [selectedDate, setSelectedDate] = useState<string>('');

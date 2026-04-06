@@ -1,14 +1,172 @@
 "use client";
 import LoginBackground from "@/public//LoginBackground.png";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { MdOutlineMovie } from "react-icons/md";
+import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { LoginRequest, SignupRequestOtpRequest, VerifyPasswordResetRequest } from "@/interfaces/authInterface";
 import LoginForm from "./_components/LoginForm";
 import RegisterForm from "./_components/RegisterForm";
-import ForgotPasswordForm from "./_components/ForgotPasswordForm"
+import ForgotPasswordForm from "./_components/ForgotPasswordForm";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const {
+    isAuthenticated,
+    login,
+    requestSignupOtp,
+    verifyOtpAndSignup,
+    requestPasswordReset,
+    verifyPasswordReset,
+    isLoading,
+    error,
+    clearError,
+  } = useAuth();
   const [activeTab, setActiveTab] = useState<"login" | "register" | "forgot">("login");
+
+  const [loginData, setLoginData] = useState<LoginRequest>({
+    email: "",
+    password: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [registerStep, setRegisterStep] = useState<"details" | "otp">("details");
+  const [registerData, setRegisterData] = useState<SignupRequestOtpRequest>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    role: "user",
+  });
+  const [registerOtp, setRegisterOtp] = useState("");
+
+  const [forgotStep, setForgotStep] = useState<"email" | "reset">("email");
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotData, setForgotData] = useState<VerifyPasswordResetRequest>({
+    email: "",
+    otp: "",
+    password: "",
+  });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
+
+  if (isAuthenticated) {
+    return null;
+  }
+
+  const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginData(prev => ({ ...prev, [name]: value }));
+    if (error) clearError();
+  };
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await login(loginData);
+      toast.success("Login successful!");
+      router.push("/");
+    } catch (err) {
+      const errorMsg = error || "Login failed. Please try again.";
+      toast.error(errorMsg);
+      console.error(err);
+    }
+  };
+
+  const handleRegisterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setRegisterData(prev => ({ ...prev, [name]: value }));
+    if (error) clearError();
+  };
+
+  const handleRegisterRequestOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await requestSignupOtp(registerData);
+      toast.success("OTP sent to your email!");
+      setRegisterStep("otp");
+    } catch (err) {
+      const errorMsg = error || "Failed to request OTP. Please try again.";
+      toast.error(errorMsg);
+      console.error(err);
+    }
+  };
+
+  const handleRegisterVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await verifyOtpAndSignup({ email: registerData.email, otp: registerOtp });
+      toast.success("Registration successful! Please log in.");
+      setRegisterStep("details");
+      setRegisterData({ firstName: "", lastName: "", email: "", password: "", role: "user" });
+      setRegisterOtp("");
+      setActiveTab("login");
+    } catch (err) {
+      const errorMsg = error || "OTP verification failed. Please try again.";
+      toast.error(errorMsg);
+      console.error(err);
+    }
+  };
+
+  const handleRegisterBack = () => {
+    setRegisterStep("details");
+    setRegisterOtp("");
+    if (error) clearError();
+  };
+
+  const handleForgotEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForgotEmail(e.target.value);
+    if (error) clearError();
+  };
+
+  const handleForgotResetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForgotData(prev => ({ ...prev, [name]: value }));
+    if (error) clearError();
+  };
+
+  const handleRequestReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await requestPasswordReset({ email: forgotEmail });
+      toast.success("Reset OTP sent to your email!");
+      setForgotData(prev => ({ ...prev, email: forgotEmail }));
+      setForgotStep("reset");
+    } catch (err) {
+      const errorMsg = error || "Failed to request password reset. Please try again.";
+      toast.error(errorMsg);
+      console.error(err);
+    }
+  };
+
+  const handleVerifyReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await verifyPasswordReset(forgotData);
+      toast.success("Password reset successful! Please log in.");
+      setForgotStep("email");
+      setForgotEmail("");
+      setForgotData({ email: "", otp: "", password: "" });
+      setActiveTab("login");
+    } catch (err) {
+      const errorMsg = error || "Password reset failed. Please try again.";
+      toast.error(errorMsg);
+      console.error(err);
+    }
+  };
+
+  const handleForgotBack = () => {
+    setForgotStep("email");
+    setForgotEmail("");
+    setForgotData({ email: "", otp: "", password: "" });
+    if (error) clearError();
+  };
 
   return (
     <div className="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col md:flex-row overflow-x-hidden">
@@ -69,9 +227,43 @@ export default function LoginPage() {
             </div>
 
             {/* Render Forms */}
-            {activeTab === "login" && <LoginForm setActiveTab={setActiveTab} />}
-            {activeTab === "register" && <RegisterForm />}
-            {activeTab === "forgot" && <ForgotPasswordForm />}
+            {activeTab === "login" && (
+              <LoginForm
+                setActiveTab={setActiveTab}
+                formData={loginData}
+                onChange={handleLoginChange}
+                onSubmit={handleLoginSubmit}
+                showPassword={showPassword}
+                toggleShowPassword={() => setShowPassword(prev => !prev)}
+                isLoading={isLoading}
+              />
+            )}
+            {activeTab === "register" && (
+              <RegisterForm
+                formData={registerData}
+                otp={registerOtp}
+                step={registerStep}
+                onChange={handleRegisterChange}
+                onOtpChange={setRegisterOtp}
+                onSubmit={handleRegisterRequestOtp}
+                onVerify={handleRegisterVerifyOtp}
+                onBack={handleRegisterBack}
+                isLoading={isLoading}
+              />
+            )}
+            {activeTab === "forgot" && (
+              <ForgotPasswordForm
+                step={forgotStep}
+                email={forgotEmail}
+                resetData={forgotData}
+                onEmailChange={handleForgotEmailChange}
+                onResetChange={handleForgotResetChange}
+                onRequestReset={handleRequestReset}
+                onVerifyReset={handleVerifyReset}
+                onBack={handleForgotBack}
+                isLoading={isLoading}
+              />
+            )}
           </div>
         </div>
       </div>

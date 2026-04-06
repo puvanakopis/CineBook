@@ -1,13 +1,30 @@
 import { FcGoogle } from "react-icons/fc";
 import { CiLock, CiMail } from "react-icons/ci";
-import { MdOutlineVisibility } from "react-icons/md";
+import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import { IoArrowForward } from "react-icons/io5";
+import { LoginRequest } from "@/interfaces/authInterface";
 
 interface LoginFormProps {
     setActiveTab: (tab: "login" | "register" | "forgot") => void;
+    formData: LoginRequest;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onSubmit: (e: React.FormEvent) => void;
+    showPassword: boolean;
+    toggleShowPassword: () => void;
+    isLoading: boolean;
+    error?: string | null;
 }
 
-export default function LoginForm({ setActiveTab }: LoginFormProps) {
+export default function LoginForm({
+    setActiveTab,
+    formData,
+    onChange,
+    onSubmit,
+    showPassword,
+    toggleShowPassword,
+    isLoading,
+}: LoginFormProps) {
+
     return (
         <>
             {/* Heading */}
@@ -17,7 +34,7 @@ export default function LoginForm({ setActiveTab }: LoginFormProps) {
             </div>
 
             {/* Form */}
-            <form className="flex flex-col gap-5">
+            <form onSubmit={onSubmit} className="flex flex-col gap-5">
                 <label className="flex flex-col gap-2">
                     <span className="text-sm font-bold">Email</span>
                     <div className="relative group">
@@ -26,8 +43,12 @@ export default function LoginForm({ setActiveTab }: LoginFormProps) {
                         </span>
                         <input
                             type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={onChange}
                             placeholder="Enter your email"
                             className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 pl-12 focus:ring-2 focus:ring-primary focus:outline-none"
+                            required
                         />
                     </div>
                 </label>
@@ -48,25 +69,31 @@ export default function LoginForm({ setActiveTab }: LoginFormProps) {
                             <CiLock size={20} />
                         </span>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            value={formData.password}
+                            onChange={onChange}
                             placeholder="Enter your password"
                             className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 pl-12 focus:ring-2 focus:ring-primary focus:outline-none"
+                            required
                         />
                         <button
                             type="button"
+                            onClick={toggleShowPassword}
                             className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
                         >
-                            <MdOutlineVisibility size={20} />
+                            {showPassword ? <MdOutlineVisibilityOff size={20} /> : <MdOutlineVisibility size={20} />}
                         </button>
                     </div>
                 </label>
 
                 <button
-                    type="button"
-                    className="mt-2 h-12 w-full bg-primary hover:bg-red-700 text-white font-bold rounded-lg flex items-center justify-center gap-2"
+                    type="submit"
+                    disabled={isLoading}
+                    className="mt-2 h-12 w-full bg-primary hover:bg-red-700 disabled:bg-gray-400 text-white font-bold rounded-lg flex items-center justify-center gap-2"
                 >
-                    <span>Log In</span>
-                    <IoArrowForward className="text-sm" />
+                    <span>{isLoading ? "Signing In..." : "Log In"}</span>
+                    {!isLoading && <IoArrowForward className="text-sm" />}
                 </button>
             </form>
 

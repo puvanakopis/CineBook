@@ -6,7 +6,7 @@ import { MovieStatsGrid } from './_components/MovieStatsGrid';
 import { MovieFilters } from './_components/MovieFilters';
 import { MovieTable } from './_components/MovieTable';
 import { movies } from '@/data/movie';
-import { Movie } from '@/interface/movie';
+import { Movie } from '@/interfaces/movie';
 
 const ageRatings = ['G', 'PG', 'PG-13', 'R'];
 const releaseStatuses = ['All Statuses', 'Now Showing', 'Coming Soon', 'Archived'];

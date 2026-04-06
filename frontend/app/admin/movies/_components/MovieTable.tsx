@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Movie } from '@/interface/movie';
+import { Movie } from '@/interfaces/movie';
 
 interface MovieTableProps {
     movies: Movie[];
@@ -61,10 +61,10 @@ export function MovieTable({ movies, getReleaseStatus, getAgeRating }: MovieTabl
                                         </td>
                                         <td className="px-6 py-4 align-top">
                                             <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${status === 'Now Showing'
-                                                    ? 'bg-emerald-500/10 text-emerald-300'
-                                                    : status === 'Coming Soon'
-                                                        ? 'bg-amber-500/10 text-amber-300'
-                                                        : 'bg-slate-700 text-slate-300'
+                                                ? 'bg-emerald-500/10 text-emerald-300'
+                                                : status === 'Coming Soon'
+                                                    ? 'bg-amber-500/10 text-amber-300'
+                                                    : 'bg-slate-700 text-slate-300'
                                                 }`}>
                                                 {status}
                                             </span>

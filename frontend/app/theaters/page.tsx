@@ -8,7 +8,7 @@ import TheaterSortControls from "./_components/TheaterSortControls";
 import Pagination from "./_components/Pagination";
 import TheaterEmptyState from "./_components/TheaterEmptyState";
 import { theaters } from '@/data/theater';
-import { Theater } from '@/interface/theater';
+import { Theater } from '@/interfaces/theater';
 
 export default function Theaters() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -83,6 +83,13 @@ export default function Theaters() {
     }
   };
 
+  const handleAmenityToggle = (amenity: string) => {
+    if (selectedAmenities.includes(amenity)) {
+      setSelectedAmenities(selectedAmenities.filter(a => a !== amenity));
+    } else {
+      setSelectedAmenities([...selectedAmenities, amenity]);
+    }
+  };
 
   const handleClearFilters = () => {
     setSearchQuery('');
@@ -106,6 +113,8 @@ export default function Theaters() {
           selectedCities={selectedCities}
           allCities={allCities}
           handleCityToggle={handleCityToggle}
+          handleAmenityToggle={handleAmenityToggle}
+          handleClearFilters={handleClearFilters}
         />
 
         <div className="flex-1">

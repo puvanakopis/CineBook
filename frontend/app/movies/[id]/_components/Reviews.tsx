@@ -8,7 +8,7 @@ import { MdOutlineStar } from "react-icons/md";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
-import { Review } from "@/interface/movie";
+import { Review } from "@/interfaces/movie";
 
 interface ReviewsProps {
     reviews: Review[];

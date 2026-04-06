@@ -1,6 +1,4 @@
-'use client';
-
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { useRouter } from 'next/navigation';
 import { IoMdStarOutline } from "react-icons/io";
 import { CiLocationOn } from "react-icons/ci";
@@ -12,7 +10,7 @@ interface TheaterCardProps {
         address: string;
         rating: number;
         amenities: string[];
-        image: string;
+        image: string | StaticImageData;
         city: string;
     };
     viewMode: 'grid' | 'list';
