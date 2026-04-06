@@ -29,3 +29,25 @@ exports.getMovieById = async (req, res) => {
     }
 };
 
+exports.updateMovie = async (req, res) => {
+    try {
+        const movie = await Movie.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+        if (!movie) return res.status(404).json({ message: 'Movie not found' });
+        res.status(200).json({ message: 'Movie updated', movie });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
+
+exports.deleteMovie = async (req, res) => {
+    try {
+        const movie = await Movie.findByIdAndDelete(req.params.id);
+        if (!movie) return res.status(404).json({ message: 'Movie not found' });
+        res.status(200).json({ message: 'Movie deleted' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
