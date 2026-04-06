@@ -105,3 +105,17 @@ exports.verifyOtpAndSignup = async (req, res) => {
 
     res.status(201).json({ message: 'Signup successful', user: { email: newUser.email, role: newUser.role, firstName: newUser.firstName, lastName: newUser.lastName } });
 };
+
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ message: 'Email and password are required' });
+
+    const user = await getUserByEmail(email);
+    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    res.status(200).json({ token, user: { email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName } });
+};

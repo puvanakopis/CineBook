@@ -7,5 +7,7 @@ const { protect } = require('../middleware/authMiddleware');
 router.post('/signup/request-otp', authController.requestOtp);
 router.post('/signup/verify-otp', authController.verifyOtpAndSignup);
 
+// Login
+router.post('/login', authController.login);
 
 module.exports = router;
