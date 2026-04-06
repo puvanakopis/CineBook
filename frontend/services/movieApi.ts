@@ -30,7 +30,6 @@ api.interceptors.response.use(
     (error) => {
         if (error.response?.status === 401) {
             Cookies.remove("token");
-            Cookies.remove("user");
             if (typeof window !== "undefined") {
                 window.dispatchEvent(new Event("unauthorized"));
             }

@@ -28,19 +28,14 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(null); 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const currentUser = authApi.getCurrentUser();
         const isAuth = authApi.isAuthenticated();
-
-        if (currentUser && isAuth) {
-            setUser(currentUser);
-            setIsAuthenticated(true);
-        }
+        setIsAuthenticated(isAuth);
 
         const handleUnauthorized = () => {
             setUser(null);
@@ -62,9 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
-    const clearError = () => {
-        setError(null);
-    };
+    const clearError = () => setError(null);
 
     // ---------- REQUEST SIGNUP OTP ----------
     const requestSignupOtp = async (data: SignupRequestOtpRequest) => {
