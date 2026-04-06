@@ -30,7 +30,6 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// Response interceptor to handle token expiration
 api.interceptors.response.use(
     (response) => response,
     (error) => {

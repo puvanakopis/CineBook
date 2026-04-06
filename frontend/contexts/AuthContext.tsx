@@ -33,7 +33,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Initialize auth state from cookies on mount
     useEffect(() => {
         const currentUser = authApi.getCurrentUser();
         const isAuth = authApi.isAuthenticated();
@@ -43,7 +42,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setIsAuthenticated(true);
         }
 
-        // Listen for unauthorized events
         const handleUnauthorized = () => {
             setUser(null);
             setIsAuthenticated(false);
