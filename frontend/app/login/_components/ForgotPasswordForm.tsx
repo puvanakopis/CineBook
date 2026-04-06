@@ -1,58 +1,32 @@
-import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { IoArrowForward, IoArrowBack } from "react-icons/io5";
-import { useAuth } from "@/contexts/AuthContext";
 import { VerifyPasswordResetRequest } from "@/interfaces/authInterface";
 
-export default function ForgotPasswordForm() {
-    const { requestPasswordReset, verifyPasswordReset, isLoading, error, clearError } = useAuth();
-    const [step, setStep] = useState<"email" | "reset">("email");
-    const [email, setEmail] = useState("");
-    const [resetData, setResetData] = useState<VerifyPasswordResetRequest>({
-        email: "",
-        otp: "",
-        password: "",
-    });
+interface ForgotPasswordFormProps {
+    step: "email" | "reset";
+    email: string;
+    resetData: VerifyPasswordResetRequest;
+    onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onResetChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onRequestReset: (e: React.FormEvent) => void;
+    onVerifyReset: (e: React.FormEvent) => void;
+    onBack: () => void;
+    isLoading: boolean;
+    error?: string | null;
+}
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-        if (error) clearError();
-    };
-
-    const handleResetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setResetData(prev => ({ ...prev, [name]: value }));
-        if (error) clearError();
-    };
-
-    const handleRequestReset = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            await requestPasswordReset({ email });
-            setResetData(prev => ({ ...prev, email }));
-            setStep("reset");
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const handleVerifyReset = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            await verifyPasswordReset(resetData);
-            setStep("email");
-            setEmail("");
-            setResetData({ email: "", otp: "", password: "" });
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const handleBack = () => {
-        setStep("email");
-        setResetData({ email: "", otp: "", password: "" });
-        clearError();
-    };
+export default function ForgotPasswordForm({
+    step,
+    email,
+    resetData,
+    onEmailChange,
+    onResetChange,
+    onRequestReset,
+    onVerifyReset,
+    onBack,
+    isLoading,
+    error,
+}: ForgotPasswordFormProps) {
 
     if (step === "reset") {
         return (
@@ -71,14 +45,14 @@ export default function ForgotPasswordForm() {
                 )}
 
                 {/* Reset Form */}
-                <form onSubmit={handleVerifyReset} className="flex flex-col gap-5">
+                <form onSubmit={onVerifyReset} className="flex flex-col gap-5">
                     <label className="flex flex-col gap-2">
                         <span className="text-sm font-bold">OTP</span>
                         <input
                             type="text"
                             name="otp"
                             value={resetData.otp}
-                            onChange={handleResetChange}
+                            onChange={onResetChange}
                             placeholder="Enter 6-digit OTP"
                             className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 focus:ring-2 focus:ring-primary focus:outline-none text-center text-lg font-mono"
                             maxLength={6}
@@ -92,7 +66,7 @@ export default function ForgotPasswordForm() {
                             type="password"
                             name="password"
                             value={resetData.password}
-                            onChange={handleResetChange}
+                            onChange={onResetChange}
                             placeholder="Enter new password"
                             className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 focus:ring-2 focus:ring-primary focus:outline-none"
                             required
@@ -102,7 +76,7 @@ export default function ForgotPasswordForm() {
                     <div className="flex gap-3">
                         <button
                             type="button"
-                            onClick={handleBack}
+                            onClick={onBack}
                             className="h-12 flex-1 bg-gray-200 dark:bg-[#543b3b] hover:bg-gray-300 dark:hover:bg-[#6b4b4b] text-gray-700 dark:text-gray-300 font-bold rounded-lg flex items-center justify-center gap-2"
                         >
                             <IoArrowBack className="text-sm" />
@@ -138,13 +112,13 @@ export default function ForgotPasswordForm() {
             )}
 
             {/* Email Form */}
-            <form onSubmit={handleRequestReset} className="flex flex-col gap-5">
+            <form onSubmit={onRequestReset} className="flex flex-col gap-5">
                 <label className="flex flex-col gap-2">
                     <span className="text-sm font-bold">Email</span>
                     <input
                         type="email"
                         value={email}
-                        onChange={handleEmailChange}
+                        onChange={onEmailChange}
                         placeholder="Enter your email to reset password"
                         className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 focus:ring-2 focus:ring-primary focus:outline-none"
                         required

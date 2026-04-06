@@ -1,42 +1,30 @@
-import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { CiLock, CiMail } from "react-icons/ci";
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import { IoArrowForward } from "react-icons/io5";
-import { useAuth } from "@/contexts/AuthContext";
 import { LoginRequest } from "@/interfaces/authInterface";
-import { useRouter } from "next/navigation";
-
 
 interface LoginFormProps {
     setActiveTab: (tab: "login" | "register" | "forgot") => void;
+    formData: LoginRequest;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onSubmit: (e: React.FormEvent) => void;
+    showPassword: boolean;
+    toggleShowPassword: () => void;
+    isLoading: boolean;
+    error?: string | null;
 }
 
-export default function LoginForm({ setActiveTab }: LoginFormProps) {
-    const router = useRouter();
-
-    const { login, isLoading, error, clearError } = useAuth();
-    const [formData, setFormData] = useState<LoginRequest>({
-        email: "",
-        password: "",
-    });
-    const [showPassword, setShowPassword] = useState(false);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-        if (error) clearError();
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            await login(formData);
-            router.push("/");
-        } catch (err) {
-            console.error(err);
-        }
-    };
+export default function LoginForm({
+    setActiveTab,
+    formData,
+    onChange,
+    onSubmit,
+    showPassword,
+    toggleShowPassword,
+    isLoading,
+    error,
+}: LoginFormProps) {
 
     return (
         <>
@@ -54,7 +42,7 @@ export default function LoginForm({ setActiveTab }: LoginFormProps) {
             )}
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <form onSubmit={onSubmit} className="flex flex-col gap-5">
                 <label className="flex flex-col gap-2">
                     <span className="text-sm font-bold">Email</span>
                     <div className="relative group">
@@ -65,7 +53,7 @@ export default function LoginForm({ setActiveTab }: LoginFormProps) {
                             type="email"
                             name="email"
                             value={formData.email}
-                            onChange={handleChange}
+                            onChange={onChange}
                             placeholder="Enter your email"
                             className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 pl-12 focus:ring-2 focus:ring-primary focus:outline-none"
                             required
@@ -92,14 +80,14 @@ export default function LoginForm({ setActiveTab }: LoginFormProps) {
                             type={showPassword ? "text" : "password"}
                             name="password"
                             value={formData.password}
-                            onChange={handleChange}
+                            onChange={onChange}
                             placeholder="Enter your password"
                             className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 pl-12 focus:ring-2 focus:ring-primary focus:outline-none"
                             required
                         />
                         <button
                             type="button"
-                            onClick={() => setShowPassword(!showPassword)}
+                            onClick={toggleShowPassword}
                             className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
                         >
                             {showPassword ? <MdOutlineVisibilityOff size={20} /> : <MdOutlineVisibility size={20} />}
