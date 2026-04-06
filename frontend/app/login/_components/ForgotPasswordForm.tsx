@@ -25,7 +25,6 @@ export default function ForgotPasswordForm({
     onVerifyReset,
     onBack,
     isLoading,
-    error,
 }: ForgotPasswordFormProps) {
 
     if (step === "reset") {
@@ -37,12 +36,6 @@ export default function ForgotPasswordForm({
                     <p className="text-gray-500 dark:text-[#b99d9d]">Enter the OTP and your new password</p>
                 </div>
 
-                {/* Error Message */}
-                {error && (
-                    <div className="p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-300 text-sm">
-                        {error}
-                    </div>
-                )}
 
                 {/* Reset Form */}
                 <form onSubmit={onVerifyReset} className="flex flex-col gap-5">
@@ -104,12 +97,6 @@ export default function ForgotPasswordForm({
                 <p className="text-gray-500 dark:text-[#b99d9d]">Enter your email to reset your password.</p>
             </div>
 
-            {/* Error Message */}
-            {error && (
-                <div className="p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-300 text-sm">
-                    {error}
-                </div>
-            )}
 
             {/* Email Form */}
             <form onSubmit={onRequestReset} className="flex flex-col gap-5">

@@ -25,7 +25,6 @@ export default function RegisterForm({
     onVerify,
     onBack,
     isLoading,
-    error,
 }: RegisterFormProps) {
 
     if (step === "otp") {
@@ -36,13 +35,6 @@ export default function RegisterForm({
                     <h2 className="text-3xl font-black">Verify Your Email</h2>
                     <p className="text-gray-500 dark:text-[#b99d9d]">Enter the OTP sent to {formData.email}</p>
                 </div>
-
-                {/* Error Message */}
-                {error && (
-                    <div className="p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-300 text-sm">
-                        {error}
-                    </div>
-                )}
 
                 {/* OTP Form */}
                 <form onSubmit={onVerify} className="flex flex-col gap-5">
@@ -89,13 +81,6 @@ export default function RegisterForm({
                 <h2 className="text-3xl font-black">Create Account</h2>
                 <p className="text-gray-500 dark:text-[#b99d9d]">Fill in your details to create a new account.</p>
             </div>
-
-            {/* Error Message */}
-            {error && (
-                <div className="p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-300 text-sm">
-                    {error}
-                </div>
-            )}
 
             {/* Form */}
             <form onSubmit={onSubmit} className="flex flex-col gap-5">

@@ -2,6 +2,7 @@ import { Be_Vietnam_Pro, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import RouteGuard from "@/route/RouteGuard";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { Toaster } from "react-hot-toast";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
@@ -34,8 +35,53 @@ export default function RootLayout({
           <AuthProvider>
             {children}
           </AuthProvider>
-
         </RouteGuard>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+          gutter={8}
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: "#291e1e",
+              color: "#ffffff",
+              border: "1.5px solid #3d2d2d",
+              borderRadius: "8px",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+              fontFamily: "var(--font-be-vietnam, inherit)",
+              fontSize: "14px",
+              fontWeight: "500",
+            },
+            success: {
+              style: {
+                background: "#1f3a1f",
+                border: "1.5px solid #2d5a2d",
+                boxShadow: "0 4px 20px rgba(46, 200, 76, 0.15)",
+              },
+              iconTheme: {
+                primary: "#2ec84c",
+                secondary: "#1f3a1f",
+              },
+            },
+            error: {
+              style: {
+                background: "#3d1f1f",
+                border: "1.5px solid #5a2d2d",
+                boxShadow: "0 4px 20px rgba(236, 19, 19, 0.15)",
+              },
+              iconTheme: {
+                primary: "#ec1313",
+                secondary: "#3d1f1f",
+              },
+            },
+            loading: {
+              style: {
+                background: "#291e1e",
+                border: "1.5px solid #3d2d2d",
+              },
+            },
+          }}
+        />
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import LoginBackground from "@/public//LoginBackground.png";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MdOutlineMovie } from "react-icons/md";
+import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { LoginRequest, SignupRequestOtpRequest, VerifyPasswordResetRequest } from "@/interfaces/authInterface";
 import LoginForm from "./_components/LoginForm";
@@ -69,8 +70,11 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await login(loginData);
+      toast.success("Login successful!");
       router.push("/");
     } catch (err) {
+      const errorMsg = error || "Login failed. Please try again.";
+      toast.error(errorMsg);
       console.error(err);
     }
   };
@@ -85,8 +89,11 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await requestSignupOtp(registerData);
+      toast.success("OTP sent to your email!");
       setRegisterStep("otp");
     } catch (err) {
+      const errorMsg = error || "Failed to request OTP. Please try again.";
+      toast.error(errorMsg);
       console.error(err);
     }
   };
@@ -95,11 +102,14 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await verifyOtpAndSignup({ email: registerData.email, otp: registerOtp });
+      toast.success("Registration successful! Please log in.");
       setRegisterStep("details");
       setRegisterData({ firstName: "", lastName: "", email: "", password: "", role: "user" });
       setRegisterOtp("");
       setActiveTab("login");
     } catch (err) {
+      const errorMsg = error || "OTP verification failed. Please try again.";
+      toast.error(errorMsg);
       console.error(err);
     }
   };
@@ -125,9 +135,12 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await requestPasswordReset({ email: forgotEmail });
+      toast.success("Reset OTP sent to your email!");
       setForgotData(prev => ({ ...prev, email: forgotEmail }));
       setForgotStep("reset");
     } catch (err) {
+      const errorMsg = error || "Failed to request password reset. Please try again.";
+      toast.error(errorMsg);
       console.error(err);
     }
   };
@@ -136,11 +149,14 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await verifyPasswordReset(forgotData);
+      toast.success("Password reset successful! Please log in.");
       setForgotStep("email");
       setForgotEmail("");
       setForgotData({ email: "", otp: "", password: "" });
       setActiveTab("login");
     } catch (err) {
+      const errorMsg = error || "Password reset failed. Please try again.";
+      toast.error(errorMsg);
       console.error(err);
     }
   };
@@ -220,7 +236,6 @@ export default function LoginPage() {
                 showPassword={showPassword}
                 toggleShowPassword={() => setShowPassword(prev => !prev)}
                 isLoading={isLoading}
-                error={error}
               />
             )}
             {activeTab === "register" && (
@@ -234,7 +249,6 @@ export default function LoginPage() {
                 onVerify={handleRegisterVerifyOtp}
                 onBack={handleRegisterBack}
                 isLoading={isLoading}
-                error={error}
               />
             )}
             {activeTab === "forgot" && (
@@ -248,7 +262,6 @@ export default function LoginPage() {
                 onVerifyReset={handleVerifyReset}
                 onBack={handleForgotBack}
                 isLoading={isLoading}
-                error={error}
               />
             )}
           </div>

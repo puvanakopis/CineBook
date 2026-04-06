@@ -23,7 +23,6 @@ export default function LoginForm({
     showPassword,
     toggleShowPassword,
     isLoading,
-    error,
 }: LoginFormProps) {
 
     return (
@@ -33,13 +32,6 @@ export default function LoginForm({
                 <h2 className="text-3xl font-black">Welcome Back</h2>
                 <p className="text-gray-500 dark:text-[#b99d9d]">Please enter your details to sign in.</p>
             </div>
-
-            {/* Error Message */}
-            {error && (
-                <div className="p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-300 text-sm">
-                    {error}
-                </div>
-            )}
 
             {/* Form */}
             <form onSubmit={onSubmit} className="flex flex-col gap-5">
