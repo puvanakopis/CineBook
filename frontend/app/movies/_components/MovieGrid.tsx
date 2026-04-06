@@ -1,7 +1,7 @@
 'use client';
 
 import MovieCard from "./MovieCard";
-import { Movie } from '@/interface/movie';
+import { Movie } from '@/interfaces/movie';
 
 interface MovieGridProps {
     movies: Movie[];
@@ -10,7 +10,7 @@ interface MovieGridProps {
 
 const MovieGrid = ({ movies, viewMode }: MovieGridProps) => {
     return (
-        <div className={viewMode === 'grid' 
+        <div className={viewMode === 'grid'
             ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
             : "flex flex-col gap-6"
         }>

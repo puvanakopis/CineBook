@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { IoMdStarOutline } from "react-icons/io";
 import { MdOutlineSchedule } from "react-icons/md";
-import { Movie } from '@/interface/movie';
+import { Movie } from '@/interfaces/movie';
 
 interface MovieCardProps {
     movie: Movie;

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { MdOutlineCancel, MdOutlineFastfood, MdOutlineTheaterComedy } from "react-icons/md";
 import { FaRegCheckCircle, FaParking, FaWheelchair } from "react-icons/fa";
-import { Theater, TimeSlot } from "@/interface/movie";
+import { Theater, TimeSlot } from "@/interfaces/movie";
 
 interface ShowtimesProps {
     theaters: Theater[];

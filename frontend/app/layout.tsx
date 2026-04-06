@@ -1,6 +1,7 @@
 import { Be_Vietnam_Pro, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import RouteGuard from "@/route/RouteGuard";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
@@ -29,7 +30,12 @@ export default function RootLayout({
       <head>
       </head>
       <body className={`${beVietnamPro.variable} ${notoSans.variable}`}>
-        <RouteGuard>{children}</RouteGuard>
+        <RouteGuard>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+
+        </RouteGuard>
       </body>
     </html>
   );

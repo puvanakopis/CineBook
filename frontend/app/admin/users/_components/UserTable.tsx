@@ -1,6 +1,6 @@
 'use client';
 
-import { User } from '@/interface/user';
+import { User } from '@/interfaces/user';
 import { MdEdit, MdBlock, MdCheckCircleOutline } from 'react-icons/md';
 
 interface UserTableProps {
@@ -50,11 +50,10 @@ export function UserTable({ users }: UserTableProps) {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 align-top">
-                                        <span className={`text-xs font-medium px-2 py-1 rounded-md ${
-                                            user.role === 'Admin' ? 'bg-purple-500/10 text-purple-400' :
-                                            user.role === 'Manager' ? 'bg-blue-500/10 text-blue-400' :
-                                            'bg-slate-500/10 text-slate-400'
-                                        }`}>
+                                        <span className={`text-xs font-medium px-2 py-1 rounded-md ${user.role === 'Admin' ? 'bg-purple-500/10 text-purple-400' :
+                                                user.role === 'Manager' ? 'bg-blue-500/10 text-blue-400' :
+                                                    'bg-slate-500/10 text-slate-400'
+                                            }`}>
                                             {user.role}
                                         </span>
                                     </td>
@@ -65,11 +64,10 @@ export function UserTable({ users }: UserTableProps) {
                                         {user.totalBookings}
                                     </td>
                                     <td className="px-6 py-4 align-top">
-                                        <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-                                            user.status === 'Active'
+                                        <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${user.status === 'Active'
                                                 ? 'bg-emerald-500/10 text-emerald-400'
                                                 : 'bg-rose-500/10 text-rose-400'
-                                        }`}>
+                                            }`}>
                                             <span className={`size-1.5 rounded-full ${user.status === 'Active' ? 'bg-emerald-400' : 'bg-rose-400'}`} />
                                             {user.status}
                                         </span>
