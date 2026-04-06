@@ -119,3 +119,50 @@ exports.login = async (req, res) => {
     const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
     res.status(200).json({ token, user: { email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName } });
 };
+
+exports.requestPasswordReset = async (req, res) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+
+    const user = await getUserByEmail(email);
+    if (!user) return res.status(404).json({ message: 'No account found with that email' });
+
+    const otpCode = generateOtpCode();
+    await OTP.findOneAndUpdate(
+        { email: email.toLowerCase() },
+        {
+            email: email.toLowerCase(),
+            otp: otpCode,
+            expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+            role: user.role,
+            firstName: user.firstName,
+            lastName: user.lastName,
+        },
+        { upsert: true, returnDocument: 'after' }
+    );
+
+    const html = loadTemplate('passwordResetOtp.html', { firstName: user.firstName || 'User', otpCode });
+    await transporter.sendMail({ from: `CineBook <${process.env.EMAIL_USER}>`, to: email, subject: 'CineBook Password Reset OTP', html });
+
+    res.status(200).json({ message: 'Password reset OTP sent', email });
+};
+
+exports.verifyPasswordResetOtp = async (req, res) => {
+    const { email, otp, password } = req.body;
+    if (!email || !otp || !password) return res.status(400).json({ message: 'Email, OTP and new password are required' });
+
+    const otpRecord = await OTP.findOne({ email: email.toLowerCase(), otp });
+    if (!otpRecord || otpRecord.expiresAt < new Date()) {
+        return res.status(400).json({ message: 'Invalid or expired OTP' });
+    }
+
+    const Model = getModelByRole(otpRecord.role);
+    const user = await Model.findOne({ email: email.toLowerCase() });
+    if (!user) return res.status(404).json({ message: 'Account not found' });
+
+    user.password = await bcrypt.hash(password, 10);
+    await user.save();
+    await OTP.deleteOne({ email: email.toLowerCase() });
+
+    res.status(200).json({ message: 'Password reset successful' });
+};

@@ -1,14 +1,28 @@
 "use client";
 import LoginBackground from "@/public//LoginBackground.png";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { MdOutlineMovie } from "react-icons/md";
+import { useAuth } from "@/contexts/AuthContext";
 import LoginForm from "./_components/LoginForm";
 import RegisterForm from "./_components/RegisterForm";
 import ForgotPasswordForm from "./_components/ForgotPasswordForm"
 
 export default function LoginPage() {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"login" | "register" | "forgot">("login");
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
+
+  if (isAuthenticated) {
+    return null; 
+  }
 
   return (
     <div className="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col md:flex-row overflow-x-hidden">
