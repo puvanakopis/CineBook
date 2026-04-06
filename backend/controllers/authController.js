@@ -37,7 +37,10 @@ const getModelByRole = (role) => {
     return role === 'admin' ? Admin : User;
 };
 
-
+const getUserByEmail = async (email) => {
+    const normalizedEmail = email.toLowerCase();
+    return (await Admin.findOne({ email: normalizedEmail })) || (await User.findOne({ email: normalizedEmail }));
+};
 
 const generateOtpCode = () => Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -71,4 +74,34 @@ exports.requestOtp = async (req, res) => {
     await transporter.sendMail({ from: `CineBook <${process.env.EMAIL_USER}>`, to: email, subject: 'CineBook Signup OTP', html });
 
     res.status(200).json({ message: 'OTP sent', email });
+};
+
+exports.verifyOtpAndSignup = async (req, res) => {
+    const { email, otp } = req.body;
+    if (!email || !otp) return res.status(400).json({ message: 'Email and OTP are required' });
+
+    const otpRecord = await OTP.findOne({ email: email.toLowerCase(), otp });
+    if (!otpRecord || otpRecord.expiresAt < new Date()) {
+        return res.status(400).json({ message: 'Invalid or expired OTP' });
+    }
+
+    const Model = getModelByRole(otpRecord.role);
+    const existing = await Model.findOne({ email: email.toLowerCase() });
+    if (existing) {
+        await OTP.deleteOne({ email: email.toLowerCase() });
+        return res.status(409).json({ message: `${otpRecord.role} email already exists` });
+    }
+
+    const newUser = new Model({
+        email: email.toLowerCase(),
+        password: otpRecord.tempPassword,
+        firstName: otpRecord.firstName,
+        lastName: otpRecord.lastName,
+        role: otpRecord.role,
+    });
+
+    await newUser.save();
+    await OTP.deleteOne({ email: email.toLowerCase() });
+
+    res.status(201).json({ message: 'Signup successful', user: { email: newUser.email, role: newUser.role, firstName: newUser.firstName, lastName: newUser.lastName } });
 };
