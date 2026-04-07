@@ -1,5 +1,3 @@
-// src/interfaces/movieInterface.ts
-
 export interface Cast {
     name: string;
     role: string;
@@ -43,7 +41,7 @@ export interface CreateMovieRequest {
     languages: string[];
     formats: string;
     synopsis: string;
-    poster: string;
+    poster?: File | string;
     trailerUrl: string;
     cast?: Cast[];
     reviews?: Review[];
@@ -52,6 +50,9 @@ export interface CreateMovieRequest {
 }
 
 export type UpdateMovieRequest = Partial<CreateMovieRequest>;
+
+export type CreateMoviePayload = CreateMovieRequest | FormData;
+export type UpdateMoviePayload = UpdateMovieRequest | FormData;
 
 export interface CreateMovieResponse {
     message: string;

@@ -1,5 +1,3 @@
-// src/context/MovieContext.tsx
-
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
@@ -8,8 +6,8 @@ import { movieApi } from "@/services/movieApi";
 import {
     MovieContextType,
     Movie,
-    CreateMovieRequest,
-    UpdateMovieRequest,
+    CreateMoviePayload,
+    UpdateMoviePayload,
 } from "@/interfaces/movieInterface";
 
 const MovieContext = createContext<MovieContextType | undefined>(undefined);
@@ -82,7 +80,7 @@ export const MovieProvider: React.FC<MovieProviderProps> = ({ children }) => {
     };
 
     // ---------- CREATE MOVIE (Admin only) ----------
-    const createMovie = async (data: CreateMovieRequest) => {
+    const createMovie = async (data: CreateMoviePayload) => {
         try {
             setIsLoading(true);
             setError(null);
@@ -98,7 +96,7 @@ export const MovieProvider: React.FC<MovieProviderProps> = ({ children }) => {
     };
 
     // ---------- UPDATE MOVIE (Admin only) ----------
-    const updateMovie = async (id: string, data: UpdateMovieRequest) => {
+    const updateMovie = async (id: string, data: UpdateMoviePayload) => {
         try {
             setIsLoading(true);
             setError(null);

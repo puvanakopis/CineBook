@@ -7,7 +7,9 @@ import {
     UpdateMovieRequest,
     UpdateMovieResponse,
     DeleteMovieResponse,
-    GetMoviesResponse
+    GetMoviesResponse,
+    CreateMoviePayload,
+    UpdateMoviePayload,
 } from "@/interfaces/movieInterface";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -38,6 +40,37 @@ api.interceptors.response.use(
     }
 );
 
+const buildFormData = (payload: CreateMovieRequest | UpdateMovieRequest): FormData => {
+    const formData = new FormData();
+
+    Object.entries(payload).forEach(([key, value]) => {
+        if (value === undefined || value === null) {
+            return;
+        }
+
+        if (value instanceof File) {
+            formData.append(key, value);
+        } else if (Array.isArray(value)) {
+            value.forEach((item) => {
+                formData.append(key, typeof item === "object" ? JSON.stringify(item) : String(item));
+            });
+        } else if (typeof value === "object") {
+            formData.append(key, JSON.stringify(value));
+        } else {
+            formData.append(key, String(value));
+        }
+    });
+
+    return formData;
+};
+
+const shouldSendMultipart = (data: CreateMoviePayload | UpdateMoviePayload): data is FormData | CreateMovieRequest | UpdateMovieRequest => {
+    return (
+        data instanceof FormData ||
+        (data !== null && typeof data === "object" && "poster" in data && data.poster instanceof File)
+    );
+};
+
 export const movieApi = {
     getMovies: async (): Promise<GetMoviesResponse> => {
         const res = await api.get<GetMoviesResponse>("/api/movies");
@@ -49,12 +82,28 @@ export const movieApi = {
         return res.data;
     },
 
-    createMovie: async (data: CreateMovieRequest): Promise<CreateMovieResponse> => {
+    createMovie: async (data: CreateMoviePayload): Promise<CreateMovieResponse> => {
+        if (shouldSendMultipart(data)) {
+            const payload = data instanceof FormData ? data : buildFormData(data);
+            const res = await api.post<CreateMovieResponse>("/api/movies", payload, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+            return res.data;
+        }
+
         const res = await api.post<CreateMovieResponse>("/api/movies", data);
         return res.data;
     },
 
-    updateMovie: async (id: string, data: UpdateMovieRequest): Promise<UpdateMovieResponse> => {
+    updateMovie: async (id: string, data: UpdateMoviePayload): Promise<UpdateMovieResponse> => {
+        if (shouldSendMultipart(data)) {
+            const payload = data instanceof FormData ? data : buildFormData(data);
+            const res = await api.put<UpdateMovieResponse>(`/api/movies/${id}`, payload, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+            return res.data;
+        }
+
         const res = await api.put<UpdateMovieResponse>(`/api/movies/${id}`, data);
         return res.data;
     },
