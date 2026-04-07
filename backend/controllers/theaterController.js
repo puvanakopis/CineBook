@@ -19,7 +19,24 @@ const validateMoviesInShows = async (screens) => {
     return true;
 };
 
+exports.getTheaters = async (req, res) => {
+    try {
+        const theaters = await Theater.find();
+        res.status(200).json(theaters);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
 
+exports.getTheaterById = async (req, res) => {
+    try {
+        const theater = await Theater.findById(req.params.id);
+        if (!theater) return res.status(404).json({ message: "Theater not found" });
+        res.status(200).json(theater);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
 
 exports.createTheater = async (req, res) => {
     try {
