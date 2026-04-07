@@ -14,6 +14,30 @@ export interface Review {
     updatedAt?: Date;
 }
 
+export interface MovieShow {
+    movie: string;
+    date: string;
+    time: string;
+    price: number;
+    currency: string;
+    status: "available" | "sold-out" | "almost-full" | "fast-filling";
+}
+
+export interface MovieScreen {
+    screen_id: string;
+    name: string;
+    type: string;
+    shows: MovieShow[];
+}
+
+export interface MovieShowing {
+    theaterId: string;
+    name: string;
+    address: string;
+    city: string;
+    screens: MovieScreen[];
+}
+
 export interface Movie {
     _id: string;
     title: string;
@@ -29,6 +53,7 @@ export interface Movie {
     reviews: Review[];
     isNowShowing: boolean;
     isUpcoming: boolean;
+    showings?: MovieShowing[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -78,25 +103,19 @@ export interface MovieState {
 }
 
 export interface MovieContextType extends MovieState {
-    // Fetch operations
     getMovies: () => Promise<void>;
     getMovieById: (id: string) => Promise<void>;
 
-    // Create operation
     createMovie: (data: CreateMovieRequest) => Promise<void>;
 
-    // Update operation
     updateMovie: (id: string, data: UpdateMovieRequest) => Promise<void>;
 
-    // Delete operation
     deleteMovie: (id: string) => Promise<void>;
 
-    // Utility
     clearError: () => void;
     clearSelectedMovie: () => void;
 }
 
-// Query params interface for filtering
 export interface MovieFilters {
     isNowShowing?: boolean;
     isUpcoming?: boolean;

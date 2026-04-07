@@ -1,4 +1,5 @@
 const Movie = require("../models/movieModel");
+const Theater = require("../models/theaterModel");
 const fs = require("fs");
 const path = require("path");
 
@@ -36,7 +37,39 @@ exports.getMovieById = async (req, res) => {
     try {
         const movie = await Movie.findById(req.params.id);
         if (!movie) return res.status(404).json({ message: "Movie not found" });
-        res.status(200).json(movie);
+
+        const theaters = await Theater.find({
+            "screens.shows.movie": req.params.id,
+        });
+
+        const showings = theaters.map((theater) => {
+            const relevantScreens = theater.screens
+                .map((screen) => {
+                    const relevantShows = screen.shows.filter(
+                        (show) => show.movie === req.params.id
+                    );
+                    return {
+                        ...screen.toObject(),
+                        shows: relevantShows,
+                    };
+                })
+                .filter((screen) => screen.shows.length > 0);
+
+            return {
+                theaterId: theater._id,
+                name: theater.name,
+                address: theater.address,
+                city: theater.city,
+                screens: relevantScreens,
+            };
+        }).filter(showing => showing.screens.length > 0);
+
+        const movieWithShowings = {
+            ...movie.toObject(),
+            showings,
+        };
+
+        res.status(200).json(movieWithShowings);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
