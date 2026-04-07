@@ -88,4 +88,9 @@ export const authApi = {
     isAuthenticated: (): boolean => {
         return !!Cookies.get("token");
     },
+
+    getCurrentUser: async () => {
+        const res = await api.get("/api/auth/me");
+        return res.data.user;
+    },
 };

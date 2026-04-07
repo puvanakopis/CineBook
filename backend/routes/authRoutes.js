@@ -13,4 +13,8 @@ router.post('/login', authController.login);
 router.post('/forgot-password/request-otp', authController.requestPasswordReset);
 router.post('/forgot-password/verify-otp', authController.verifyPasswordResetOtp);
 
+// Get Current User
+const { protect } = require('../middlewares/authMiddleware');
+router.get('/me', protect, authController.getCurrentUser);
+
 module.exports = router;
