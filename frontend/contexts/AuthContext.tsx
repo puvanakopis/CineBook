@@ -33,22 +33,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Initialize auth state from cookies on mount
     useEffect(() => {
-        const currentUser = authApi.getCurrentUser();
-        const isAuth = authApi.isAuthenticated();
+        const initializeUser = async () => {
+            try {
+                const isAuth = authApi.isAuthenticated();
+                setIsAuthenticated(isAuth);
 
-        if (currentUser && isAuth) {
-            setUser(currentUser);
-            setIsAuthenticated(true);
-        }
+                if (isAuth) {
+                    const userData = await authApi.getCurrentUser();
+                    console.log(userData);
+                    setUser(userData);
+                }
+            } catch (err) {
+                console.error("Error fetching user data:", err);
+                setUser(null);
+                setIsAuthenticated(false);
+            }
+        };
 
-        // Listen for unauthorized events
         const handleUnauthorized = () => {
             setUser(null);
             setIsAuthenticated(false);
         };
 
+        initializeUser();
         window.addEventListener("unauthorized", handleUnauthorized);
         return () => window.removeEventListener("unauthorized", handleUnauthorized);
     }, []);
@@ -64,9 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
-    const clearError = () => {
-        setError(null);
-    };
+    const clearError = () => setError(null);
 
     // ---------- REQUEST SIGNUP OTP ----------
     const requestSignupOtp = async (data: SignupRequestOtpRequest) => {
@@ -108,6 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setError(null);
             const response = await authApi.login(data);
             setUser(response.user);
+            console.log(response.user);
             setIsAuthenticated(true);
         } catch (err) {
             handleError(err);

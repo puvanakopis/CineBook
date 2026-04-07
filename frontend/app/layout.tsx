@@ -2,6 +2,7 @@ import { Be_Vietnam_Pro, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import RouteGuard from "@/route/RouteGuard";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { MovieProvider } from "@/contexts/MovieContext";
 import { Toaster } from "react-hot-toast";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -31,11 +32,13 @@ export default function RootLayout({
       <head>
       </head>
       <body className={`${beVietnamPro.variable} ${notoSans.variable}`}>
-        <RouteGuard>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </RouteGuard>
+        <AuthProvider>
+          <MovieProvider>
+            <RouteGuard>
+              {children}
+            </RouteGuard>
+          </MovieProvider>
+        </AuthProvider>
         <Toaster
           position="top-right"
           reverseOrder={false}

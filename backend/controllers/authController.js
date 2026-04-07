@@ -166,3 +166,22 @@ exports.verifyPasswordResetOtp = async (req, res) => {
 
     res.status(200).json({ message: 'Password reset successful' });
 };
+
+exports.getCurrentUser = async (req, res) => {
+    try {
+        const user = req.user;
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        res.status(200).json({
+            user: {
+                id: user._id,
+                email: user.email,
+                role: user.role,
+                firstName: user.firstName,
+                lastName: user.lastName,
+            },
+        });
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching user', error: err.message });
+    }
+};
