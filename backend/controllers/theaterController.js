@@ -65,3 +65,47 @@ exports.updateTheater = async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 };
+
+exports.deleteTheater = async (req, res) => {
+    try {
+        const theater = await Theater.findByIdAndDelete(req.params.id);
+        if (!theater) return res.status(404).json({ message: "Theater not found" });
+        res.status(200).json({ message: "Theater deleted" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+exports.addReview = async (req, res) => {
+    try {
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({ message: "User must be authenticated to add a review" });
+        }
+
+        if (req.user.role !== 'user') {
+            return res.status(403).json({ message: "Only users can add reviews" });
+        }
+
+        const theater = await Theater.findById(req.params.id);
+        if (!theater) return res.status(404).json({ message: "Theater not found" });
+
+        if (!req.body.rating || !req.body.message) {
+            return res.status(400).json({ message: "Rating and message are required" });
+        }
+
+        if (req.body.rating < 0 || req.body.rating > 5) {
+            return res.status(400).json({ message: "Rating must be between 0 and 5" });
+        }
+
+        theater.reviews.push({
+            user: req.user._id,
+            rating: req.body.rating,
+            message: req.body.message,
+        });
+
+        await theater.save();
+        res.status(201).json(theater);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};

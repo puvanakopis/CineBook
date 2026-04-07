@@ -8,5 +8,8 @@ router.get("/:id", protect, theaterController.getTheaterById);
 
 router.post("/", protect, authorize("admin"), theaterController.createTheater);
 router.put("/:id", protect, authorize("admin"), theaterController.updateTheater);
+router.delete("/:id", protect, authorize("admin"), theaterController.deleteTheater);
+
+router.post("/:id/review", protect, authorize("user"), theaterController.addReview);
 
 module.exports = router;
