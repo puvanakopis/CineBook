@@ -1,7 +1,7 @@
 'use client';
 
 import MovieCard from "./MovieCard";
-import { Movie } from '@/interfaces/movie';
+import { Movie } from '@/interfaces/movieInterface';
 
 interface MovieGridProps {
     movies: Movie[];
@@ -15,7 +15,7 @@ const MovieGrid = ({ movies, viewMode }: MovieGridProps) => {
             : "flex flex-col gap-6"
         }>
             {movies.map((movie) => (
-                <MovieCard key={movie.movie_id} movie={movie} viewMode={viewMode} />
+                <MovieCard key={movie._id} movie={movie} viewMode={viewMode} />
             ))}
         </div>
     );

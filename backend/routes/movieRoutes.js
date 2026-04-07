@@ -6,8 +6,8 @@ const { uploadImage } = require("../middlewares/uploadMiddleware");
 
 const uploadMovie = uploadImage("movies");
 
-router.get("/", protect, movieController.getMovies);
-router.get("/:id", protect, movieController.getMovieById);
+router.get("/",  movieController.getMovies);
+router.get("/:id", movieController.getMovieById);
 
 router.post("/", protect, authorize("admin"), uploadMovie.single("poster"), movieController.createMovie);
 router.put("/:id", protect, authorize("admin"), uploadMovie.single("poster"), movieController.updateMovie);

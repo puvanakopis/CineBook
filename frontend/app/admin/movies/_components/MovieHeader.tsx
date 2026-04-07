@@ -4,20 +4,21 @@ import { MdAdd } from 'react-icons/md';
 
 export function MovieHeader() {
     return (
-        <div className="relative overflow-hidden rounded-xl bg-surface-dark min-h-[180px] shadow-xl">
-            <div className="absolute inset-0 bg-gradient-to-r from-background-dark via-background-dark/80 to-transparent" />
-
-            <div className="relative z-10 p-6 md:p-10 flex flex-col justify-center h-full">
-                <h1 className="text-white text-3xl font-bold mb-2">Movies</h1>
-                <p className="text-gray-300 max-w-lg mb-6">
-                    Manage all films in the cinema catalog with quick filters, bulk actions, and curated admin listing.
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                    Movie Management
+                </h2>
+                <p className="text-slate-500 dark:text-[#b99d9d] text-sm mt-1">
+                    Manage all movies in your cinema catalog with ease.
                 </p>
-                <div className="flex gap-3">
-                    <button className="bg-primary hover:bg-red-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-primary/30 flex items-center gap-2">
-                        <MdAdd className="text-[20px]" />
-                        Add New Movie
-                    </button>
-                </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-dark shadow-lg shadow-primary/20 transition-all">
+                    <MdAdd className="text-lg" />
+                    Add Movie
+                </button>
             </div>
         </div>
     );

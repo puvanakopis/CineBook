@@ -3,6 +3,7 @@
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import CineBotChat from "@/components/CineBotChat";
 import { AdminSidebar } from "@/components/AdminSidebar";
@@ -96,10 +97,10 @@ export default function RouteGuard({ children }: RouteGuardProps) {
     // Render admin layout
     if (user?.role === "admin" && pathname.startsWith("/admin")) {
         return (
-            <div className="min-h-screen flex bg-[#090505] text-white">
-                <AdminSidebar />
-                <main className="flex-1 bg-[#0f0b0b] min-h-screen">{children}</main>
-            </div>
+            <>
+                <AdminNavbar />
+                <main className="min-h-screen bg-[#0b0909] text-white">{children}</main>
+            </>
         );
     }
 
