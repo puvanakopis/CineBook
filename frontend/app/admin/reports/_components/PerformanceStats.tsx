@@ -9,8 +9,7 @@ const stats = [
     change: '+15.8%',
     changeType: 'positive',
     icon: MdAttachMoney,
-    iconColor: 'text-emerald-500',
-    bgColor: 'bg-emerald-500/10',
+    bgColor: 'bg-emerald-500/10 text-emerald-600',
   },
   {
     label: 'Avg. Occupancy',
@@ -18,8 +17,7 @@ const stats = [
     change: '+4.2%',
     changeType: 'positive',
     icon: MdEventSeat,
-    iconColor: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
+    bgColor: 'bg-blue-500/10 text-blue-600',
   },
   {
     label: 'Conversion Rate',
@@ -27,8 +25,7 @@ const stats = [
     change: '+1.1%',
     changeType: 'positive',
     icon: MdTrendingUp,
-    iconColor: 'text-purple-500',
-    bgColor: 'bg-purple-500/10',
+    bgColor: 'bg-purple-500/10 text-purple-600',
   },
   {
     label: 'Avg. Ticket Price',
@@ -36,37 +33,38 @@ const stats = [
     change: '-0.5%',
     changeType: 'negative',
     icon: MdShowChart,
-    iconColor: 'text-orange-500',
-    bgColor: 'bg-orange-500/10',
+    bgColor: 'bg-orange-500/10 text-orange-600',
   },
 ];
 
 export function PerformanceStats() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
+        const isPositive = stat.changeType === 'positive';
         return (
           <div
             key={index}
-            className="bg-surface-light dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-[#392828] shadow-sm hover:border-primary/50 transition-all group"
+            className="p-6 bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-[#392828] shadow-sm hover:shadow-md transition-shadow"
           >
-            <div className="flex justify-between items-start mb-4">
-              <div className={`${stat.bgColor} p-2 rounded-lg`}>
-                <Icon className={`${stat.iconColor} text-2xl`} />
+            <div className="flex items-center gap-4 mb-4">
+              <div className={`p-3 rounded-lg ${stat.bgColor}`}>
+                <Icon className="text-2xl" />
               </div>
               <span
-                className={`flex items-center text-xs font-bold px-2 py-1 rounded-full ${
-                  stat.changeType === 'positive'
-                    ? 'text-emerald-500 bg-emerald-500/10'
-                    : 'text-rose-500 bg-rose-500/10'
+                className={`ml-auto text-xs font-semibold px-2 py-1 rounded-full ${
+                  isPositive ? 'text-emerald-500 bg-emerald-500/10' : 'text-rose-500 bg-rose-500/10'
                 }`}
               >
                 {stat.change}
               </span>
             </div>
-            <p className="text-slate-500 dark:text-[#b99d9d] text-sm font-medium">{stat.label}</p>
-            <h3 className="text-slate-900 dark:text-white text-2xl font-bold mt-1 tracking-tight">{stat.value}</h3>
+
+            <p className="text-sm font-medium text-slate-500 dark:text-[#b99d9d] uppercase tracking-wider">
+              {stat.label}
+            </p>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{stat.value}</h3>
           </div>
         );
       })}

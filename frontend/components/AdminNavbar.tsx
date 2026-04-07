@@ -14,8 +14,8 @@ const AdminNavbar = () => {
         { href: "/admin", label: "Dashboard" },
         { href: "/admin/movies", label: "Movies" },
         { href: "/admin/bookings", label: "Bookings" },
-        { href: "/admin/reports", label: "Reports" },
         { href: "/admin/users", label: "Users" },
+        { href: "/admin/reports", label: "Reports" },
     ];
 
     return (
@@ -39,8 +39,8 @@ const AdminNavbar = () => {
                             key={link.href}
                             href={link.href}
                             className={`text-base font-medium leading-normal transition-colors ${pathname === link.href
-                                    ? "text-[#ec1313] font-bold"
-                                    : "text-white hover:text-[#ec1313]"
+                                ? "text-[#ec1313] font-bold"
+                                : "text-white hover:text-[#ec1313]"
                                 }`}
                         >
                             {link.label}

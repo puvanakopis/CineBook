@@ -31,8 +31,6 @@ export function MovieFilters({
 }: MovieFiltersProps) {
   return (
     <aside className="h-fit space-y-6 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-[#392828] p-6 shadow-sm">
-
-      {/* Header */}
       <div className="space-y-2">
         <h3 className="text-lg font-bold text-slate-900 dark:text-white">
           Movie filters
@@ -42,15 +40,11 @@ export function MovieFilters({
         </p>
       </div>
 
-      {/* Filters */}
       <div className="space-y-4">
-
-        {/* Search */}
         <div className="space-y-3">
           <label className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-[#b99d9d] font-semibold block">
             Search movies
           </label>
-
           <input
             type="text"
             value={searchQuery}
@@ -60,12 +54,10 @@ export function MovieFilters({
           />
         </div>
 
-        {/* Genre */}
         <div className="space-y-3">
           <label className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-[#b99d9d] font-semibold block">
             Genre
           </label>
-
           <div className="relative">
             <select
               value={selectedGenre}
@@ -79,20 +71,16 @@ export function MovieFilters({
                 </option>
               ))}
             </select>
-
-            {/* Custom dropdown icon */}
             <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
               <RiArrowDropDownLine size={27} />
             </div>
           </div>
         </div>
 
-        {/* Age Rating */}
         <div className="space-y-3">
           <label className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-[#b99d9d] font-semibold block">
             Age rating
           </label>
-
           <div className="relative">
             <select
               value={selectedRating}
@@ -106,19 +94,16 @@ export function MovieFilters({
                 </option>
               ))}
             </select>
-
             <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
               <RiArrowDropDownLine size={27} />
             </div>
           </div>
         </div>
 
-        {/* Release Status */}
         <div className="space-y-3">
           <label className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-[#b99d9d] font-semibold block">
             Release status
           </label>
-
           <div className="relative">
             <select
               value={selectedStatus}
@@ -131,13 +116,11 @@ export function MovieFilters({
                 </option>
               ))}
             </select>
-
             <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400">
               <RiArrowDropDownLine size={27} />
             </div>
           </div>
         </div>
-
       </div>
     </aside>
   );
