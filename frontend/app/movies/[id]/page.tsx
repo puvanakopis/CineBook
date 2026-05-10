@@ -1,43 +1,132 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MovieHero from "./_components/MovieHero";
 import Showtimes from "./_components/Showtimes";
 import CastCrew from "./_components/CastCrew";
 import Reviews from "./_components/Reviews";
-import { movies } from "@/data/movie";
-import { Review, Theater, TimeSlot } from "@/interfaces/movie";
+import { useMovie } from "@/contexts/MovieContext";
+import { Review, Theater, TimeSlot, Cast } from "@/interfaces/movie";
+import type {
+  Cast as BackendCast,
+  MovieShowing,
+  Review as BackendReview,
+} from "@/interfaces/movieInterface";
 
 export default function MovieDetail() {
   const params = useParams();
   const movieId = params?.id as string;
-  const movie = movies.find((m) => m.movie_id === movieId);
+  const {
+    selectedMovie,
+    getMovieById,
+    addReview,
+    error,
+    clearError,
+  } = useMovie();
 
-  const [localReviews, setLocalReviews] = useState<Review[]>(movie?.reviews || []);
   const [userRating, setUserRating] = useState<number>(0);
-  const [reviewText, setReviewText] = useState<string>('');
+  const [reviewText, setReviewText] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<string>("");
 
-  const [selectedDate, setSelectedDate] = useState<string>(getDefaultDate());
+  useEffect(() => {
+    if (movieId) {
+      getMovieById(movieId);
+    }
+  }, [movieId, getMovieById]);
 
-  function getDefaultDate(): string {
-    if (!movie) return '';
+  useEffect(() => {
+    if (error) {
+      console.error(error);
+      clearError();
+    }
+  }, [error, clearError]);
 
-    const allDates = getAllDates(movie.theaters);
-    return allDates[0] || '';
+  const mappedCast: Cast[] = (selectedMovie?.cast || []).map(
+    (member: BackendCast, idx: number) => ({
+      cast_id: idx.toString(),
+      name: member.name,
+      role: member.role,
+      type: "actor",
+      imageUrl: member.profilePicture,
+    })
+  );
+
+  const mappedTheaters: Theater[] = (selectedMovie?.showings || []).map(
+    (showing: MovieShowing) => ({
+      theater_id: showing.theaterId,
+      name: showing.name,
+      address: showing.address,
+      features: {
+        mTicket: true,
+        foodBeverage: true,
+        parking: true,
+        wheelchair: true,
+      },
+      showtimes: {
+        standard: showing.screens.flatMap((screen) =>
+          screen.shows.map((show) => ({
+            date: show.date,
+            times: [
+              {
+                time: show.time,
+                price: show.price,
+                currency: "USD",
+                isSoldOut: show.status === "sold-out",
+              },
+            ],
+          }))
+        ),
+        imax3d: [],
+      },
+    })
+  );
+
+  const mappedReviews: Review[] = (selectedMovie?.reviews || []).map(
+    (review: BackendReview, idx: number) => ({
+      review_id: idx.toString(),
+      user_id: review.user || "unknown",
+      author: review.user || "Anonymous",
+      date: new Date(review.createdAt || 0).toISOString().split("T")[0],
+      rating: review.rating,
+      content: review.message,
+      initials: (review.user || "A").slice(0, 2).toUpperCase(),
+      hasPremium: false,
+      likes: 0,
+      verified: false,
+    })
+  );
+
+  if (!selectedMovie) {
+    return (
+      <main>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-white">Loading movie details...</p>
+          </div>
+        </div>
+      </main>
+    );
   }
+
+  const averageRating =
+    selectedMovie.reviews && selectedMovie.reviews.length > 0
+      ? selectedMovie.reviews.reduce((sum, r) => sum + r.rating, 0) /
+      selectedMovie.reviews.length
+      : 0;
 
   function getAllDates(theaters: Theater[]): string[] {
     const dateSet = new Set<string>();
-    theaters.forEach(theater => {
+    theaters.forEach((theater) => {
       if (theater.showtimes.standard) {
-        theater.showtimes.standard.forEach(dateShowtime => {
+        theater.showtimes.standard.forEach((dateShowtime) => {
           dateSet.add(dateShowtime.date);
         });
       }
       if (theater.showtimes.imax3d) {
-        theater.showtimes.imax3d.forEach(dateShowtime => {
+        theater.showtimes.imax3d.forEach((dateShowtime) => {
           dateSet.add(dateShowtime.date);
         });
       }
@@ -45,7 +134,14 @@ export default function MovieDetail() {
     return Array.from(dateSet).sort();
   }
 
-  function formatDateDisplay(dateString: string): { day: string; month: string; weekday: string } {
+  const allDates = getAllDates(mappedTheaters);
+  const activeSelectedDate = selectedDate || allDates[0] || "";
+
+  function formatDateDisplay(dateString: string): {
+    day: string;
+    month: string;
+    weekday: string;
+  } {
     const date = new Date(dateString);
     const today = new Date();
     const tomorrow = new Date(today);
@@ -54,107 +150,82 @@ export default function MovieDetail() {
     if (date.toDateString() === today.toDateString()) {
       return {
         day: date.getDate().toString(),
-        month: date.toLocaleString('default', { month: 'short' }).toUpperCase(),
-        weekday: 'Today'
+        month: date.toLocaleString("default", { month: "short" }).toUpperCase(),
+        weekday: "Today",
       };
     } else if (date.toDateString() === tomorrow.toDateString()) {
       return {
         day: date.getDate().toString(),
-        month: date.toLocaleString('default', { month: 'short' }).toUpperCase(),
-        weekday: 'Tomorrow'
+        month: date.toLocaleString("default", { month: "short" }).toUpperCase(),
+        weekday: "Tomorrow",
       };
     } else {
       return {
         day: date.getDate().toString(),
-        month: date.toLocaleString('default', { month: 'short' }).toUpperCase(),
-        weekday: date.toLocaleString('default', { weekday: 'short' })
+        month: date.toLocaleString("default", { month: "short" }).toUpperCase(),
+        weekday: date.toLocaleString("default", { weekday: "short" }),
       };
     }
   }
 
-  function getShowtimesForDate(theater: Theater, date: string): { standard: TimeSlot[]; imax3d: TimeSlot[] } {
-    const standardShowtimes = theater.showtimes.standard?.find(d => d.date === date);
-    const imax3dShowtimes = theater.showtimes.imax3d?.find(d => d.date === date);
+  function getShowtimesForDate(
+    theater: Theater,
+    date: string
+  ): { standard: TimeSlot[]; imax3d: TimeSlot[] } {
+    const standardShowtimes =
+      theater.showtimes.standard?.find((d) => d.date === date);
+    const imax3dShowtimes =
+      theater.showtimes.imax3d?.find((d) => d.date === date);
 
     return {
       standard: standardShowtimes?.times || [],
-      imax3d: imax3dShowtimes?.times || []
+      imax3d: imax3dShowtimes?.times || [],
     };
   }
 
-  const handleSubmitReview = async (rating: number, reviewText: string): Promise<void> => {
+  const handleSubmitReview = async (rating: number, reviewText: string) => {
     if (!rating || !reviewText.trim()) {
-      throw new Error('Please provide both a rating and review text');
+      throw new Error("Please provide both a rating and review text");
     }
-
     if (reviewText.length < 50) {
-      throw new Error('Review must be at least 50 characters long');
+      throw new Error("Review must be at least 50 characters long");
     }
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const newReview: Review = {
-        review_id: Date.now().toString(),
-        user_id: 'current-user',
-        author: 'You',
-        date: new Date().toISOString().split('T')[0],
-        rating: rating,
-        content: reviewText,
-        initials: 'YU',
-        hasPremium: true,
-        likes: 0,
-        verified: true
-      };
-
-      setLocalReviews(prev => [newReview, ...prev]);
+      await addReview(selectedMovie._id, rating, reviewText);
       setUserRating(0);
-      setReviewText('');
-    } catch (error) {
-      throw error;
+      setReviewText("");
+    } catch (err) {
+      throw err;
     }
   };
-
-  if (!movie) {
-    return (
-      <main>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">Movie Not Found</h1>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  const allDates = getAllDates(movie.theaters);
 
   return (
     <main>
       <MovieHero
-        title={movie.title}
-        rating={movie.rating}
-        genres={movie.genres}
-        duration={movie.duration}
-        releaseDate={movie.releaseDate}
-        languages={movie.languages}
-        formats={movie.formats}
-        synopsis={movie.synopsis}
-        poster={movie.poster}
-        trailerUrl={movie.trailerUrl}
+        title={selectedMovie.title}
+        rating={averageRating}
+        genres={selectedMovie.genres}
+        duration={selectedMovie.duration}
+        releaseDate={selectedMovie.releaseDate}
+        languages={selectedMovie.languages.join(", ")}
+        formats={selectedMovie.formats}
+        synopsis={selectedMovie.synopsis}
+        poster={selectedMovie.poster}
+        trailerUrl={selectedMovie.trailerUrl}
       />
       <Showtimes
-        theaters={movie.theaters}
-        selectedDate={selectedDate}
+        theaters={mappedTheaters}
+        selectedDate={activeSelectedDate}
         allDates={allDates}
         onDateSelect={setSelectedDate}
         formatDateDisplay={formatDateDisplay}
         getShowtimesForDate={getShowtimesForDate}
       />
-      <CastCrew cast={movie.cast} />
+      <CastCrew cast={mappedCast} />
       <Reviews
-        reviews={localReviews}
-        movieTitle={movie.title}
+        reviews={mappedReviews}
+        movieTitle={selectedMovie.title}
         userRating={userRating}
         reviewText={reviewText}
         isSubmitting={isSubmitting}

@@ -7,10 +7,11 @@ import MovieGrid from "./_components/MovieGrid";
 import MovieSortControls from "./_components/MovieSortControls";
 import Pagination from "./_components/Pagination";
 import EmptyState from "./_components/MovieEmptyState";
-import { movies } from '@/data/movie';
-import { Movie } from '@/interfaces/movie';
+import { useMovie } from "@/contexts/MovieContext";
+import { Movie } from "@/interfaces/movieInterface";
 
 export default function Movies() {
+  const { movies, isLoading, error } = useMovie();
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All');
@@ -21,11 +22,21 @@ export default function Movies() {
 
   const moviesPerPage = 9;
 
-  const allGenres = Array.from(new Set(movies.flatMap(movie => movie.genres))).sort();
+  const allGenres = useMemo(() => 
+    Array.from(new Set(movies.flatMap(movie => movie.genres))).sort(),
+  [movies]);
 
-  const allLanguages = ['All', ...Array.from(
-    new Set(movies.flatMap(movie => movie.languages.split(',').map(lang => lang.trim())))
-  ).sort()];
+  const allLanguages = useMemo(() => {
+    const langs = new Set<string>();
+    movies.forEach(movie => {
+      if (Array.isArray(movie.languages)) {
+        movie.languages.forEach(l => langs.add(l));
+      } else if (typeof movie.languages === 'string') {
+        (movie.languages as string).split(',').forEach(l => langs.add(l.trim()));
+      }
+    });
+    return ['All', ...Array.from(langs).sort()];
+  }, [movies]);
 
   const ratings = [
     { value: '4', label: '★★★★★' },
@@ -36,35 +47,45 @@ export default function Movies() {
   ];
 
   const filteredMovies = useMemo<Movie[]>(() => {
-    const filtered = movies.slice();
+    const filtered = movies.map(movie => {
+        const avgRating = movie.reviews && movie.reviews.length > 0
+            ? movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length
+            : 0;
+        return { ...movie, averageRating: avgRating };
+    });
 
     const genreFiltered = selectedGenres.length > 0
       ? filtered.filter(movie => movie.genres.some(genre => selectedGenres.includes(genre)))
       : filtered;
 
     const languageFiltered = selectedLanguage !== 'All'
-      ? genreFiltered.filter(movie => movie.languages.toLowerCase().includes(selectedLanguage.toLowerCase()))
+      ? genreFiltered.filter(movie => {
+          if (Array.isArray(movie.languages)) {
+            return movie.languages.some(l => l.toLowerCase() === selectedLanguage.toLowerCase());
+          }
+          return (movie.languages as string).toLowerCase().includes(selectedLanguage.toLowerCase());
+        })
       : genreFiltered;
 
     const ratingFiltered = selectedRating
-      ? languageFiltered.filter(movie => movie.rating >= parseFloat(selectedRating))
+      ? languageFiltered.filter(movie => movie.averageRating >= parseFloat(selectedRating))
       : languageFiltered;
 
     return ratingFiltered.sort((a, b) => {
       switch (sortBy) {
         case 'Popularity':
-          return b.rating - a.rating;
+          return b.averageRating - a.averageRating;
         case 'Release Date':
-          return parseInt(b.releaseDate) - parseInt(a.releaseDate);
+          return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime();
         case 'Rating (High to Low)':
-          return b.rating - a.rating;
+          return b.averageRating - a.averageRating;
         case 'Rating (Low to High)':
-          return a.rating - b.rating;
+          return a.averageRating - b.averageRating;
         default:
           return 0;
       }
     });
-  }, [selectedGenres, selectedLanguage, selectedRating, sortBy]);
+  }, [movies, selectedGenres, selectedLanguage, selectedRating, sortBy]);
 
   const handleGenreToggle = (genre: string) => {
     setCurrentPage(1);
@@ -117,6 +138,34 @@ export default function Movies() {
     handleClearFilters,
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-text-secondary animate-pulse">Loading amazing movies...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center p-8 bg-surface-dark rounded-2xl border border-primary/20 max-w-md">
+          <h2 className="text-2xl font-bold text-white mb-2">Oops! Something went wrong</h2>
+          <p className="text-text-secondary mb-6">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <MovieHeader />
@@ -136,7 +185,7 @@ export default function Movies() {
 
           {currentMovies.length > 0 ? (
             <>
-              <MovieGrid movies={currentMovies} viewMode={viewMode} />
+              <MovieGrid movies={currentMovies as any} viewMode={viewMode} />
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

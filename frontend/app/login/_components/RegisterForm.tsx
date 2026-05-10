@@ -1,5 +1,7 @@
 import { FcGoogle } from "react-icons/fc";
 import { IoArrowForward, IoArrowBack } from "react-icons/io5";
+import { CiLock } from "react-icons/ci";
+import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import { SignupRequestOtpRequest } from "@/interfaces/authInterface";
 
 interface RegisterFormProps {
@@ -11,6 +13,9 @@ interface RegisterFormProps {
     onSubmit: (e: React.FormEvent) => void;
     onVerify: (e: React.FormEvent) => void;
     onBack: () => void;
+    showPassword: boolean;
+    toggleShowPassword: () => void;
+    onGoogleLogin: () => void;
     isLoading: boolean;
     error?: string | null;
 }
@@ -24,6 +29,9 @@ export default function RegisterForm({
     onSubmit,
     onVerify,
     onBack,
+    showPassword,
+    toggleShowPassword,
+    onGoogleLogin,
     isLoading,
 }: RegisterFormProps) {
 
@@ -126,15 +134,27 @@ export default function RegisterForm({
 
                 <label className="flex flex-col gap-2">
                     <span className="text-sm font-bold">Password</span>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={onChange}
-                        placeholder="Create a password"
-                        className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 focus:ring-2 focus:ring-primary focus:outline-none"
-                        required
-                    />
+                    <div className="relative group">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary">
+                            <CiLock size={20} />
+                        </span>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            value={formData.password}
+                            onChange={onChange}
+                            placeholder="Create a password"
+                            className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 pl-12 focus:ring-2 focus:ring-primary focus:outline-none"
+                            required
+                        />
+                        <button
+                            type="button"
+                            onClick={toggleShowPassword}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                        >
+                            {showPassword ? <MdOutlineVisibilityOff size={20} /> : <MdOutlineVisibility size={20} />}
+                        </button>
+                    </div>
                 </label>
 
                 <button
@@ -156,7 +176,7 @@ export default function RegisterForm({
 
             {/* Social */}
             <div className="grid gap-4">
-                <button className="h-12 flex items-center justify-center gap-3 bg-white dark:bg-[#392828] rounded-lg text-sm font-bold">
+                <button type="button" onClick={onGoogleLogin} className="h-12 flex items-center justify-center gap-3 bg-white dark:bg-[#392828] rounded-lg text-sm font-bold">
                     <FcGoogle size={24} />
                     Google
                 </button>

@@ -1,12 +1,11 @@
 "use client";
 
 import { MdOutlineReviews } from "react-icons/md";
+import { CgInsights } from "react-icons/cg";
 import { FormEvent } from 'react';
 import { MdOutlineRateReview } from "react-icons/md";
 import { IoSendOutline } from "react-icons/io5";
 import { MdOutlineStar } from "react-icons/md";
-import { FaRegHeart } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { Review } from "@/interfaces/movie";
 
@@ -34,9 +33,9 @@ const Reviews = ({ reviews, movieTitle, userRating, reviewText, isSubmitting, on
 
         try {
             await onSubmitReview(userRating, reviewText);
-            alert('Review submitted successfully!');
+            console.log('Review submitted successfully!');
         } catch (error) {
-            alert(error instanceof Error ? error.message : 'Failed to submit review. Please try again.');
+            console.log(error instanceof Error ? error.message : 'Failed to submit review. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -127,7 +126,7 @@ const Reviews = ({ reviews, movieTitle, userRating, reviewText, isSubmitting, on
                                         onChange={(e) => onReviewTextChange(e.target.value)}
                                         placeholder="Share your thoughts on the movie, direction, and performances..."
                                         rows={5}
-                                        className="w-full bg-[#221a1a] border border-[#392828] rounded-lg p-4 text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-text-secondary/50 resize-none"
+                                        className="w-full bg-[#221a1a] border border-[#392828] rounded-lg p-4 text-white outline-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-text-secondary/50 resize-none"
                                         disabled={isSubmitting}
                                         maxLength={1000}
                                     />
@@ -165,7 +164,7 @@ const Reviews = ({ reviews, movieTitle, userRating, reviewText, isSubmitting, on
                         {/* Review Stats */}
                         <div className="bg-surface-dark rounded-xl border border-[#392828] p-6">
                             <h4 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
-                                <span className="material-symbols-outlined text-primary">insights</span>
+                                <span className="material-symbols-outlined text-primary"><CgInsights /></span>
                                 Review Statistics
                             </h4>
                             <div className="grid grid-cols-2 gap-6">
@@ -190,7 +189,7 @@ const Reviews = ({ reviews, movieTitle, userRating, reviewText, isSubmitting, on
 
                     {/* User Reviews Section */}
                     <div className="w-full lg:w-1/2">
-                        <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#392828] scrollbar-track-transparent">
+                        <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-none">
                             {reviews.map((review) => (
                                 <div
                                     key={review.review_id}
@@ -229,21 +228,6 @@ const Reviews = ({ reviews, movieTitle, userRating, reviewText, isSubmitting, on
 
                                     {/* Review Content */}
                                     <p className="text-text-secondary text-sm leading-relaxed mb-4">{review.content}</p>
-
-                                    {/* Review Footer */}
-                                    <div className="flex items-center justify-between">
-                                        <button className="flex items-center gap-2 text-text-secondary hover:text-primary transition-colors group">
-                                            {review.likes > 0 ? (
-                                                <FaHeart className="text-red-500" />
-                                            ) : (
-                                                <FaRegHeart className="group-hover:text-red-500" />
-                                            )}
-                                            <span className="text-xs">{review.likes} likes</span>
-                                        </button>
-                                        <span className="text-xs text-text-secondary">
-                                            {review.hasPremium && 'Premium Reviewer'}
-                                        </span>
-                                    </div>
                                 </div>
                             ))}
                         </div>

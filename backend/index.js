@@ -7,6 +7,8 @@ const cors = require('cors');
 const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const movieRoutes = require('./routes/movieRoutes');
+const theaterRoutes = require('./routes/theaterRoutes');
+const passport = require('./config/passport');
 
 connectDB();
 
@@ -14,12 +16,18 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_URL }));
-
-// Serve static files from uploads directory
+app.use(passport.initialize());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.use((req, res, next) => {
+    const timestamp = new Date().toISOString();
+    console.log(`[${timestamp}] ${req.method} ${req.path}`);
+    next();
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
+app.use('/api/theaters', theaterRoutes);
 
 app.get('/', (req, res) => res.send('Hello from CineBook!'));
 

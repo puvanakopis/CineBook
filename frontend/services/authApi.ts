@@ -42,9 +42,25 @@ api.interceptors.response.use(
 );
 
 export const authApi = {
+    googleAuthUrl: (): string => {
+        return `${API_BASE_URL}/api/auth/google`;
+    },
+
     requestSignupOtp: async (data: SignupRequestOtpRequest): Promise<SignupRequestOtpResponse> => {
-        const res = await api.post<SignupRequestOtpResponse>("/api/auth/signup/request-otp", data);
-        return res.data;
+        try {
+            const res = await api.post<SignupRequestOtpResponse>("/api/auth/signup/request-otp", data);
+            return res.data;
+        } catch (err: unknown) {
+            let message = "Request failed";
+            if (axios.isAxiosError(err)) {
+                message = err.response?.data?.message || err.message || message;
+            } else if (err instanceof Error) {
+                message = err.message;
+            } else if (typeof err === "string") {
+                message = err;
+            }
+            throw new Error(message);
+        }
     },
 
     verifyOtpAndSignup: async (data: VerifyOtpAndSignupRequest): Promise<VerifyOtpAndSignupResponse> => {

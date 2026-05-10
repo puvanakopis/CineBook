@@ -41,7 +41,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
                 if (isAuth) {
                     const userData = await authApi.getCurrentUser();
-                    console.log(userData);
                     setUser(userData);
                 }
             } catch (err) {
@@ -114,7 +113,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setError(null);
             const response = await authApi.login(data);
             setUser(response.user);
-            console.log(response.user);
             setIsAuthenticated(true);
         } catch (err) {
             handleError(err);
