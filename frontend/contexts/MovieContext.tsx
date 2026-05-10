@@ -3,12 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
 import { AxiosError } from "axios";
 import { movieApi } from "@/services/movieApi";
-import {
-    MovieContextType,
-    Movie,
-    CreateMoviePayload,
-    UpdateMoviePayload,
-} from "@/interfaces/movieInterface";
+import { MovieContextType, Movie, CreateMoviePayload, UpdateMoviePayload, } from "@/interfaces/movieInterface";
 
 const MovieContext = createContext<MovieContextType | undefined>(undefined);
 
