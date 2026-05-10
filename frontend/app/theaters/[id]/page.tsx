@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useState, useMemo } from "react";
 import { theaters } from "@/data/theater";
-import { Theater, Screen, MovieShowtime, TimeSlot } from "@/interface/theater";
+import { Theater, Screen, MovieShowtime, TimeSlot } from "@/interfaces/theater";
 import TheaterHero from "./_components/TheaterHero";
 import TheaterShowtimes from "./_components/TheaterShowtimes";
 import TheaterInfo from "./_components/TheaterInfo";

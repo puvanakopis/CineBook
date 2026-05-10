@@ -1,4 +1,4 @@
-import { TheaterFeatures } from "@/interface/theater";
+import { TheaterFeatures } from "@/interfaces/theater";
 import { FaCheckCircle, FaParking } from "react-icons/fa";
 import { IoIosInformationCircle } from "react-icons/io";
 import { IoCalendarNumberSharp, IoCall, IoFastFood, IoSparkles } from "react-icons/io5";

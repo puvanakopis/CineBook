@@ -1,7 +1,114 @@
 import { FcGoogle } from "react-icons/fc";
-import { IoArrowForward } from "react-icons/io5";
+import { IoArrowForward, IoArrowBack } from "react-icons/io5";
+import { CiLock } from "react-icons/ci";
+import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
+import { VerifyPasswordResetRequest } from "@/interfaces/authInterface";
 
-export default function ForgotPasswordForm() {
+interface ForgotPasswordFormProps {
+    step: "email" | "reset";
+    email: string;
+    resetData: VerifyPasswordResetRequest;
+    onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onResetChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onRequestReset: (e: React.FormEvent) => void;
+    onVerifyReset: (e: React.FormEvent) => void;
+    onBack: () => void;
+    showPassword: boolean;
+    toggleShowPassword: () => void;
+    onGoogleLogin: () => void;
+    isLoading: boolean;
+    error?: string | null;
+}
+
+export default function ForgotPasswordForm({
+    step,
+    email,
+    resetData,
+    onEmailChange,
+    onResetChange,
+    onRequestReset,
+    onVerifyReset,
+    onBack,
+    showPassword,
+    toggleShowPassword,
+    onGoogleLogin,
+    isLoading,
+}: ForgotPasswordFormProps) {
+
+    if (step === "reset") {
+        return (
+            <>
+                {/* Heading */}
+                <div className="flex flex-col gap-2">
+                    <h2 className="text-3xl font-black">Reset Password</h2>
+                    <p className="text-gray-500 dark:text-[#b99d9d]">Enter the OTP and your new password</p>
+                </div>
+
+
+                {/* Reset Form */}
+                <form onSubmit={onVerifyReset} className="flex flex-col gap-5">
+                    <label className="flex flex-col gap-2">
+                        <span className="text-sm font-bold">OTP</span>
+                        <input
+                            type="text"
+                            name="otp"
+                            value={resetData.otp}
+                            onChange={onResetChange}
+                            placeholder="Enter 6-digit OTP"
+                            className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 focus:ring-2 focus:ring-primary focus:outline-none text-center text-lg font-mono"
+                            maxLength={6}
+                            required
+                        />
+                    </label>
+
+                    <label className="flex flex-col gap-2">
+                        <span className="text-sm font-bold">New Password</span>
+                        <div className="relative group">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary">
+                                <CiLock size={20} />
+                            </span>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                value={resetData.password}
+                                onChange={onResetChange}
+                                placeholder="Enter new password"
+                                className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 pl-12 focus:ring-2 focus:ring-primary focus:outline-none"
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={toggleShowPassword}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                            >
+                                {showPassword ? <MdOutlineVisibilityOff size={20} /> : <MdOutlineVisibility size={20} />}
+                            </button>
+                        </div>
+                    </label>
+
+                    <div className="flex gap-3">
+                        <button
+                            type="button"
+                            onClick={onBack}
+                            className="h-12 flex-1 bg-gray-200 dark:bg-[#543b3b] hover:bg-gray-300 dark:hover:bg-[#6b4b4b] text-gray-700 dark:text-gray-300 font-bold rounded-lg flex items-center justify-center gap-2"
+                        >
+                            <IoArrowBack className="text-sm" />
+                            <span>Back</span>
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={isLoading || resetData.otp.length !== 6 || !resetData.password}
+                            className="h-12 flex-1 bg-primary hover:bg-red-700 disabled:bg-gray-400 text-white font-bold rounded-lg flex items-center justify-center gap-2"
+                        >
+                            <span>{isLoading ? "Resetting..." : "Reset Password"}</span>
+                            {!isLoading && <IoArrowForward className="text-sm" />}
+                        </button>
+                    </div>
+                </form>
+            </>
+        );
+    }
+
     return (
         <>
             {/* Heading */}
@@ -10,23 +117,28 @@ export default function ForgotPasswordForm() {
                 <p className="text-gray-500 dark:text-[#b99d9d]">Enter your email to reset your password.</p>
             </div>
 
-            {/* Form */}
-            <form className="flex flex-col gap-5">
+
+            {/* Email Form */}
+            <form onSubmit={onRequestReset} className="flex flex-col gap-5">
                 <label className="flex flex-col gap-2">
                     <span className="text-sm font-bold">Email</span>
                     <input
                         type="email"
+                        value={email}
+                        onChange={onEmailChange}
                         placeholder="Enter your email to reset password"
                         className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 focus:ring-2 focus:ring-primary focus:outline-none"
+                        required
                     />
                 </label>
 
                 <button
-                    type="button"
-                    className="mt-2 h-12 w-full bg-primary hover:bg-red-700 text-white font-bold rounded-lg flex items-center justify-center gap-2"
+                    type="submit"
+                    disabled={isLoading}
+                    className="mt-2 h-12 w-full bg-primary hover:bg-red-700 disabled:bg-gray-400 text-white font-bold rounded-lg flex items-center justify-center gap-2"
                 >
-                    <span>Reset Password</span>
-                    <IoArrowForward className="text-sm" />
+                    <span>{isLoading ? "Sending OTP..." : "Send Reset OTP"}</span>
+                    {!isLoading && <IoArrowForward className="text-sm" />}
                 </button>
             </form>
 
@@ -39,7 +151,7 @@ export default function ForgotPasswordForm() {
 
             {/* Social */}
             <div className="grid gap-4">
-                <button className="h-12 flex items-center justify-center gap-3 bg-white dark:bg-[#392828] rounded-lg text-sm font-bold">
+                <button type="button" onClick={onGoogleLogin} className="h-12 flex items-center justify-center gap-3 bg-white dark:bg-[#392828] rounded-lg text-sm font-bold">
                     <FcGoogle size={24} />
                     Google
                 </button>

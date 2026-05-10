@@ -1,10 +1,10 @@
 'use client';
 
-import { Booking } from '@/interface/booking';
-import { 
-  MdMoreVert, 
-  MdVisibility, 
-  MdEdit, 
+import { Booking } from '@/interfaces/booking';
+import {
+  MdMoreVert,
+  MdVisibility,
+  MdEdit,
   MdDelete,
   MdConfirmationNumber
 } from 'react-icons/md';
@@ -48,8 +48,8 @@ export function BookingTable({ bookings }: BookingTableProps) {
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div 
-                        className="h-10 w-7 rounded bg-cover bg-center shrink-0 border border-black/10 dark:border-white/5" 
+                      <div
+                        className="h-10 w-7 rounded bg-cover bg-center shrink-0 border border-black/10 dark:border-white/5"
                         style={{ backgroundImage: `url("${booking.poster}")` }}
                       />
                       <div className="flex flex-col">
@@ -85,13 +85,13 @@ export function BookingTable({ bookings }: BookingTableProps) {
                     </span>
                   </td>
                   <td className="p-4 text-right relative">
-                    <button 
+                    <button
                       onClick={() => setActiveMenu(activeMenu === booking.id ? null : booking.id)}
                       className="p-1 rounded hover:bg-slate-200 dark:hover:bg-[#3d2525] text-slate-500 dark:text-[#b99d9d] transition-colors"
                     >
                       <MdMoreVert className="text-xl" />
                     </button>
-                    
+
                     {activeMenu === booking.id && (
                       <div className="absolute right-4 top-12 w-36 bg-surface-light dark:bg-[#2b1a1a] rounded-lg shadow-xl border border-gray-200 dark:border-[#392828] z-50 overflow-hidden py-1">
                         <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-[#b99d9d] hover:bg-slate-100 dark:hover:bg-[#3d2525] transition-colors">
@@ -125,7 +125,7 @@ export function BookingTable({ bookings }: BookingTableProps) {
           </tbody>
         </table>
       </div>
-      
+
       <div className="p-4 border-t border-gray-200 dark:border-[#392828] bg-slate-50/50 dark:bg-[#1a0f0f] flex items-center justify-between">
         <p className="text-xs text-slate-500 dark:text-[#b99d9d]">
           Showing <span className="font-bold text-slate-900 dark:text-white">{bookings.length}</span> results

@@ -1,4 +1,4 @@
-import { Booking } from '@/interface/booking';
+import { Booking } from '@/interfaces/booking';
 
 export const bookings: Booking[] = [
   {
