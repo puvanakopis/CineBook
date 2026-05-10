@@ -1,15 +1,17 @@
 "use client";
-import LoginBackground from "@/public//LoginBackground.png";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MdOutlineMovie } from "react-icons/md";
 import toast from "react-hot-toast";
+
+import LoginBackground from "@/public//LoginBackground.png";
+
 import { useAuth } from "@/contexts/AuthContext";
-import { LoginRequest, SignupRequestOtpRequest, VerifyPasswordResetRequest } from "@/interfaces/authInterface";
 import LoginForm from "./_components/LoginForm";
 import RegisterForm from "./_components/RegisterForm";
 import ForgotPasswordForm from "./_components/ForgotPasswordForm";
+import { LoginRequest, SignupRequestOtpRequest, VerifyPasswordResetRequest } from "@/interfaces/authInterface";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,6 +43,7 @@ export default function LoginPage() {
     role: "user",
   });
   const [registerOtp, setRegisterOtp] = useState("");
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
 
   const [forgotStep, setForgotStep] = useState<"email" | "reset">("email");
   const [forgotEmail, setForgotEmail] = useState("");
@@ -49,6 +52,7 @@ export default function LoginPage() {
     otp: "",
     password: "",
   });
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -106,6 +110,7 @@ export default function LoginPage() {
       setRegisterStep("details");
       setRegisterData({ firstName: "", lastName: "", email: "", password: "", role: "user" });
       setRegisterOtp("");
+      setShowRegisterPassword(false);
       setActiveTab("login");
     } catch (err) {
       const errorMsg = error || "OTP verification failed. Please try again.";
@@ -153,6 +158,7 @@ export default function LoginPage() {
       setForgotStep("email");
       setForgotEmail("");
       setForgotData({ email: "", otp: "", password: "" });
+      setShowForgotPassword(false);
       setActiveTab("login");
     } catch (err) {
       const errorMsg = error || "Password reset failed. Please try again.";
@@ -165,6 +171,7 @@ export default function LoginPage() {
     setForgotStep("email");
     setForgotEmail("");
     setForgotData({ email: "", otp: "", password: "" });
+    setShowForgotPassword(false);
     if (error) clearError();
   };
 
@@ -248,6 +255,8 @@ export default function LoginPage() {
                 onSubmit={handleRegisterRequestOtp}
                 onVerify={handleRegisterVerifyOtp}
                 onBack={handleRegisterBack}
+                showPassword={showRegisterPassword}
+                toggleShowPassword={() => setShowRegisterPassword(prev => !prev)}
                 isLoading={isLoading}
               />
             )}
@@ -261,6 +270,8 @@ export default function LoginPage() {
                 onRequestReset={handleRequestReset}
                 onVerifyReset={handleVerifyReset}
                 onBack={handleForgotBack}
+                showPassword={showForgotPassword}
+                toggleShowPassword={() => setShowForgotPassword(prev => !prev)}
                 isLoading={isLoading}
               />
             )}

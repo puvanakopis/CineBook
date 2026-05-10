@@ -17,6 +17,12 @@ app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.use((req, res, next) => {
+    const timestamp = new Date().toISOString();
+    console.log(`[${timestamp}] ${req.method} ${req.path}`);
+    next();
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/theaters', theaterRoutes);

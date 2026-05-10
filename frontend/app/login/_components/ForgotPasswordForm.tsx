@@ -1,5 +1,7 @@
 import { FcGoogle } from "react-icons/fc";
 import { IoArrowForward, IoArrowBack } from "react-icons/io5";
+import { CiLock } from "react-icons/ci";
+import { MdOutlineVisibility, MdOutlineVisibilityOff } from "react-icons/md";
 import { VerifyPasswordResetRequest } from "@/interfaces/authInterface";
 
 interface ForgotPasswordFormProps {
@@ -11,6 +13,8 @@ interface ForgotPasswordFormProps {
     onRequestReset: (e: React.FormEvent) => void;
     onVerifyReset: (e: React.FormEvent) => void;
     onBack: () => void;
+    showPassword: boolean;
+    toggleShowPassword: () => void;
     isLoading: boolean;
     error?: string | null;
 }
@@ -24,6 +28,8 @@ export default function ForgotPasswordForm({
     onRequestReset,
     onVerifyReset,
     onBack,
+    showPassword,
+    toggleShowPassword,
     isLoading,
 }: ForgotPasswordFormProps) {
 
@@ -55,15 +61,27 @@ export default function ForgotPasswordForm({
 
                     <label className="flex flex-col gap-2">
                         <span className="text-sm font-bold">New Password</span>
-                        <input
-                            type="password"
-                            name="password"
-                            value={resetData.password}
-                            onChange={onResetChange}
-                            placeholder="Enter new password"
-                            className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 focus:ring-2 focus:ring-primary focus:outline-none"
-                            required
-                        />
+                        <div className="relative group">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary">
+                                <CiLock size={20} />
+                            </span>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                value={resetData.password}
+                                onChange={onResetChange}
+                                placeholder="Enter new password"
+                                className="w-full h-12 bg-white dark:bg-[#392828] border border-gray-200 dark:border-transparent rounded-lg px-4 pl-12 focus:ring-2 focus:ring-primary focus:outline-none"
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={toggleShowPassword}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                            >
+                                {showPassword ? <MdOutlineVisibilityOff size={20} /> : <MdOutlineVisibility size={20} />}
+                            </button>
+                        </div>
                     </label>
 
                     <div className="flex gap-3">

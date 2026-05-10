@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import CineBotChat from "@/components/CineBotChat";
-import { AdminSidebar } from "@/components/AdminSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface RouteGuardProps {
@@ -84,10 +83,6 @@ export default function RouteGuard({ children }: RouteGuardProps) {
             }
         }
     }, [isAuthenticated, isLoading, pathname, user, router]);
-
-    if (isLoading) {
-        return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
-    }
 
     const showCineBot =
         !pathname.startsWith("/login") &&
