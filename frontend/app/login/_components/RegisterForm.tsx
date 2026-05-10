@@ -15,6 +15,7 @@ interface RegisterFormProps {
     onBack: () => void;
     showPassword: boolean;
     toggleShowPassword: () => void;
+    onGoogleLogin: () => void;
     isLoading: boolean;
     error?: string | null;
 }
@@ -30,6 +31,7 @@ export default function RegisterForm({
     onBack,
     showPassword,
     toggleShowPassword,
+    onGoogleLogin,
     isLoading,
 }: RegisterFormProps) {
 
@@ -174,7 +176,7 @@ export default function RegisterForm({
 
             {/* Social */}
             <div className="grid gap-4">
-                <button className="h-12 flex items-center justify-center gap-3 bg-white dark:bg-[#392828] rounded-lg text-sm font-bold">
+                <button type="button" onClick={onGoogleLogin} className="h-12 flex items-center justify-center gap-3 bg-white dark:bg-[#392828] rounded-lg text-sm font-bold">
                     <FcGoogle size={24} />
                     Google
                 </button>

@@ -10,6 +10,7 @@ const OTP = require('../models/otpModel');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
@@ -43,6 +44,20 @@ const getUserByEmail = async (email) => {
 };
 
 const generateOtpCode = () => Math.floor(100000 + Math.random() * 900000).toString();
+
+const issueAuthCookieAndRedirect = (res, user) => {
+    const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+
+    res.cookie('token', token, {
+        httpOnly: false,
+        sameSite: 'lax',
+        secure: false,
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.redirect(`${FRONTEND_URL}/`);
+};
 
 exports.requestOtp = async (req, res) => {
     const { firstName, lastName, email, password, role } = req.body;
@@ -184,4 +199,12 @@ exports.getCurrentUser = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Error fetching user', error: err.message });
     }
+};
+
+exports.googleCallback = async (req, res) => {
+    if (!req.user) {
+        return res.redirect(`${FRONTEND_URL}/login`);
+    }
+
+    return issueAuthCookieAndRedirect(res, req.user);
 };

@@ -8,6 +8,7 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const movieRoutes = require('./routes/movieRoutes');
 const theaterRoutes = require('./routes/theaterRoutes');
+const passport = require('./config/passport');
 
 connectDB();
 
@@ -15,6 +16,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_URL }));
+app.use(passport.initialize());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use((req, res, next) => {

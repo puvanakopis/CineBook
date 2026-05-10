@@ -42,6 +42,10 @@ api.interceptors.response.use(
 );
 
 export const authApi = {
+    googleAuthUrl: (): string => {
+        return `${API_BASE_URL}/api/auth/google`;
+    },
+
     requestSignupOtp: async (data: SignupRequestOtpRequest): Promise<SignupRequestOtpResponse> => {
         const res = await api.post<SignupRequestOtpResponse>("/api/auth/signup/request-otp", data);
         return res.data;

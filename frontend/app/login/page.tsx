@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import LoginBackground from "@/public//LoginBackground.png";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { authApi } from "@/services/authApi";
 import LoginForm from "./_components/LoginForm";
 import RegisterForm from "./_components/RegisterForm";
 import ForgotPasswordForm from "./_components/ForgotPasswordForm";
@@ -175,6 +176,10 @@ export default function LoginPage() {
     if (error) clearError();
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = authApi.googleAuthUrl();
+  };
+
   return (
     <div className="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col md:flex-row overflow-x-hidden">
       {/* Left Side: Hero */}
@@ -242,6 +247,7 @@ export default function LoginPage() {
                 onSubmit={handleLoginSubmit}
                 showPassword={showPassword}
                 toggleShowPassword={() => setShowPassword(prev => !prev)}
+                onGoogleLogin={handleGoogleLogin}
                 isLoading={isLoading}
               />
             )}
@@ -257,6 +263,7 @@ export default function LoginPage() {
                 onBack={handleRegisterBack}
                 showPassword={showRegisterPassword}
                 toggleShowPassword={() => setShowRegisterPassword(prev => !prev)}
+                onGoogleLogin={handleGoogleLogin}
                 isLoading={isLoading}
               />
             )}
@@ -272,6 +279,7 @@ export default function LoginPage() {
                 onBack={handleForgotBack}
                 showPassword={showForgotPassword}
                 toggleShowPassword={() => setShowForgotPassword(prev => !prev)}
+                onGoogleLogin={handleGoogleLogin}
                 isLoading={isLoading}
               />
             )}

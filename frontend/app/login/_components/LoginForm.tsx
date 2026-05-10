@@ -11,6 +11,7 @@ interface LoginFormProps {
     onSubmit: (e: React.FormEvent) => void;
     showPassword: boolean;
     toggleShowPassword: () => void;
+    onGoogleLogin: () => void;
     isLoading: boolean;
     error?: string | null;
 }
@@ -22,6 +23,7 @@ export default function LoginForm({
     onSubmit,
     showPassword,
     toggleShowPassword,
+    onGoogleLogin,
     isLoading,
 }: LoginFormProps) {
 
@@ -106,7 +108,7 @@ export default function LoginForm({
 
             {/* Social */}
             <div className="grid gap-4">
-                <button className="h-12 flex items-center justify-center gap-3 bg-white dark:bg-[#392828] rounded-lg text-sm font-bold">
+                <button type="button" onClick={onGoogleLogin} className="h-12 flex items-center justify-center gap-3 bg-white dark:bg-[#392828] rounded-lg text-sm font-bold">
                     <FcGoogle size={24} />
                     Google
                 </button>
