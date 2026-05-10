@@ -169,3 +169,43 @@ exports.deleteMovie = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+exports.addReview = async (req, res) => {
+    try {
+        const { rating, message } = req.body;
+
+        if (!rating || !message) {
+            return res.status(400).json({
+                message: "Rating and message are required"
+            });
+        }
+
+        const movie = await Movie.findById(req.params.id);
+
+        if (!movie) {
+            return res.status(404).json({
+                message: "Movie not found"
+            });
+        }
+
+        const review = {
+            user: req.user ? req.user._id : null,
+            rating,
+            message
+        };
+
+        movie.reviews.push(review);
+
+        await movie.save();
+
+        res.status(201).json({
+            message: "Review added successfully",
+            reviews: movie.reviews
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            message: err.message
+        });
+    }
+};

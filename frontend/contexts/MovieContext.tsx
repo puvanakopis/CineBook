@@ -60,7 +60,7 @@ export const MovieProvider: React.FC<MovieProviderProps> = ({ children }) => {
     }, []);
 
     // ---------- GET MOVIE BY ID ----------
-    const getMovieById = async (id: string) => {
+    const getMovieById = useCallback(async (id: string) => {
         try {
             setIsLoading(true);
             setError(null);
@@ -72,15 +72,14 @@ export const MovieProvider: React.FC<MovieProviderProps> = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
     // ---------- CREATE MOVIE (Admin only) ----------
-    const createMovie = async (data: CreateMoviePayload) => {
+    const createMovie = useCallback(async (data: CreateMoviePayload) => {
         try {
             setIsLoading(true);
             setError(null);
             const response = await movieApi.createMovie(data);
-            // Add the new movie to the list
             setMovies(prev => [...prev, response.movie]);
         } catch (err) {
             handleError(err);
@@ -88,19 +87,17 @@ export const MovieProvider: React.FC<MovieProviderProps> = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
     // ---------- UPDATE MOVIE (Admin only) ----------
-    const updateMovie = async (id: string, data: UpdateMoviePayload) => {
+    const updateMovie = useCallback(async (id: string, data: UpdateMoviePayload) => {
         try {
             setIsLoading(true);
             setError(null);
             const response = await movieApi.updateMovie(id, data);
-            // Update the movie in the list
             setMovies(prev => prev.map(movie =>
                 movie._id === id ? response.movie : movie
             ));
-            // Update selected movie if it's the same
             if (selectedMovie?._id === id) {
                 setSelectedMovie(response.movie);
             }
@@ -110,17 +107,15 @@ export const MovieProvider: React.FC<MovieProviderProps> = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [selectedMovie]);
 
     // ---------- DELETE MOVIE (Admin only) ----------
-    const deleteMovie = async (id: string) => {
+    const deleteMovie = useCallback(async (id: string) => {
         try {
             setIsLoading(true);
             setError(null);
             await movieApi.deleteMovie(id);
-            // Remove the movie from the list
             setMovies(prev => prev.filter(movie => movie._id !== id));
-            // Clear selected movie if it's the same
             if (selectedMovie?._id === id) {
                 setSelectedMovie(null);
             }
@@ -130,9 +125,8 @@ export const MovieProvider: React.FC<MovieProviderProps> = ({ children }) => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [selectedMovie]);
 
-    // Optional: Auto-fetch movies on mount
     useEffect(() => {
         getMovies();
     }, [getMovies]);
