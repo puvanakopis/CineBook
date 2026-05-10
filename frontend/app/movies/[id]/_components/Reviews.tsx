@@ -189,7 +189,7 @@ const Reviews = ({ reviews, movieTitle, userRating, reviewText, isSubmitting, on
 
                     {/* User Reviews Section */}
                     <div className="w-full lg:w-1/2">
-                        <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#392828] scrollbar-track-transparent">
+                        <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-none">
                             {reviews.map((review) => (
                                 <div
                                     key={review.review_id}
