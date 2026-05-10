@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Movie } from '@/interfaces/movieInterface';
 import { MdEdit, MdDelete } from 'react-icons/md';
+import getImage from '@/utils/imageUrl';
 
 interface MovieTableProps {
     movies: Movie[];
@@ -62,16 +63,18 @@ export function MovieTable({
                         {movies.length > 0 ? (
                             movies.map((movie) => {
                                 const status = getReleaseStatus(movie.releaseDate);
+                                const posterSrc = getImage(movie.poster, "movies");
 
                                 return (
                                     <tr key={movie._id} className="hover:bg-slate-50 dark:hover:bg-[#1f1212] transition-colors">
                                         <td className="px-6 py-4 align-top">
                                             <div className="relative h-24 w-16 overflow-hidden rounded-2xl border border-gray-200 dark:border-[#392828] bg-[#0f0b0b]">
                                                 <Image
-                                                    src={`/images/${movie.poster}`}
+                                                    src={posterSrc}
                                                     alt={movie.title}
                                                     fill
                                                     className="object-cover"
+                                                    sizes="64px"
                                                 />
                                             </div>
                                         </td>

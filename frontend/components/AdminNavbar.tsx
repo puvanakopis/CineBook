@@ -104,7 +104,7 @@ const AdminNavbar = () => {
                     <div className="relative" ref={authRef}>
                         <button
                             onClick={() => setOpen((v) => !v)}
-                            className="flex items-center gap-3 rounded-lg h-10 px-3 bg-[#1b1414] hover:bg-[#241818] transition-colors text-white"
+                            className="flex items-center gap-3 rounded-lg h-10 px-3 transition-colors text-white"
                         >
                             <div className="h-10 w-10 rounded-full bg-[#2a2323] flex items-center justify-center text-white font-bold uppercase overflow-hidden">
                                 {initials || "A"}

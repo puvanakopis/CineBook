@@ -8,6 +8,7 @@ import { MdLanguage } from "react-icons/md";
 import { IoIosStarOutline } from "react-icons/io";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { MdPlayArrow } from "react-icons/md";
+import getImage from "@/utils/imageUrl";
 
 interface MovieHeroProps {
     title: string;
@@ -23,12 +24,14 @@ interface MovieHeroProps {
 }
 
 const MovieHero = ({ title, rating, genres, duration, releaseDate, languages, formats, synopsis, poster, trailerUrl, }: MovieHeroProps) => {
+    const posterSrc = getImage(poster, "movies");
+
     return (
         <div className="relative w-full bg-surface-dark border-b border-[#392828]">
             {/* Background */}
             <div className="absolute inset-0 overflow-hidden">
                 <Image
-                    src={poster}
+                    src={posterSrc}
                     alt="Movie Background"
                     fill
                     className="object-cover opacity-10 blur-xl scale-110"
@@ -44,7 +47,7 @@ const MovieHero = ({ title, rating, genres, duration, releaseDate, languages, fo
                     <div className="w-full lg:w-[350px] flex-shrink-0">
                         <div className="relative aspect-[2/3] rounded-xl overflow-hidden shadow-2xl border border-[#392828]">
                             <Image
-                                src={poster}
+                                src={posterSrc}
                                 alt={`${title} Poster`}
                                 fill
                                 className="object-cover"
@@ -123,10 +126,11 @@ const MovieHero = ({ title, rating, genres, duration, releaseDate, languages, fo
                                 className="relative w-full max-w-2xl aspect-video bg-black rounded-xl overflow-hidden border border-[#392828] shadow-lg group flex items-center justify-center cursor-pointer"
                             >
                                 <Image
-                                    src={poster}
+                                    src={posterSrc}
                                     alt="Trailer Thumbnail"
                                     fill
                                     className="object-cover opacity-40"
+                                    sizes="(max-width: 1024px) 100vw, 768px"
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors">
                                     <div className="size-16 rounded-full bg-primary/90 text-white flex items-center justify-center pl-1 group-hover:scale-110 transition-transform shadow-[0_0_20px_rgba(236,19,19,0.5)]">

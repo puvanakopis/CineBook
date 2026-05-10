@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useMovie } from '@/contexts/MovieContext';
 import { Movie, CreateMovieRequest } from '@/interfaces/movieInterface';
 import { MdClose } from 'react-icons/md';
+import getImage from '@/utils/imageUrl';
 
-interface MovieModalProps {
+interface AddEditModalProps {
   isOpen: boolean;
   onClose: () => void;
   movie?: Movie;
@@ -25,7 +27,7 @@ const languagesList = [
 
 const formatsList = ['2D', '3D', 'IMAX', '4DX', 'Dolby'];
 
-export function MovieModal({ isOpen, onClose, movie }: MovieModalProps) {
+export function AddEditModal({ isOpen, onClose, movie }: AddEditModalProps) {
   const { createMovie, updateMovie } = useMovie();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<CreateMovieRequest>({
@@ -46,6 +48,7 @@ export function MovieModal({ isOpen, onClose, movie }: MovieModalProps) {
   const [posterFile, setPosterFile] = useState<File | null>(null);
   const [posterPreview, setPosterPreview] = useState<string>('');
   const [castMembers, setCastMembers] = useState<Array<{ name: string; role: string; profilePicture: string }>>([]);
+  const resolvedPosterPreview = posterPreview ? getImage(posterPreview, "movies") : '';
 
   useEffect(() => {
     if (movie) {
@@ -72,7 +75,6 @@ export function MovieModal({ isOpen, onClose, movie }: MovieModalProps) {
   }, [movie]);
 
   useEffect(() => {
-    // Disable body scroll when modal is open
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -226,7 +228,7 @@ export function MovieModal({ isOpen, onClose, movie }: MovieModalProps) {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-[#b99d9d] mb-2">
-                Duration (e.g., "2h 30m") *
+                Duration (e.g., &quot;2h 30m&quot;) *
               </label>
               <input
                 type="text"
@@ -319,7 +321,13 @@ export function MovieModal({ isOpen, onClose, movie }: MovieModalProps) {
             <div className="flex items-center gap-4">
               {posterPreview && (
                 <div className="relative h-24 w-16 overflow-hidden rounded-lg border border-gray-200 dark:border-[#392828]">
-                  <img src={posterPreview} alt="Poster preview" className="h-full w-full object-cover" />
+                  <Image
+                    src={resolvedPosterPreview}
+                    alt="Poster preview"
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                  />
                 </div>
               )}
               <input

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo } from "react";
+import {  useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { IoMdStarOutline } from "react-icons/io";
 import { MdOutlineSchedule } from "react-icons/md";
 import { Movie } from '@/interfaces/movieInterface';
+import getImage from '@/utils/imageUrl';
 
 interface MovieCardProps {
     movie: Movie;
@@ -14,6 +15,7 @@ interface MovieCardProps {
 
 const MovieCard = ({ movie, viewMode }: MovieCardProps) => {
     const router = useRouter();
+    const posterUrl = getImage(movie.poster, "movies");
 
     // Calculate average rating from reviews
     const averageRating = useMemo(() => {
@@ -26,10 +28,6 @@ const MovieCard = ({ movie, viewMode }: MovieCardProps) => {
         ? movie.languages.join(', ') 
         : movie.languages;
 
-    const posterUrl = movie.poster.startsWith('http') || movie.poster.startsWith('/') 
-        ? movie.poster 
-        : `http://localhost:5000/${movie.poster}`;
-
     if (viewMode === 'list') {
         return (
             <div
@@ -37,12 +35,13 @@ const MovieCard = ({ movie, viewMode }: MovieCardProps) => {
                 onClick={() => router.push(`/movies/${movie._id}`)}
             >
                 <div className="relative w-full sm:w-48 h-48 sm:h-auto overflow-hidden bg-gray-800">
-                    {/* <Image
-                        src={posterUrl}
-                        alt={movie.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    /> */}
+                        <Image
+                            src={posterUrl}
+                            alt={movie.title}
+                            fill
+                            sizes="(max-width: 640px) 100vw, 192px"
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
                     <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded flex items-center gap-1 border border-white/10">
                         <IoMdStarOutline className="text-yellow-500 text-sm" />
@@ -88,12 +87,13 @@ const MovieCard = ({ movie, viewMode }: MovieCardProps) => {
             onClick={() => router.push(`/movies/${movie._id}`)}
         >
             <div className="relative aspect-[2/3] overflow-hidden bg-gray-800">
-                {/* <Image
+                <Image
                     src={posterUrl}
                     alt={movie.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
-                /> */}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
                 <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded flex items-center gap-1 border border-white/10">
                     <IoMdStarOutline className="text-yellow-500 text-sm" />

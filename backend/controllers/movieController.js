@@ -3,9 +3,58 @@ const Theater = require("../models/theaterModel");
 const fs = require("fs");
 const path = require("path");
 
+const parseMaybeJson = (value) => {
+    if (typeof value !== "string") {
+        return value;
+    }
+
+    const trimmed = value.trim();
+    if (!trimmed) {
+        return value;
+    }
+
+    if (
+        (trimmed.startsWith("[") && trimmed.endsWith("]")) ||
+        (trimmed.startsWith("{") && trimmed.endsWith("}"))
+    ) {
+        try {
+            return JSON.parse(trimmed);
+        } catch (error) {
+            return value;
+        }
+    }
+
+    return value;
+};
+
+const normalizeMovieBody = (body, posterPath) => {
+    const normalizedBody = { ...body };
+
+    ["genres", "languages", "cast", "reviews"].forEach((field) => {
+        if (normalizedBody[field] === undefined) {
+            return;
+        }
+
+        const parsedValue = parseMaybeJson(normalizedBody[field]);
+        if (Array.isArray(parsedValue)) {
+            normalizedBody[field] = parsedValue.map((item) => parseMaybeJson(item));
+        } else {
+            normalizedBody[field] = parsedValue;
+        }
+    });
+
+    if (posterPath) {
+        normalizedBody.poster = posterPath;
+    } else if (normalizedBody.poster === "") {
+        delete normalizedBody.poster;
+    }
+
+    return normalizedBody;
+};
+
 exports.createMovie = async (req, res) => {
     try {
-        const movie = new Movie(req.body);
+        const movie = new Movie(normalizeMovieBody(req.body, req.file ? req.file.path : req.body.poster));
         await movie.save();
 
         if (req.file) {
@@ -86,7 +135,7 @@ exports.updateMovie = async (req, res) => {
             }
         }
 
-        Object.assign(movie, req.body);
+        Object.assign(movie, normalizeMovieBody(req.body));
 
         if (req.file) {
             const ext = path.extname(req.file.originalname);

@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useMovie } from '@/contexts/MovieContext';
 import { MovieHeader } from './_components/MovieHeader';
 import { MovieStatsGrid } from './_components/MovieStatsGrid';
 import { MovieFilters } from './_components/MovieFilters';
 import { MovieTable } from './_components/MovieTable';
-import { MovieModal } from './_components/MovieModal';
-import { DeleteConfirmModal } from './_components/DeleteConfirmModal';
+import { AddEditModal } from './_components/AddEditModal';
+import { DeleteModal } from './_components/DeleteModal';
 import { Movie } from '@/interfaces/movieInterface';
 
 const ageRatings = ['G', 'PG', 'PG-13', 'R'];
@@ -44,10 +44,6 @@ export default function AdminMovies() {
     () => Array.from(new Set(movies.flatMap((movie) => movie.genres))).sort(),
     [movies]
   );
-
-  useEffect(() => {
-    console.log('All movies:', movies);
-  }, [movies]);
 
   const filteredMovies = useMemo(() => {
     return movies.filter((movie) => {
@@ -136,13 +132,13 @@ export default function AdminMovies() {
         />
       </div>
 
-      <MovieModal
+      <AddEditModal
         isOpen={isModalOpen}
         onClose={handleModalClose}
         movie={selectedMovie}
       />
 
-      <DeleteConfirmModal
+      <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDeleteConfirm}

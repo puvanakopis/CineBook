@@ -15,16 +15,6 @@ export default function SettingsPage() {
     const [pushAlerts, setPushAlerts] = useState(true);
     const [dataSharing, setDataSharing] = useState(false);
 
-    const handleSave = () => {
-        console.log('Saving preferences:', {
-            emailReleases,
-            emailPromos,
-            pushReminders,
-            pushAlerts,
-            dataSharing,
-        });
-    };
-
     const handleDiscard = () => {
         setEmailReleases(true);
         setEmailPromos(false);
@@ -56,7 +46,7 @@ export default function SettingsPage() {
                             dataSharing={dataSharing}
                             onDataSharingChange={setDataSharing}
                         />
-                        <SettingsActions onSave={handleSave} onDiscard={handleDiscard} />
+                        <SettingsActions onDiscard={handleDiscard} />
                     </div>
                 </div>
             </main>
