@@ -3,7 +3,12 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
 import { AxiosError } from "axios";
 import { movieApi } from "@/services/movieApi";
-import { MovieContextType, Movie, CreateMoviePayload, UpdateMoviePayload, } from "@/interfaces/movieInterface";
+import {
+    MovieContextType,
+    Movie,
+    CreateMoviePayload,
+    UpdateMoviePayload,
+} from "@/interfaces/movieInterface";
 
 const MovieContext = createContext<MovieContextType | undefined>(undefined);
 
@@ -127,6 +132,35 @@ export const MovieProvider: React.FC<MovieProviderProps> = ({ children }) => {
         }
     }, [selectedMovie]);
 
+    // ---------- ADD REVIEW (Authenticated users) ----------
+    const addReview = useCallback(async (movieId: string, rating: number, message: string) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await movieApi.addReview(movieId, rating, message);
+
+            if (selectedMovie?._id === movieId) {
+                setSelectedMovie({
+                    ...selectedMovie,
+                    reviews: response.reviews,
+                });
+            }
+
+            setMovies(prev =>
+                prev.map(movie =>
+                    movie._id === movieId
+                        ? { ...movie, reviews: response.reviews }
+                        : movie
+                )
+            );
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    }, [selectedMovie]);
+
     useEffect(() => {
         getMovies();
     }, [getMovies]);
@@ -143,6 +177,7 @@ export const MovieProvider: React.FC<MovieProviderProps> = ({ children }) => {
                 createMovie,
                 updateMovie,
                 deleteMovie,
+                addReview,
                 clearError,
                 clearSelectedMovie,
             }}

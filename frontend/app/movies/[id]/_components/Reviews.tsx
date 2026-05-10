@@ -33,9 +33,9 @@ const Reviews = ({ reviews, movieTitle, userRating, reviewText, isSubmitting, on
 
         try {
             await onSubmitReview(userRating, reviewText);
-            alert('Review submitted successfully!');
+            console.log('Review submitted successfully!');
         } catch (error) {
-            alert(error instanceof Error ? error.message : 'Failed to submit review. Please try again.');
+            console.log(error instanceof Error ? error.message : 'Failed to submit review. Please try again.');
         } finally {
             setIsSubmitting(false);
         }

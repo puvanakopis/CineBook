@@ -20,7 +20,7 @@ export default function MovieDetail() {
   const {
     selectedMovie,
     getMovieById,
-    updateMovie,
+    addReview,
     error,
     clearError,
   } = useMovie();
@@ -191,16 +191,8 @@ export default function MovieDetail() {
       throw new Error("Review must be at least 50 characters long");
     }
 
-    const newReview = {
-      user: "current-user-id",
-      rating: rating,
-      message: reviewText,
-    };
-
-    const updatedReviews = [...(selectedMovie.reviews || []), newReview];
-
     try {
-      await updateMovie(selectedMovie._id, { reviews: updatedReviews });
+      await addReview(selectedMovie._id, rating, reviewText);
       setUserRating(0);
       setReviewText("");
     } catch (err) {

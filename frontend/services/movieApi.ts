@@ -10,6 +10,8 @@ import {
     GetMoviesResponse,
     CreateMoviePayload,
     UpdateMoviePayload,
+    AddReviewRequest,
+    AddReviewResponse,
 } from "@/interfaces/movieInterface";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -110,6 +112,13 @@ export const movieApi = {
 
     deleteMovie: async (id: string): Promise<DeleteMovieResponse> => {
         const res = await api.delete<DeleteMovieResponse>(`/api/movies/${id}`);
+        return res.data;
+    },
+
+    // ----- ADD REVIEW -----
+    addReview: async (movieId: string, rating: number, message: string): Promise<AddReviewResponse> => {
+        const body: AddReviewRequest = { rating, message };
+        const res = await api.post<AddReviewResponse>(`/api/movies/${movieId}/reviews`, body);
         return res.data;
     },
 };

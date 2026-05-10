@@ -95,6 +95,18 @@ export interface DeleteMovieResponse {
 
 export type GetMoviesResponse = Movie[];
 
+// ----- ADD REVIEW TYPES -----
+export interface AddReviewRequest {
+    rating: number;
+    message: string;
+}
+
+export interface AddReviewResponse {
+    message: string;
+    reviews: Review[];
+}
+
+// ----- CONTEXT TYPE -----
 export interface MovieState {
     movies: Movie[];
     selectedMovie: Movie | null;
@@ -105,13 +117,10 @@ export interface MovieState {
 export interface MovieContextType extends MovieState {
     getMovies: () => Promise<void>;
     getMovieById: (id: string) => Promise<void>;
-
     createMovie: (data: CreateMovieRequest) => Promise<void>;
-
     updateMovie: (id: string, data: UpdateMovieRequest) => Promise<void>;
-
     deleteMovie: (id: string) => Promise<void>;
-
+    addReview: (movieId: string, rating: number, message: string) => Promise<void>; // new method
     clearError: () => void;
     clearSelectedMovie: () => void;
 }
