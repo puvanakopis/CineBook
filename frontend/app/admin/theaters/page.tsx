@@ -14,7 +14,7 @@ import Loading from '@/components/Loading';
 
 const getAssignedMovieCount = (theater: Theater) => theater.movies?.length ?? 0;
 
-export default function AdminTheatersPage() {
+export default function AdminTheaters() {
   const { theaters, isLoading, error, deleteTheater } = useTheater();
   const { movies, isLoading: isMoviesLoading } = useMovie();
 

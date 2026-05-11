@@ -17,7 +17,7 @@ const AdminNavbar = () => {
     const authRef = useRef<HTMLDivElement | null>(null);
 
     const initials = user ? `${user.firstName?.[0] ?? ""}`.toUpperCase() : "";
-    
+
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (authRef.current && !authRef.current.contains(e.target as Node)) {
@@ -36,8 +36,8 @@ const AdminNavbar = () => {
 
     const navLinks = [
         { href: "/admin", label: "Dashboard" },
-        { href: "/admin/theaters", label: "Theaters" },
         { href: "/admin/movies", label: "Movies" },
+        { href: "/admin/theaters", label: "Theaters" },
         { href: "/admin/bookings", label: "Bookings" },
         { href: "/admin/users", label: "Users" },
         { href: "/admin/reports", label: "Reports" },
