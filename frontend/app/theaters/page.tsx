@@ -8,6 +8,7 @@ import TheaterGrid from "./_components/TheaterGrid";
 import TheaterSortControls from "./_components/TheaterSortControls";
 import Pagination from "./_components/Pagination";
 import TheaterEmptyState from "./_components/TheaterEmptyState";
+import Loading from "@/components/Loading";
 import { Theater } from "@/interfaces/theaterInterface";
 type TheaterWithRating = Theater & { avgRating: number };
 
@@ -111,13 +112,9 @@ export default function Theaters() {
   const totalPages = Math.ceil(filteredTheaters.length / theatersPerPage);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="text-white">Loading theaters...</div>
-      </div>
-    );
+    return <Loading />;
   }
-
+  
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
