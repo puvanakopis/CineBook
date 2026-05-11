@@ -12,6 +12,8 @@ interface MovieSortControlsProps {
     setSortBy: (sort: string) => void;
     viewMode: 'grid' | 'list';
     setViewMode: (mode: 'grid' | 'list') => void;
+    searchQuery?: string;
+    setSearchQuery?: (q: string) => void;
 }
 
 const MovieSortControls = ({
@@ -22,7 +24,8 @@ const MovieSortControls = ({
     setSortBy,
     viewMode,
     setViewMode,
-
+    searchQuery,
+    setSearchQuery,
 }: MovieSortControlsProps) => {
     return (
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 bg-surface-dark p-4 rounded-xl border border-[#392828]">
@@ -31,7 +34,17 @@ const MovieSortControls = ({
                     Showing <strong className="text-white">{filteredMoviesCount > 0 ? indexOfFirstMovie + 1 : 0}-{Math.min(indexOfLastMovie, filteredMoviesCount)}</strong> of{' '}
                     <strong className="text-white">{filteredMoviesCount}</strong> movies
                 </span>
-
+                {setSearchQuery && (
+                    <div className="flex items-center w-full sm:w-64">
+                        <input
+                            type="text"
+                            placeholder="Search movies..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-input-bg text-sm text-white px-3 py-2 rounded-lg border border-[#392828] focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                        />
+                    </div>
+                )}
             </div>
             <div className="flex items-center gap-3">
                 <span className="text-text-secondary text-sm hidden sm:inline">Sort by:</span>

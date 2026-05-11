@@ -11,7 +11,7 @@ import { DeleteModal } from './_components/DeleteModal';
 import { Movie } from '@/interfaces/movieInterface';
 
 const ageRatings = ['G', 'PG', 'PG-13', 'R'];
-const releaseStatuses = ['All Statuses', 'Now Showing', 'Coming Soon', 'Archived'];
+const releaseStatuses = ['Now Showing', 'Coming Soon'];
 
 const getAgeRating = (movie: Movie) => {
   const index = movie.title.length % ageRatings.length;
@@ -34,7 +34,7 @@ export default function AdminMovies() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('All Genres');
   const [selectedRating, setSelectedRating] = useState('All Ratings');
-  const [selectedStatus, setSelectedStatus] = useState('All Statuses');
+  const [selectedStatus, setSelectedStatus] = useState('Now Showing');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | undefined>(undefined);
@@ -47,6 +47,10 @@ export default function AdminMovies() {
 
   const filteredMovies = useMemo(() => {
     return movies.filter((movie) => {
+      const status = getReleaseStatus(movie.releaseDate);
+      // exclude archived movies entirely
+      if (status === 'Archived') return false;
+
       const searchMatch =
         !searchQuery ||
         movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -58,8 +62,7 @@ export default function AdminMovies() {
       const ratingMatch =
         selectedRating === 'All Ratings' || getAgeRating(movie) === selectedRating;
 
-      const statusMatch =
-        selectedStatus === 'All Statuses' || getReleaseStatus(movie.releaseDate) === selectedStatus;
+      const statusMatch = status === selectedStatus;
 
       return searchMatch && genreMatch && ratingMatch && statusMatch;
     });
@@ -67,7 +70,7 @@ export default function AdminMovies() {
 
   const nowShowing = movies.filter((movie) => getReleaseStatus(movie.releaseDate) === 'Now Showing').length;
   const comingSoon = movies.filter((movie) => getReleaseStatus(movie.releaseDate) === 'Coming Soon').length;
-  const archived = movies.filter((movie) => getReleaseStatus(movie.releaseDate) === 'Archived').length;
+  const total = movies.filter((movie) => getReleaseStatus(movie.releaseDate) !== 'Archived').length;
 
   const handleAddMovie = () => {
     setSelectedMovie(undefined);
@@ -101,10 +104,9 @@ export default function AdminMovies() {
     <>
       <MovieHeader onAddMovie={handleAddMovie} />
       <MovieStatsGrid
-        total={movies.length}
+        total={total}
         nowShowing={nowShowing}
         comingSoon={comingSoon}
-        archived={archived}
       />
 
       <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
