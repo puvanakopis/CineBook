@@ -22,13 +22,17 @@ const MovieSortControls = ({
     setSortBy,
     viewMode,
     setViewMode,
+
 }: MovieSortControlsProps) => {
     return (
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 bg-surface-dark p-4 rounded-xl border border-[#392828]">
-            <span className="text-text-secondary text-sm font-medium">
-                Showing <strong className="text-white">{filteredMoviesCount > 0 ? indexOfFirstMovie + 1 : 0}-{Math.min(indexOfLastMovie, filteredMoviesCount)}</strong> of{' '}
-                <strong className="text-white">{filteredMoviesCount}</strong> movies
-            </span>
+            <div className="flex items-center gap-4 w-full sm:w-auto">
+                <span className="text-text-secondary text-sm font-medium hidden sm:inline">
+                    Showing <strong className="text-white">{filteredMoviesCount > 0 ? indexOfFirstMovie + 1 : 0}-{Math.min(indexOfLastMovie, filteredMoviesCount)}</strong> of{' '}
+                    <strong className="text-white">{filteredMoviesCount}</strong> movies
+                </span>
+
+            </div>
             <div className="flex items-center gap-3">
                 <span className="text-text-secondary text-sm hidden sm:inline">Sort by:</span>
                 <div className="relative">

@@ -13,6 +13,7 @@ import { Movie } from "@/interfaces/movieInterface";
 
 export default function Movies() {
   const { movies, isLoading, error } = useMovie();
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All');
@@ -48,16 +49,25 @@ export default function Movies() {
   ];
 
   const filteredMovies = useMemo<Movie[]>(() => {
-    const filtered = movies.map(movie => {
+    const withRating = movies.map(movie => {
       const avgRating = movie.reviews && movie.reviews.length > 0
         ? movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length
         : 0;
       return { ...movie, averageRating: avgRating };
     });
 
+    // Search filter
+    const searched = searchQuery
+      ? withRating.filter(movie =>
+        movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (movie.synopsis || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        movie.genres.some(g => g.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+      : withRating;
+
     const genreFiltered = selectedGenres.length > 0
-      ? filtered.filter(movie => movie.genres.some(genre => selectedGenres.includes(genre)))
-      : filtered;
+      ? searched.filter(movie => movie.genres.some(genre => selectedGenres.includes(genre)))
+      : searched;
 
     const languageFiltered = selectedLanguage !== 'All'
       ? genreFiltered.filter(movie => {
@@ -72,7 +82,18 @@ export default function Movies() {
       ? languageFiltered.filter(movie => movie.averageRating >= parseFloat(selectedRating))
       : languageFiltered;
 
-    return ratingFiltered.sort((a, b) => {
+    // Show date filter: if a date is selected, only include movies that have a showing on that date
+    const dateFiltered = selectedDate
+      ? ratingFiltered.filter(movie =>
+        (movie.showings || []).some(showing =>
+          showing.screens.some(screen =>
+            screen.shows.some(show => show.date === selectedDate)
+          )
+        )
+      )
+      : ratingFiltered;
+
+    return dateFiltered.sort((a, b) => {
       switch (sortBy) {
         case 'Popularity':
           return b.averageRating - a.averageRating;
@@ -86,7 +107,7 @@ export default function Movies() {
           return 0;
       }
     });
-  }, [movies, selectedGenres, selectedLanguage, selectedRating, sortBy]);
+  }, [movies, selectedGenres, selectedLanguage, selectedRating, sortBy, searchQuery, selectedDate]);
 
   const handleGenreToggle = (genre: string) => {
     setCurrentPage(1);
@@ -95,6 +116,11 @@ export default function Movies() {
     } else {
       setSelectedGenres([...selectedGenres, genre]);
     }
+  };
+
+  const handleSearchQueryChange = (query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
   };
 
   const handleLanguageChange = (language: string) => {
@@ -137,6 +163,8 @@ export default function Movies() {
     ratings,
     handleGenreToggle,
     handleClearFilters,
+    searchQuery,
+    setSearchQuery: handleSearchQueryChange,
   };
 
   if (isLoading) {
@@ -162,7 +190,7 @@ export default function Movies() {
 
   return (
     <div>
-      <MovieHeader />
+      <MovieHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <div className="flex flex-col lg:flex-row max-w-[1400px] mx-auto w-full px-4 md:px-10 lg:px-20 py-10 gap-8">
         <MovieFilters {...filterProps} />
 

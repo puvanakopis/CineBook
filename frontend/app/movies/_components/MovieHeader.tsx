@@ -5,7 +5,7 @@ const MovieHeader = () => {
                 <h1 className="text-3xl md:text-5xl font-black text-white mb-4">
                     All Movies
                 </h1>
-                <p className="text-text-secondary max-w-2xl text-lg">
+                <p className="text-text-secondary max-w-2xl text-lg mb-6">
                     Browse our extensive collection of current screenings. Filter by genre,
                     date, or theater to find the perfect showtime for you.
                 </p>
