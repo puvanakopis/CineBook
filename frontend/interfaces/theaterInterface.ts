@@ -1,7 +1,9 @@
 export interface Show {
     movie: string;
     date: string;
-    time: string;
+    name?: string;
+    startTime: string;
+    endTime: string;
     price: number;
     currency?: string;
     status?: "available" | "sold-out" | "almost-full" | "fast-filling";

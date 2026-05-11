@@ -1,6 +1,7 @@
 'use client';
 
 import Image, { StaticImageData } from "next/image";
+import getImage from '@/utils/imageUrl';
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import { CiLocationOn } from "react-icons/ci";
 import { MdFavoriteBorder } from "react-icons/md";
@@ -41,12 +42,14 @@ const TheaterHero = ({
         return stars;
     };
 
+    const imageSrc = getImage(image, 'theaters');
+
     return (
         <div className="relative w-full h-[400px] lg:h-[480px] flex items-end overflow-hidden">
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
                 <Image
-                    src={image}
+                    src={imageSrc}
                     alt={name}
                     fill
                     className="object-cover"

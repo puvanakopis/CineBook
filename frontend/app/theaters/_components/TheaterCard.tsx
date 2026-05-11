@@ -1,5 +1,6 @@
 // TheaterCard.tsx (updated)
 import Image from "next/image";
+import getImage from '@/utils/imageUrl';
 import { useRouter } from 'next/navigation';
 import { IoMdStarOutline } from "react-icons/io";
 import { CiLocationOn } from "react-icons/ci";
@@ -28,7 +29,7 @@ const TheaterCard = ({ theater, viewMode }: TheaterCardProps) => {
             >
                 <div className="relative w-full sm:w-48 h-48 sm:h-auto overflow-hidden bg-gray-800">
                     <Image
-                        src={theater.image}
+                        src={getImage(theater.image, 'theaters')}
                         alt={theater.name}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -82,7 +83,7 @@ const TheaterCard = ({ theater, viewMode }: TheaterCardProps) => {
         >
             <div className="relative aspect-video overflow-hidden bg-gray-800">
                 <Image
-                    src={theater.image}
+                    src={getImage(theater.image, 'theaters')}
                     alt={theater.name}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"

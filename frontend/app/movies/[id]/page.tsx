@@ -70,9 +70,10 @@ export default function MovieDetail() {
             date: show.date,
             times: [
               {
-                time: show.time,
+                time:
+                  show.time || (show.startTime && show.endTime ? `${show.startTime} - ${show.endTime}` : ""),
                 price: show.price,
-                currency: "USD",
+                currency: "LKR",
                 isSoldOut: show.status === "sold-out",
               },
             ],
