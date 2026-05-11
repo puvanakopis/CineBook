@@ -1,10 +1,12 @@
 'use client';
 
 import TheaterCard from "./TheaterCard";
-import { Theater } from '@/interfaces/theater';
+import { Theater } from '@/interfaces/theaterInterface';
+
+type TheaterWithRating = Theater & { avgRating: number };
 
 interface TheaterGridProps {
-  theaters: Theater[];
+  theaters: TheaterWithRating[];
   viewMode: 'grid' | 'list';
 }
 
@@ -15,7 +17,7 @@ const TheaterGrid = ({ theaters, viewMode }: TheaterGridProps) => {
       : "flex flex-col gap-6"
     }>
       {theaters.map((theater) => (
-        <TheaterCard key={theater.theater_id} theater={theater} viewMode={viewMode} />
+        <TheaterCard key={theater._id} theater={theater} viewMode={viewMode} />
       ))}
     </div>
   );

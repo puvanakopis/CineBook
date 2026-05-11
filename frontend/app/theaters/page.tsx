@@ -1,31 +1,45 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useTheater } from "@/contexts/TheaterContext";
 import TheaterHeader from "./_components/TheaterHeader";
 import TheaterFilters from "./_components/TheaterFilters";
 import TheaterGrid from "./_components/TheaterGrid";
 import TheaterSortControls from "./_components/TheaterSortControls";
 import Pagination from "./_components/Pagination";
 import TheaterEmptyState from "./_components/TheaterEmptyState";
-import { theaters } from '@/data/theater';
-import { Theater } from '@/interfaces/theater';
+import Loading from "@/components/Loading";
+import { Theater } from "@/interfaces/theaterInterface";
+type TheaterWithRating = Theater & { avgRating: number };
 
 export default function Theaters() {
+  const { theaters, isLoading, error, getTheaters } = useTheater();
+
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-  const [selectedChains, setSelectedChains] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>('Popularity');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [filteredTheaters, setFilteredTheaters] = useState<Theater[]>(theaters as Theater[]);
+  const [filteredTheaters, setFilteredTheaters] = useState<TheaterWithRating[]>([]);
 
   const theatersPerPage = 9;
 
-  const allCities = Array.from(new Set(theaters.map(theater => theater.city))).sort();
+  const getAverageRating = (theater: Theater): number => {
+    if (!theater.reviews || theater.reviews.length === 0) return 0;
+    const sum = theater.reviews.reduce((acc, review) => acc + review.rating, 0);
+    return parseFloat((sum / theater.reviews.length).toFixed(1));
+  };
+
+  const allCities = useMemo(() => {
+    const cities = new Set(theaters.map(theater => theater.city).filter(Boolean));
+    return Array.from(cities).sort();
+  }, [theaters]);
 
   useEffect(() => {
-    let filtered = [...theaters] as Theater[];
+    if (!theaters.length) return;
+
+    let filtered = [...theaters];
 
     if (searchQuery) {
       filtered = filtered.filter(theater =>
@@ -43,65 +57,71 @@ export default function Theaters() {
 
     if (selectedAmenities.length > 0) {
       filtered = filtered.filter(theater =>
-        selectedAmenities.some(amenity => theater.amenities.includes(amenity))
+        selectedAmenities.some(amenity => theater.amenities?.includes(amenity))
       );
     }
 
-    if (selectedChains.length > 0) {
-      filtered = filtered.filter(theater =>
-        selectedChains.includes(theater.chain)
-      );
-    }
-
-    // Sort
     filtered.sort((a, b) => {
+      const ratingA = getAverageRating(a);
+      const ratingB = getAverageRating(b);
       switch (sortBy) {
         case 'Popularity':
-          return b.rating - a.rating;
+          return ratingB - ratingA;
         case 'Name (A-Z)':
           return a.name.localeCompare(b.name);
         case 'Name (Z-A)':
           return b.name.localeCompare(a.name);
         case 'Rating (High to Low)':
-          return b.rating - a.rating;
+          return ratingB - ratingA;
         case 'Rating (Low to High)':
-          return a.rating - b.rating;
+          return ratingA - ratingB;
         default:
           return 0;
       }
     });
 
-    setFilteredTheaters(filtered);
+    setFilteredTheaters(filtered.map(t => ({ ...t, avgRating: getAverageRating(t) })));
     setCurrentPage(1);
-  }, [searchQuery, selectedCities, selectedAmenities, selectedChains, sortBy]);
+  }, [theaters, searchQuery, selectedCities, selectedAmenities, sortBy]);
+
+  useEffect(() => {
+    getTheaters();
+  }, [getTheaters]);
 
   const handleCityToggle = (city: string) => {
-    if (selectedCities.includes(city)) {
-      setSelectedCities(selectedCities.filter(c => c !== city));
-    } else {
-      setSelectedCities([...selectedCities, city]);
-    }
+    setSelectedCities(prev =>
+      prev.includes(city) ? prev.filter(c => c !== city) : [...prev, city]
+    );
   };
 
   const handleAmenityToggle = (amenity: string) => {
-    if (selectedAmenities.includes(amenity)) {
-      setSelectedAmenities(selectedAmenities.filter(a => a !== amenity));
-    } else {
-      setSelectedAmenities([...selectedAmenities, amenity]);
-    }
+    setSelectedAmenities(prev =>
+      prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
+    );
   };
 
   const handleClearFilters = () => {
     setSearchQuery('');
     setSelectedCities([]);
     setSelectedAmenities([]);
-    setSelectedChains([]);
   };
 
   const indexOfLastTheater = currentPage * theatersPerPage;
   const indexOfFirstTheater = indexOfLastTheater - theatersPerPage;
   const currentTheaters = filteredTheaters.slice(indexOfFirstTheater, indexOfLastTheater);
   const totalPages = Math.ceil(filteredTheaters.length / theatersPerPage);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="text-red-500">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -113,6 +133,8 @@ export default function Theaters() {
           selectedCities={selectedCities}
           allCities={allCities}
           handleCityToggle={handleCityToggle}
+          selectedAmenities={selectedAmenities}
+          allAmenities={Array.from(new Set(theaters.flatMap(t => t.amenities || [])))}
           handleAmenityToggle={handleAmenityToggle}
           handleClearFilters={handleClearFilters}
         />

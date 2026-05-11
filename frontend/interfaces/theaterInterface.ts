@@ -1,7 +1,9 @@
 export interface Show {
     movie: string;
     date: string;
-    time: string;
+    name?: string;
+    startTime: string;
+    endTime: string;
     price: number;
     currency?: string;
     status?: "available" | "sold-out" | "almost-full" | "fast-filling";
@@ -52,6 +54,7 @@ export interface Theater {
     features: Features;
     screens: Screen[];
     reviews: Review[];
+    movies?: import("./movieInterface").Movie[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -69,6 +72,7 @@ export interface CreateTheaterRequest {
     features?: Features;
     screens?: Screen[];
     reviews?: Review[];
+    movies?: string[];
 }
 
 export type UpdateTheaterRequest = Partial<CreateTheaterRequest>;
@@ -103,6 +107,7 @@ export interface TheaterContextType extends TheaterState {
     getTheaterById: (id: string) => Promise<void>;
     createTheater: (data: CreateTheaterPayload) => Promise<void>;
     updateTheater: (id: string, data: UpdateTheaterPayload) => Promise<void>;
+    updateTheaterMovies: (id: string, movies: string[]) => Promise<void>;
     deleteTheater: (id: string) => Promise<void>;
     clearError: () => void;
     clearSelectedTheater: () => void;

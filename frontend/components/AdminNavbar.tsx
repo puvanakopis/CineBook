@@ -36,6 +36,7 @@ const AdminNavbar = () => {
 
     const navLinks = [
         { href: "/admin", label: "Dashboard" },
+        { href: "/admin/theaters", label: "Theaters" },
         { href: "/admin/movies", label: "Movies" },
         { href: "/admin/bookings", label: "Bookings" },
         { href: "/admin/users", label: "Users" },
@@ -114,6 +115,7 @@ const AdminNavbar = () => {
                         {open && (
                             <div className="absolute right-0 mt-2 w-52 bg-[#181111] border border-[#392828] rounded-md shadow-lg z-50">
                                 <Link href="/admin" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Dashboard</Link>
+                                <Link href="/admin/theaters" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Theaters</Link>
                                 <Link href="/admin/movies" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Movies</Link>
                                 <Link href="/admin/bookings" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Bookings</Link>
                                 <Link href="/admin/users" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Users</Link>

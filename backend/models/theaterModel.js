@@ -8,11 +8,20 @@ const ShowSchema = new mongoose.Schema(
             ref: "Movie",
             required: true
         },
+        name: {
+            type: String,
+            required: false,
+            default: ''
+        },
         date: {
             type: String,
             required: true
         },
-        time: {
+        startTime: {
+            type: String,
+            required: true
+        },
+        endTime: {
             type: String,
             required: true
         },
@@ -38,7 +47,7 @@ const ScreenSchema = new mongoose.Schema(
     {
         screen_id: {
             type: String,
-            required: true
+            required: false
         },
         name: {
             type: String,
@@ -200,6 +209,17 @@ TheaterSchema.pre("save", async function () {
             { new: true, upsert: true }
         );
         this._id = `theater_${String(counter.seq).padStart(2, "0")}`;
+    }
+});
+
+TheaterSchema.pre("save", function () {
+    if (this.screens && Array.isArray(this.screens)) {
+        for (let i = 0; i < this.screens.length; i++) {
+            const screen = this.screens[i];
+            if (!screen.screen_id) {
+                screen.screen_id = `screen_${String(i + 1).padStart(2, "0")}`;
+            }
+        }
     }
 });
 

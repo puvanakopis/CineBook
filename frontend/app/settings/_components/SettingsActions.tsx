@@ -3,11 +3,11 @@
 import { MdCancel, MdSave } from 'react-icons/md';
 
 interface SettingsActionsProps {
-    onSave: () => void;
+    onSave?: () => void;
     onDiscard: () => void;
 }
 
-export function SettingsActions({ onSave, onDiscard }: SettingsActionsProps) {
+export function SettingsActions({ onSave = () => { }, onDiscard }: SettingsActionsProps) {
     return (
         <section>
 
@@ -21,7 +21,7 @@ export function SettingsActions({ onSave, onDiscard }: SettingsActionsProps) {
                         Discard
                     </button>
                     <button
-                        onClick={onSave}
+                        onClick={() => onSave && onSave()}
                         className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white font-bold rounded-lg shadow-lg active:scale-95 transition-transform  tracking-widest text-xs"
                     >
                         <MdSave />

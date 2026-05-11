@@ -97,6 +97,11 @@ export const theaterApi = {
         return res.data;
     },
 
+    updateTheaterMovies: async (id: string, movies: string[]): Promise<UpdateTheaterResponse> => {
+        const res = await api.put<UpdateTheaterResponse>(`/api/theaters/${id}/movies`, { movies });
+        return res.data;
+    },
+
     deleteTheater: async (id: string): Promise<DeleteTheaterResponse> => {
         const res = await api.delete<DeleteTheaterResponse>(`/api/theaters/${id}`);
         return res.data;

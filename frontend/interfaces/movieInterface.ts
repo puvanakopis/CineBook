@@ -17,7 +17,9 @@ export interface Review {
 export interface MovieShow {
     movie: string;
     date: string;
-    time: string;
+    time?: string;
+    startTime?: string;
+    endTime?: string;
     price: number;
     currency: string;
     status: "available" | "sold-out" | "almost-full" | "fast-filling";

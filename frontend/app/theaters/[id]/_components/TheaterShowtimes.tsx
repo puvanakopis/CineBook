@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Screen, MovieShowtime, TimeSlot } from "@/interfaces/theater";
 import Image from "next/image";
+import getImage from '@/utils/imageUrl';
 
 interface TheaterShowtimesProps {
     screens: Screen[];
@@ -71,14 +72,14 @@ const TheaterShowtimes = ({
                             <button
                                 key={date}
                                 onClick={() => onDateSelect(date)}
-                                className={`flex flex-col items-center justify-center min-w-[80px] h-16 rounded-lg border transition-all ${selectedDate === date
+                                className={`flex items-center justify-center min-w-[100px] h-12 rounded-lg border px-3 transition-all ${selectedDate === date
                                     ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
                                     : "bg-surface-dark text-text-secondary border-[#392828] hover:border-primary hover:text-white"
                                     }`}
                             >
-                                <span className="text-xs font-medium opacity-80">{month}</span>
-                                <span className="text-xl font-bold">{day}</span>
-                                <span className="text-xs font-medium">{weekday}</span>
+                                <span className="text-sm font-medium">
+                                    {weekday} • {month} {day}
+                                </span>
                             </button>
                         );
                     })}
@@ -112,7 +113,7 @@ const TheaterShowtimes = ({
                                 <div className="p-6 border-b border-[#392828]">
                                     <div className="flex flex-col md:flex-row gap-6">
                                         <div className="w-24 h-32 relative rounded-lg overflow-hidden bg-[#181111] flex-shrink-0">
-                                            <Image src={movie.poster} alt={movie.title} fill className="object-cover" />
+                                            <Image src={getImage(movie.poster, 'movies')} alt={movie.title} fill className="object-cover" />
                                         </div>
                                         <div className="flex-1">
                                             <h3 className="text-xl font-bold text-white mb-2">{movie.title}</h3>

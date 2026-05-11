@@ -1,3 +1,4 @@
+// TheaterFilters.tsx (updated)
 'use client';
 
 import { IoMdSearch } from "react-icons/io";
@@ -9,6 +10,8 @@ interface TheaterFiltersProps {
     selectedCities: string[];
     allCities: string[];
     handleCityToggle: (city: string) => void;
+    selectedAmenities: string[];
+    allAmenities: string[];
     handleAmenityToggle: (amenity: string) => void;
     handleClearFilters: () => void;
 }
@@ -19,6 +22,10 @@ const TheaterFilters = ({
     selectedCities,
     allCities,
     handleCityToggle,
+    selectedAmenities,
+    allAmenities,
+    handleAmenityToggle,
+    handleClearFilters,
 }: TheaterFiltersProps) => {
     return (
         <aside className="w-full lg:w-64 flex-shrink-0 space-y-8">
@@ -26,9 +33,7 @@ const TheaterFilters = ({
             <div className="pb-6 border-b border-[#392828]">
                 <h3 className="font-bold text-white mb-4 flex items-center justify-between">
                     Search
-                    <span className="material-symbols-outlined text-text-secondary text-sm">
-                        <IoMdSearch />
-                    </span>
+                    <IoMdSearch className="text-text-secondary text-sm" />
                 </h3>
                 <div className="relative">
                     <input
@@ -53,9 +58,7 @@ const TheaterFilters = ({
             <div className="pb-6 border-b border-[#392828]">
                 <h3 className="font-bold text-white mb-4 flex items-center justify-between">
                     Location
-                    <span className="material-symbols-outlined text-text-secondary text-sm">
-                        <CiLocationOn />
-                    </span>
+                    <CiLocationOn className="text-text-secondary text-sm" />
                 </h3>
                 <div className="space-y-2">
                     {allCities.map((city) => (
@@ -73,6 +76,38 @@ const TheaterFilters = ({
                     ))}
                 </div>
             </div>
+
+            {/* Amenities */}
+            {allAmenities.length > 0 && (
+                <div className="pb-6 border-b border-[#392828]">
+                    <h3 className="font-bold text-white mb-4">Amenities</h3>
+                    <div className="space-y-2">
+                        {allAmenities.map((amenity) => (
+                            <label key={amenity} className="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    className="rounded accent-primary border-[#392828] bg-input-bg text-primary focus:ring-primary focus:ring-offset-background-dark w-4 h-4"
+                                    type="checkbox"
+                                    checked={selectedAmenities.includes(amenity)}
+                                    onChange={() => handleAmenityToggle(amenity)}
+                                />
+                                <span className="text-text-secondary group-hover:text-white transition-colors text-sm">
+                                    {amenity}
+                                </span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Clear filters button */}
+            {(searchQuery || selectedCities.length > 0 || selectedAmenities.length > 0) && (
+                <button
+                    onClick={handleClearFilters}
+                    className="w-full py-2 text-center text-sm text-primary border border-primary rounded-lg hover:bg-primary/10 transition-colors"
+                >
+                    Clear all filters
+                </button>
+            )}
         </aside>
     );
 };

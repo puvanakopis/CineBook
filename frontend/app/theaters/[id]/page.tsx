@@ -1,9 +1,13 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState, useMemo } from "react";
-import { theaters } from "@/data/theater";
-import { Theater, Screen, MovieShowtime, TimeSlot } from "@/interfaces/theater";
+import { useState, useMemo, useEffect } from "react";
+import { useTheater } from "@/contexts/TheaterContext";
+import { theaterApi } from '@/services/theaterApi';
+import { movieApi } from '@/services/movieApi';
+import { Theater as ApiTheater } from "@/interfaces/theaterInterface";
+import { Movie as ApiMovie } from '@/interfaces/movieInterface';
+import { Theater as UITheater, Screen, MovieShowtime, TimeSlot } from "@/interfaces/theater";
 import TheaterHero from "./_components/TheaterHero";
 import TheaterShowtimes from "./_components/TheaterShowtimes";
 import TheaterInfo from "./_components/TheaterInfo";
@@ -12,16 +16,137 @@ import LocationMap from "./_components/LocationMap";
 export default function TheaterDetailPage() {
     const params = useParams();
     const theaterId = params?.id ? (params.id as string) : null;
-    const theater = theaters.find((t) => t.theater_id === theaterId);
+    const { theaters: apiTheaters, selectedTheater } = useTheater();
 
-    const [selectedDate, setSelectedDate] = useState<string>(getDefaultDate(theater));
+    const [theater, setTheater] = useState<UITheater | null>(null);
+    const [selectedDate, setSelectedDate] = useState<string>("");
     const [selectedMovieFilter, setSelectedMovieFilter] = useState<string>("all");
 
-    function getDefaultDate(theater: Theater | undefined): string {
-        if (!theater) return "";
-        const allDates = getAllDates(theater.screens);
-        return allDates[0] || "";
-    }
+    useEffect(() => {
+        if (!theaterId) return;
+
+        (async () => {
+            let apiT: ApiTheater | undefined;
+
+            try {
+                // request authoritative theater (should include populated movies)
+                apiT = await theaterApi.getTheaterById(theaterId);
+            } catch {
+                // fallback to context-provided theater if API call fails
+                apiT = selectedTheater ?? apiTheaters.find(t => t._id === theaterId);
+            }
+
+            if (!apiT) return;
+
+            // transform API theater to UI theater shape used by existing components
+            // fetch movie objects referenced by shows (backend may not include `movies` field)
+            const moviesMap = new Map<string, ApiMovie | null>();
+            const movieIdSet = new Set<string>();
+            (apiT.screens || []).forEach((s) => {
+                (s.shows || []).forEach((show) => {
+                    const mid = show.movie;
+                    const key = mid && typeof mid === 'object' && '_id' in mid ? (mid as any)._id : String(mid);
+                    if (key) movieIdSet.add(key);
+                });
+            });
+
+            if (movieIdSet.size > 0) {
+                const ids = Array.from(movieIdSet);
+                const results = await Promise.all(ids.map(async (id) => {
+                    try {
+                        const m = await movieApi.getMovieById(id);
+                        return { id, movie: m };
+                    } catch {
+                        return { id, movie: null };
+                    }
+                }));
+
+                results.forEach(r => moviesMap.set(r.id, r.movie));
+            }
+
+            const uiScreens: Screen[] = (apiT.screens || []).map((s) => {
+                const movieGroups = new Map<string, MovieShowtime & { showtimes: { date: string; times: TimeSlot[] }[] }>();
+
+                (s.shows || []).forEach((show) => {
+                    const movieId = show.movie;
+                    const movieKey = movieId && typeof movieId === 'object' && '_id' in movieId ? (movieId as any)._id : String(movieId);
+                    if (!movieGroups.has(movieKey)) {
+                        const movieObj = moviesMap.get(movieKey);
+                        const parsedIdMatch = movieKey.match(/\d+/);
+                        const numericId = parsedIdMatch ? parseInt(parsedIdMatch[0], 10) : 0;
+                        movieGroups.set(movieKey, {
+                            movie_id: numericId,
+                            title: movieObj?.title || "Unknown",
+                            rating: 0,
+                            genres: movieObj?.genres || [],
+                            duration: movieObj?.duration || "",
+                            certificate: undefined,
+                            poster: movieObj?.poster || "",
+                            showtimes: [],
+                        });
+                    }
+
+                    const group = movieGroups.get(movieKey)!;
+                    const dateEntry = group.showtimes.find((d) => d.date === show.date);
+                    const timeSlot: TimeSlot = {
+                        time: `${show.startTime} - ${show.endTime}`,
+                        price: show.price,
+                        currency: show.currency || "LKR",
+                        isSoldOut: show.status === "sold-out",
+                        status: show.status,
+                    };
+                    if (dateEntry) {
+                        dateEntry.times.push(timeSlot);
+                    } else {
+                        group.showtimes.push({ date: show.date, times: [timeSlot] });
+                    }
+                });
+
+                return {
+                    screen_id: s.screen_id,
+                    name: s.name,
+                    type: s.type,
+                    seatingCapacity: 0,
+                    features: [],
+                    currentMovies: Array.from(movieGroups.values()),
+                } as Screen;
+            });
+
+            const uiTheater: UITheater = {
+                theater_id: apiT._id,
+                name: apiT.name,
+                address: apiT.address,
+                city: apiT.city,
+                chain: "",
+                rating: 0,
+                totalVotes: 0,
+                amenities: apiT.amenities || [],
+                image: apiT.image,
+                description: apiT.description,
+                phone: apiT.phone,
+                email: apiT.email || "",
+                location: apiT.location ? { lat: apiT.location.lat, lng: apiT.location.lng } : undefined,
+                features: {
+                    mTicket: !!apiT.features?.mTicket,
+                    foodBeverage: !!apiT.features?.foodBeverage,
+                    parking: !!apiT.features?.parking,
+                    wheelchair: !!apiT.features?.wheelchair,
+                    dolby: !!apiT.features?.dolby,
+                    imax: !!apiT.features?.imax,
+                    recliners: !!apiT.features?.recliners,
+                    fourK: !!apiT.features?.fourK,
+                },
+                screens: uiScreens,
+            };
+
+            setTheater(uiTheater);
+            // default selected date
+            const allDates = uiScreens.flatMap(s => s.currentMovies.flatMap(m => m.showtimes.map(st => st.date)));
+            setSelectedDate(allDates.sort()[0] || "");
+        })();
+    }, [selectedTheater, apiTheaters, theaterId]);
+
+    // (removed unused helper getDefaultDate)
 
     function getAllDates(screens: Screen[]): string[] {
         const dateSet = new Set<string>();
