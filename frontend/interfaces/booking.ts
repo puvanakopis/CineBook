@@ -10,4 +10,6 @@ export interface Booking {
   poster: string;
   theaterName: string;
   hallName: string;
+  screenId?: string;
+  showTime?: string;
 }
