@@ -3,6 +3,7 @@ import "./globals.css";
 import RouteGuard from "@/route/RouteGuard";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { MovieProvider } from "@/contexts/MovieContext";
+import { TheaterProvider } from "@/contexts/TheaterContext";
 import { Toaster } from "react-hot-toast";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -33,11 +34,13 @@ export default function RootLayout({
       </head>
       <body className={`${beVietnamPro.variable} ${notoSans.variable}`}>
         <AuthProvider>
-          <MovieProvider>
-            <RouteGuard>
-              {children}
-            </RouteGuard>
-          </MovieProvider>
+          <TheaterProvider>
+            <MovieProvider>
+              <RouteGuard>
+                {children}
+              </RouteGuard>
+            </MovieProvider>
+          </TheaterProvider>
         </AuthProvider>
         <Toaster
           position="top-right"

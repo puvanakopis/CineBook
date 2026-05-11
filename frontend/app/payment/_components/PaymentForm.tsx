@@ -2,6 +2,7 @@
 
 import { FaCreditCard, FaApplePay, FaGooglePay } from "react-icons/fa";
 import { MdErrorOutline } from "react-icons/md";
+import Loading from "@/components/Loading";
 
 interface PaymentFormProps {
     formData: {
@@ -121,7 +122,7 @@ export default function PaymentForm({
                 >
                     {isProcessing ? (
                         <>
-                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-xl animate-spin"></div>
+                            <Loading inline size="sm" />
                             Processing...
                         </>
                     ) : (

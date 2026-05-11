@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
-import { useTheater } from "@/contexts/theaterContext";
+import { useTheater } from "@/contexts/TheaterContext";
 import { theaterApi } from '@/services/theaterApi';
 import { movieApi } from '@/services/movieApi';
 import { Theater as ApiTheater } from "@/interfaces/theaterInterface";

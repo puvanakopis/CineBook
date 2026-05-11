@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useMovie } from '@/contexts/MovieContext';
-import { useTheater } from '@/contexts/theaterContext';
+import { useTheater } from '@/contexts/TheaterContext';
 import { Theater } from '@/interfaces/theaterInterface';
 import { TheaterHeader } from './_components/TheaterHeader';
 import { TheaterStatsGrid } from './_components/TheaterStatsGrid';

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { MdClose } from 'react-icons/md';
-import { useTheater } from '@/contexts/theaterContext';
+import { useTheater } from '@/contexts/TheaterContext';
 import { Theater, CreateTheaterRequest, UpdateTheaterRequest, CreateTheaterPayload, UpdateTheaterPayload } from '@/interfaces/theaterInterface';
 import { Movie } from '@/interfaces/movieInterface';
 import getImage from '@/utils/imageUrl';

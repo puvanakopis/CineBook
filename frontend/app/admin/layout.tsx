@@ -1,6 +1,6 @@
 'use client';
 
-import { TheaterProvider } from '@/contexts/theaterContext';
+import { TheaterProvider } from '@/contexts/TheaterContext';
 
 export default function AdminLayout({
   children,

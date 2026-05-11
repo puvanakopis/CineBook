@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import TicketHeader from "./_components/TicketHeader";
 import TicketCard from "./_components/TicketCard";
+import Loading from "@/components/Loading";
 
 interface Seat {
     id: string;
@@ -101,7 +102,7 @@ export default function TicketsPage() {
     return (
         <Suspense fallback={
             <div className="min-h-screen flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-[var(--color-input-bg)] border-t-[var(--color-primary)] rounded-full animate-spin"></div>
+                <Loading inline size="sm" />
             </div>
         }>
             <TicketsContent />

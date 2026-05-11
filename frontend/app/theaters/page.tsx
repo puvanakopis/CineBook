@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from "react";
-import { useTheater } from "@/contexts/theaterContext";
+import { useTheater } from "@/contexts/TheaterContext";
 import TheaterHeader from "./_components/TheaterHeader";
 import TheaterFilters from "./_components/TheaterFilters";
 import TheaterGrid from "./_components/TheaterGrid";
@@ -114,7 +114,7 @@ export default function Theaters() {
   if (isLoading) {
     return <Loading />;
   }
-  
+
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
