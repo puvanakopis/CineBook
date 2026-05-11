@@ -80,7 +80,7 @@ export default function RouteGuard({ children }: RouteGuardProps) {
             } else if (role === "user") {
                 router.replace("/");
             } else {
-                router.replace("/");
+                router.replace("/login");
             }
         }
     }, [isAuthenticated, isLoading, pathname, user, router]);
