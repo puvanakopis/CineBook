@@ -7,6 +7,7 @@ import Showtimes from "./_components/Showtimes";
 import CastCrew from "./_components/CastCrew";
 import Reviews from "./_components/Reviews";
 import { useMovie } from "@/contexts/MovieContext";
+import Loading from "@/components/Loading";
 import { Review, Theater, TimeSlot, Cast } from "@/interfaces/movie";
 import type {
   Cast as BackendCast,
@@ -70,9 +71,10 @@ export default function MovieDetail() {
             date: show.date,
             times: [
               {
-                time: show.time,
+                time:
+                  show.time || (show.startTime && show.endTime ? `${show.startTime} - ${show.endTime}` : ""),
                 price: show.price,
-                currency: "USD",
+                currency: "LKR",
                 isSoldOut: show.status === "sold-out",
               },
             ],
@@ -101,12 +103,7 @@ export default function MovieDetail() {
   if (!selectedMovie) {
     return (
       <main>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-white">Loading movie details...</p>
-          </div>
-        </div>
+        <Loading message={"Loading movie details..."} />
       </main>
     );
   }

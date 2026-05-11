@@ -8,6 +8,7 @@ import { IoSendOutline } from "react-icons/io5";
 import { MdOutlineStar } from "react-icons/md";
 import { MdVerified } from "react-icons/md";
 import { Review } from "@/interfaces/movie";
+import Loading from '@/components/Loading';
 
 interface ReviewsProps {
     reviews: Review[];
@@ -147,7 +148,7 @@ const Reviews = ({ reviews, movieTitle, userRating, reviewText, isSubmitting, on
                                     >
                                         {isSubmitting ? (
                                             <>
-                                                <span className="animate-spin">⟳</span>
+                                                <Loading inline size="sm" />
                                                 Submitting...
                                             </>
                                         ) : (

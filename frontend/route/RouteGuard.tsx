@@ -17,6 +17,7 @@ const ALLOWED_PATHS = {
         "/admin",
         "/admin/bookings",
         "/admin/movies",
+        "/admin/theaters",
         "/admin/reports",
         "/admin/users",
     ],

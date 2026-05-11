@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Movie } from '@/interfaces/movieInterface';
 import { MdEdit, MdDelete } from 'react-icons/md';
+import Loading from '@/components/Loading';
 import getImage from '@/utils/imageUrl';
 
 interface MovieTableProps {
@@ -26,7 +27,7 @@ export function MovieTable({
         return (
             <section className="rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-[#392828] shadow-sm overflow-hidden">
                 <div className="p-12 text-center">
-                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
+                    <Loading inline size="lg" />
                     <p className="mt-4 text-slate-500 dark:text-[#b99d9d]">Loading movies...</p>
                 </div>
             </section>
@@ -92,10 +93,10 @@ export function MovieTable({
                                         </td>
                                         <td className="px-6 py-4 align-top">
                                             <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${status === 'Now Showing'
-                                                    ? 'bg-emerald-500/10 text-emerald-300'
-                                                    : status === 'Coming Soon'
-                                                        ? 'bg-amber-500/10 text-amber-300'
-                                                        : 'bg-slate-700 text-slate-300'
+                                                ? 'bg-emerald-500/10 text-emerald-300'
+                                                : status === 'Coming Soon'
+                                                    ? 'bg-amber-500/10 text-amber-300'
+                                                    : 'bg-slate-700 text-slate-300'
                                                 }`}>
                                                 {status}
                                             </span>

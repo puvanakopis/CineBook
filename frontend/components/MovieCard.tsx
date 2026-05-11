@@ -1,9 +1,11 @@
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 import { FaRegStar } from "react-icons/fa";
 import { MdSchedule } from "react-icons/md";
 
 export interface MovieCardProps {
+    id?: string;
     title: string;
     genre: string;
     duration: string;
@@ -11,7 +13,7 @@ export interface MovieCardProps {
     poster: string;
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ title, genre, duration, rating, poster }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ id, title, genre, duration, rating, poster }) => {
     return (
         <div className="group bg-surface-dark rounded-xl overflow-hidden border border-[#392828] hover:border-primary/50 transition-all hover:-translate-y-1 shadow-lg hover:shadow-2xl">
             <div className="relative aspect-[2/3] overflow-hidden bg-gray-800">
@@ -29,9 +31,18 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, genre, duration, rating, p
                 </div>
 
                 <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex flex-col gap-2">
-                    <button className="w-full bg-primary hover:bg-red-700 text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2">
-                        Book Now
-                    </button>
+                    {id ? (
+                        <Link
+                            href={`/movies/${id}`}
+                            className="w-full bg-primary hover:bg-red-700 text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 text-center"
+                        >
+                            Book Now
+                        </Link>
+                    ) : (
+                        <button className="w-full bg-primary hover:bg-red-700 text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2">
+                            Book Now
+                        </button>
+                    )}
                 </div>
             </div>
 

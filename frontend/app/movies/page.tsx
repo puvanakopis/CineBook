@@ -8,6 +8,7 @@ import MovieSortControls from "./_components/MovieSortControls";
 import Pagination from "./_components/Pagination";
 import EmptyState from "./_components/MovieEmptyState";
 import { useMovie } from "@/contexts/MovieContext";
+import Loading from "@/components/Loading";
 import { Movie } from "@/interfaces/movieInterface";
 
 export default function Movies() {
@@ -22,9 +23,9 @@ export default function Movies() {
 
   const moviesPerPage = 9;
 
-  const allGenres = useMemo(() => 
+  const allGenres = useMemo(() =>
     Array.from(new Set(movies.flatMap(movie => movie.genres))).sort(),
-  [movies]);
+    [movies]);
 
   const allLanguages = useMemo(() => {
     const langs = new Set<string>();
@@ -48,10 +49,10 @@ export default function Movies() {
 
   const filteredMovies = useMemo<Movie[]>(() => {
     const filtered = movies.map(movie => {
-        const avgRating = movie.reviews && movie.reviews.length > 0
-            ? movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length
-            : 0;
-        return { ...movie, averageRating: avgRating };
+      const avgRating = movie.reviews && movie.reviews.length > 0
+        ? movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length
+        : 0;
+      return { ...movie, averageRating: avgRating };
     });
 
     const genreFiltered = selectedGenres.length > 0
@@ -60,11 +61,11 @@ export default function Movies() {
 
     const languageFiltered = selectedLanguage !== 'All'
       ? genreFiltered.filter(movie => {
-          if (Array.isArray(movie.languages)) {
-            return movie.languages.some(l => l.toLowerCase() === selectedLanguage.toLowerCase());
-          }
-          return (movie.languages as string).toLowerCase().includes(selectedLanguage.toLowerCase());
-        })
+        if (Array.isArray(movie.languages)) {
+          return movie.languages.some(l => l.toLowerCase() === selectedLanguage.toLowerCase());
+        }
+        return (movie.languages as string).toLowerCase().includes(selectedLanguage.toLowerCase());
+      })
       : genreFiltered;
 
     const ratingFiltered = selectedRating
@@ -139,14 +140,7 @@ export default function Movies() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-text-secondary animate-pulse">Loading amazing movies...</p>
-        </div>
-      </div>
-    );
+    return <Loading message={"Loading amazing movies..."} />;
   }
 
   if (error) {
@@ -155,7 +149,7 @@ export default function Movies() {
         <div className="text-center p-8 bg-surface-dark rounded-2xl border border-primary/20 max-w-md">
           <h2 className="text-2xl font-bold text-white mb-2">Oops! Something went wrong</h2>
           <p className="text-text-secondary mb-6">{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
           >

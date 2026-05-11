@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import PaymentHeader from "./_components/PaymentHeader";
 import PaymentForm from "./_components/PaymentForm";
 import OrderSummary from "./_components/OrderSummary";
+import Loading from "@/components/Loading";
 
 interface Seat {
     id: string;
@@ -104,7 +105,7 @@ function PaymentContent() {
 
     return (
         <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-8">
-            <PaymentHeader 
+            <PaymentHeader
                 movie="Cyber Chronicles"
                 theater="Cineplex Downtown"
                 hall="4 - IMAX"
@@ -113,8 +114,8 @@ function PaymentContent() {
             />
 
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
-                
-                <PaymentForm 
+
+                <PaymentForm
                     formData={formData}
                     errors={errors}
                     isProcessing={isProcessing}
@@ -125,7 +126,7 @@ function PaymentContent() {
                 />
 
                 <div className="w-full lg:w-[380px] flex-shrink-0">
-                    <OrderSummary 
+                    <OrderSummary
                         seats={orderData.seats}
                         subtotal={orderData.subtotal}
                         convenienceFee={orderData.convenienceFee}
@@ -141,7 +142,7 @@ export default function PaymentPage() {
     return (
         <Suspense fallback={
             <div className="min-h-screen flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-[var(--color-input-bg)] border-t-[var(--color-primary)] rounded-full animate-spin"></div>
+                <Loading inline size="sm" />
             </div>
         }>
             <PaymentContent />
