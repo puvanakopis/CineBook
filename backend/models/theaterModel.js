@@ -184,6 +184,11 @@ const TheaterSchema = new mongoose.Schema(
             type: [ScreenSchema],
             default: []
         },
+        movies: {
+            type: [String],
+            ref: "Movie",
+            default: []
+        },
         reviews: {
             type: [ReviewSchema],
             default: []

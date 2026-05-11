@@ -10,6 +10,9 @@ router.post("/", protect, authorize("admin"), theaterController.createTheater);
 router.put("/:id", protect, authorize("admin"), theaterController.updateTheater);
 router.delete("/:id", protect, authorize("admin"), theaterController.deleteTheater);
 
+// Update theater's movies array (replace current movies)
+router.put('/:id/movies', protect, authorize('admin'), theaterController.updateTheaterMovies);
+
 router.post("/:id/review", protect, authorize("user"), theaterController.addReview);
 
 module.exports = router;

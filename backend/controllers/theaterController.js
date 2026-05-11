@@ -19,9 +19,25 @@ const validateMoviesInShows = async (screens) => {
     return true;
 };
 
+const validateMoviesArray = async (movies) => {
+    if (!movies || !Array.isArray(movies)) return true;
+
+    for (const m of movies) {
+        if (m) {
+            const movieExists = await Movie.findById(m);
+            if (!movieExists) {
+                throw new Error(`Movie with ID ${m} not found`);
+            }
+        }
+    }
+    return true;
+};
+
 exports.getTheaters = async (req, res) => {
     try {
-        const theaters = await Theater.find();
+        const theaters = await Theater.find()
+            .populate("movies")
+            .populate("screens.shows.movie");
         res.status(200).json(theaters);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -30,7 +46,9 @@ exports.getTheaters = async (req, res) => {
 
 exports.getTheaterById = async (req, res) => {
     try {
-        const theater = await Theater.findById(req.params.id);
+        const theater = await Theater.findById(req.params.id)
+            .populate("movies")
+            .populate("screens.shows.movie");
         if (!theater) return res.status(404).json({ message: "Theater not found" });
         res.status(200).json(theater);
     } catch (err) {
@@ -42,6 +60,9 @@ exports.createTheater = async (req, res) => {
     try {
         if (req.body.screens) {
             await validateMoviesInShows(req.body.screens);
+        }
+        if (req.body.movies) {
+            await validateMoviesArray(req.body.movies);
         }
 
         const newTheater = new Theater(req.body);
@@ -56,6 +77,9 @@ exports.updateTheater = async (req, res) => {
     try {
         if (req.body.screens) {
             await validateMoviesInShows(req.body.screens);
+        }
+        if (req.body.movies) {
+            await validateMoviesArray(req.body.movies);
         }
 
         const theater = await Theater.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -73,6 +97,30 @@ exports.deleteTheater = async (req, res) => {
         res.status(200).json({ message: "Theater deleted" });
     } catch (err) {
         res.status(500).json({ message: err.message });
+    }
+};
+
+exports.updateTheaterMovies = async (req, res) => {
+    try {
+        const { movies } = req.body;
+        if (!movies || !Array.isArray(movies)) {
+            return res.status(400).json({ message: "`movies` array is required in the request body" });
+        }
+
+        await validateMoviesArray(movies);
+
+        const theater = await Theater.findByIdAndUpdate(
+            req.params.id,
+            { $set: { movies } },
+            { new: true }
+        )
+            .populate("movies")
+            .populate("screens.shows.movie");
+
+        if (!theater) return res.status(404).json({ message: "Theater not found" });
+        res.status(200).json(theater);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
     }
 };
 

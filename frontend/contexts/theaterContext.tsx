@@ -99,6 +99,21 @@ export const TheaterProvider: React.FC<TheaterProviderProps> = ({ children }) =>
         }
     };
 
+    const updateTheaterMovies = async (id: string, movies: string[]) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await theaterApi.updateTheaterMovies(id, movies);
+            setTheaters(prev => prev.map(t => t._id === id ? response.theater : t));
+            if (selectedTheater?._id === id) setSelectedTheater(response.theater);
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const deleteTheater = async (id: string) => {
         try {
             setIsLoading(true);
@@ -127,6 +142,7 @@ export const TheaterProvider: React.FC<TheaterProviderProps> = ({ children }) =>
                 getTheaterById,
                 createTheater,
                 updateTheater,
+                updateTheaterMovies,
                 deleteTheater,
                 clearError,
                 clearSelectedTheater,
