@@ -68,3 +68,38 @@ exports.getBookings = async (req, res) => {
         res.status(500).json({ message: 'Server error fetching bookings' });
     }
 };
+
+exports.getMyBookings = async (req, res) => {
+    try {
+        if (!req.user || !req.user._id) return res.status(401).json({ message: 'Not authenticated' });
+        const bookings = await Booking.find({ user: req.user._id }).sort({ createdAt: -1 });
+        res.json(bookings);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error fetching user bookings' });
+    }
+};
+
+exports.getBookingById = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+        if (!booking) return res.status(404).json({ message: 'Booking not found' });
+        res.json(booking);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error fetching booking' });
+    }
+};
+
+exports.cancelBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+        if (!booking) return res.status(404).json({ message: 'Booking not found' });
+        booking.status = 'Cancelled';
+        await booking.save();
+        res.json({ message: 'Booking cancelled', booking });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error cancelling booking' });
+    }
+};
