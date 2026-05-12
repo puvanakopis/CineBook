@@ -103,7 +103,9 @@ export default function SelectSeatsPage() {
             seats: selectedSeats,
             subtotal,
             convenienceFee,
-            total
+            total,
+            // include original payload so payment page/backend can access movie/theater meta
+            meta: payload
         };
         const searchString = encodeURIComponent(JSON.stringify(orderData));
         router.push(`/payment?data=${searchString}`);
@@ -134,6 +136,8 @@ export default function SelectSeatsPage() {
                         title={payload?.movie?.title || "Cyber Chronicles"}
                         genre={payload?.movie?.genres?.join(", ") || "Sci-Fi"}
                         duration={payload?.movie?.duration || "2h 15m"}
+                        date={payload?.date}
+                        time={payload?.time}
                         rating={payload?.movie?.rating || 8.9}
                         selectedSeats={selectedSeats}
                         onRemoveSeat={removeSeat}

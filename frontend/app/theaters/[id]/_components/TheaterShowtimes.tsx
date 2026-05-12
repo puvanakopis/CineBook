@@ -61,6 +61,9 @@ const TheaterShowtimes = ({
                     id: movie.movie_id,
                     title: movie.title,
                     poster: movie.poster,
+                    duration: movie.duration,
+                    rating: movie.rating,
+                    genres: movie.genres,
                 },
                 theater: {
                     id: st.screen.screen_id,

@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+// Stripe integration removed for now to avoid build-time dependency
 
 import PaymentHeader from "./_components/PaymentHeader";
 import PaymentForm from "./_components/PaymentForm";
@@ -31,6 +32,7 @@ function PaymentContent() {
     const [orderData, setOrderData] = useState<OrderData | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentStatus, setPaymentStatus] = useState<"idle" | "success" | "error">("idle");
+    const [paymentMethod, setPaymentMethod] = useState<string>('card');
     const [formData, setFormData] = useState({
         cardName: "",
         cardNumber: "",
@@ -72,6 +74,13 @@ function PaymentContent() {
         }
     }, [dataString]);
 
+    // ensure formData includes customer fields
+    useEffect(() => {
+        if (orderData && orderData.meta) {
+            setFormData((f) => ({ ...f, customerName: orderData.meta.movie?.customerName || f.customerName || '', customerEmail: orderData.meta.movie?.customerEmail || f.customerEmail || '' }));
+        }
+    }, [orderData]);
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         if (errors[e.target.name]) {
@@ -81,7 +90,9 @@ function PaymentContent() {
 
     const validateForm = () => {
         const newErrors: Record<string, string> = {};
-        if (!formData.cardName.trim()) newErrors.cardName = "Name is required";
+        if (!formData.customerName || !formData.customerName.toString().trim()) newErrors.customerName = "Name is required";
+        if (!formData.customerEmail || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(String(formData.customerEmail))) newErrors.customerEmail = "Valid email is required";
+        if (!formData.cardName?.toString().trim()) newErrors.cardName = "Cardholder name is required";
         if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s+/g, ''))) newErrors.cardNumber = "Invalid card number (16 digits required)";
         if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry)) newErrors.expiry = "Use MM/YY format";
         if (!/^\d{3,4}$/.test(formData.cvv)) newErrors.cvv = "Invalid CVV (3-4 digits)";
@@ -96,16 +107,46 @@ function PaymentContent() {
 
         setIsProcessing(true);
         setPaymentStatus("idle");
+        try {
+            const API_BASE = (process.env.NEXT_PUBLIC_API_URL as string) || 'http://localhost:4000';
 
-        // Mock API call delay
-        setTimeout(() => {
-            if (Math.random() > 0.1) {
-                router.push(`/tickets?data=${encodeURIComponent(JSON.stringify(orderData))}`);
-            } else {
+            const resp = await fetch(`${API_BASE}/api/payments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    orderData,
+                    paymentDetails: {
+                        method: paymentMethod || 'card',
+                        provider: 'MockGateway',
+                        cardName: formData.cardName,
+                        cardNumber: formData.cardNumber.replace(/\s+/g, ''),
+                    },
+                    meta: {
+                        customerName: formData.customerName || formData.cardName,
+                        customerEmail: formData.customerEmail || undefined,
+                        // merge any meta sent from select-seats
+                        ...(orderData?.meta || {})
+                    }
+                })
+            });
+
+            if (!resp.ok) {
                 setIsProcessing(false);
-                setPaymentStatus("error");
+                setPaymentStatus('error');
+                return;
             }
-        }, 2500);
+
+            const data = await resp.json();
+            setIsProcessing(false);
+            setPaymentStatus('success');
+            // Redirect to tickets with booking data returned from backend
+            const booking = data.booking || orderData;
+            router.push(`/tickets?data=${encodeURIComponent(JSON.stringify(booking))}`);
+        } catch (err) {
+            console.error('Payment request failed', err);
+            setIsProcessing(false);
+            setPaymentStatus('error');
+        }
     };
 
 
@@ -128,11 +169,11 @@ function PaymentContent() {
     return (
         <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-8">
             <PaymentHeader
-                movie="Cyber Chronicles"
-                theater="Cineplex Downtown"
-                hall="4 - IMAX"
-                date="Today, 14 Oct"
-                time="06:00 PM"
+                movie={orderData?.meta?.movie?.title || "Cyber Chronicles"}
+                theater={orderData?.meta?.theater?.name || "Cineplex Downtown"}
+                hall={orderData?.meta?.format || "4 - IMAX"}
+                date={orderData?.meta?.date || "Today, 14 Oct"}
+                time={orderData?.meta?.time || "06:00 PM"}
             />
 
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
@@ -145,6 +186,8 @@ function PaymentContent() {
                     totalAmount={orderData.total}
                     onInputChange={handleInputChange}
                     onSubmit={handleSubmit}
+                    paymentMethod={paymentMethod}
+                    onMethodChange={setPaymentMethod}
                 />
 
                 <div className="w-full lg:w-[380px] flex-shrink-0">
@@ -153,6 +196,7 @@ function PaymentContent() {
                         subtotal={orderData.subtotal}
                         convenienceFee={orderData.convenienceFee}
                         total={orderData.total}
+                        meta={orderData.meta}
                     />
                 </div>
             </div>
