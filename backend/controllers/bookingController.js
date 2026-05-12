@@ -4,12 +4,14 @@ const User = require('../models/userModel');
 exports.createBooking = async (req, res) => {
     try {
         const {
+            movieId,
             movieTitle,
             customerName,
             customerEmail,
             dateTime,
             seats,
             totalPrice,
+            payment,
             poster,
             theaterName,
             hallName,
@@ -25,12 +27,14 @@ exports.createBooking = async (req, res) => {
         }
 
         const booking = new Booking({
+            movieId,
             movieTitle,
             customerName,
             customerEmail,
             dateTime: new Date(dateTime),
             seats,
             totalPrice,
+            payment,
             poster,
             theaterName,
             hallName,
@@ -42,8 +46,13 @@ exports.createBooking = async (req, res) => {
             booking.user = req.user._id;
         }
 
+        // Set status based on payment if provided
+        if (booking.payment && booking.payment.status) {
+            booking.status = booking.payment.status === 'Paid' ? 'Confirmed' : 'Pending';
+        }
+
         await booking.save();
-        res.status(201).json(booking);
+        res.status(201).json({ message: 'Booking created', booking });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error creating booking' });
@@ -101,5 +110,26 @@ exports.cancelBooking = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error cancelling booking' });
+    }
+};
+
+// Update payment info for a booking
+exports.updatePayment = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+        if (!booking) return res.status(404).json({ message: 'Booking not found' });
+
+        const { payment } = req.body;
+        if (!payment) return res.status(400).json({ message: 'Payment data required' });
+
+        booking.payment = payment;
+        // Update booking status based on payment
+        booking.status = payment.status === 'Paid' ? 'Confirmed' : booking.status;
+
+        await booking.save();
+        res.json({ message: 'Payment updated', booking });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error updating payment' });
     }
 };

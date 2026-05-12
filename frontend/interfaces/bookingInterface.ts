@@ -1,10 +1,11 @@
 export interface Booking {
     _id: string;
     movieTitle: string;
+    movieId?: string;
     customerName: string;
     customerEmail: string;
     dateTime: string;
-    seats: string[];
+    seats: Array<Seat | string>;
     totalPrice: number;
     status: 'Confirmed' | 'Pending' | 'Cancelled';
     poster: string;
@@ -16,6 +17,22 @@ export interface Booking {
     updatedAt?: Date;
 }
 
+export interface Seat {
+    id?: string;
+    row?: string;
+    number?: number;
+    type?: string;
+    price?: number;
+}
+
+export interface PaymentInfo {
+    method?: string;
+    transactionId?: string;
+    amount?: number;
+    status?: 'Paid' | 'Pending' | 'Failed';
+    provider?: string;
+}
+
 export interface CreateBookingRequest {
     movieId?: string;
     movieTitle: string;
@@ -25,11 +42,12 @@ export interface CreateBookingRequest {
     screenId?: string;
     showTime?: string;
     dateTime: string;
-    seats: string[];
+    seats: Array<Seat | string>;
     totalPrice: number;
     customerName: string;
     customerEmail: string;
     poster?: string;
+    payment?: PaymentInfo;
 }
 
 export type CreateBookingPayload = CreateBookingRequest;

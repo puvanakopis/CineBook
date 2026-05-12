@@ -42,7 +42,26 @@ function TicketsContent() {
         if (dataString) {
             try {
                 const parsed = JSON.parse(decodeURIComponent(dataString));
-                setOrderData(parsed);
+                const normalizeSeat = (s: any) => {
+                    if (!s) return null;
+                    if (typeof s === 'string') {
+                        const id = s;
+                        const row = id.replace(/\d+/g, '') || id.charAt(0);
+                        const numMatch = id.match(/\d+/);
+                        const number = numMatch ? parseInt(numMatch[0], 10) : undefined;
+                        return { id, row, number, type: 'standard', price: 14 };
+                    }
+                    return {
+                        id: s.id ?? `${s.row ?? ''}${s.number ?? ''}`,
+                        row: s.row ?? (typeof s.id === 'string' ? s.id.replace(/\d+/g, '') : undefined),
+                        number: s.number ?? (typeof s.id === 'string' ? parseInt((s.id.match(/\d+/) || [''])[0], 10) : undefined),
+                        type: s.type ?? 'standard',
+                        price: s.price ?? 14,
+                    };
+                };
+
+                const parsedSeats = Array.isArray(parsed.seats) ? parsed.seats.map(normalizeSeat).filter(Boolean) : [];
+                setOrderData({ ...parsed, seats: parsedSeats });
             } catch (e) {
                 console.error("Failed to parse order data", e);
             }

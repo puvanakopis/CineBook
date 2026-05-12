@@ -4,7 +4,7 @@ export interface Booking {
   customerName: string;
   customerEmail: string;
   dateTime: string;
-  seats: string[];
+  seats: Array<string | { id?: string; row?: string; number?: number; type?: string; price?: number }>;
   totalPrice: number;
   status: 'Confirmed' | 'Pending' | 'Cancelled';
   poster: string;

@@ -23,10 +23,12 @@ const bookingSchema = new mongoose.Schema({
     _id: {
         type: String
     },
+    movieId: { type: String, ref: 'Movie' },
     movieTitle: {
         type: String,
         required: true
     },
+    theaterId: { type: String, ref: 'Theater' },
     customerName: {
         type: String,
         required: true
@@ -46,6 +48,13 @@ const bookingSchema = new mongoose.Schema({
     totalPrice: {
         type: Number,
         required: true
+    },
+    payment: {
+        method: { type: String },
+        transactionId: { type: String },
+        amount: { type: Number },
+        status: { type: String, enum: ['Paid', 'Pending', 'Failed'], default: 'Pending' },
+        provider: { type: String }
     },
     status: {
         type: String,
