@@ -86,7 +86,7 @@ bookingSchema.pre('save', async function () {
             { $inc: { seq: 1 } },
             { new: true, upsert: true }
         );
-        this._id = `booking_${String(counter.seq).padStart(4, '0')}`;
+        this._id = `booking_${String(counter.seq).padStart(2, '0')}`;
     }
 });
 
