@@ -13,7 +13,7 @@ import TheaterShowtimes from "./_components/TheaterShowtimes";
 import TheaterInfo from "./_components/TheaterInfo";
 import LocationMap from "./_components/LocationMap";
 
-export default function TheaterDetailPage() {
+export default function TheaterDetail() {
     const params = useParams();
     const theaterId = params?.id ? (params.id as string) : null;
     const { theaters: apiTheaters, selectedTheater } = useTheater();

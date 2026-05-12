@@ -11,39 +11,31 @@ interface MovieStatsGridProps {
   total: number;
   nowShowing: number;
   comingSoon: number;
-  archived: number;
 }
-
-export function MovieStatsGrid({ total = 0, nowShowing = 0, comingSoon = 0, archived = 0 }: MovieStatsGridProps) {
+export function MovieStatsGrid({ total, nowShowing, comingSoon }: MovieStatsGridProps) {
   const stats = [
     {
       label: 'Total Movies',
-      value: (total ?? 0).toLocaleString(),
+      value: total.toLocaleString(),
       icon: MdOutlineLocalMovies,
       bgColor: 'bg-cyan-500/10 text-cyan-600',
     },
     {
       label: 'Now Showing',
-      value: (nowShowing ?? 0).toLocaleString(),
+      value: nowShowing.toLocaleString(),
       icon: MdMovieFilter,
       bgColor: 'bg-emerald-500/10 text-emerald-600',
     },
     {
       label: 'Coming Soon',
-      value: (comingSoon ?? 0).toLocaleString(),
+      value: comingSoon.toLocaleString(),
       icon: MdStar,
       bgColor: 'bg-amber-500/10 text-amber-600',
-    },
-    {
-      label: 'Archived',
-      value: (archived ?? 0).toLocaleString(),
-      icon: MdMovie,
-      bgColor: 'bg-slate-500/10 text-slate-600',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {stats.map((stat, index) => (
         <div
           key={index}

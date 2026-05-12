@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import getImage from '@/utils/imageUrl';
 import { IoIosStarOutline, IoMdClose } from "react-icons/io";
 import { IoArrowForward } from "react-icons/io5";
 
@@ -7,7 +8,7 @@ interface Seat {
     id: string;
     row: string;
     number: number;
-    type: "standard" | "vip";
+    type: "standard";
     price: number;
     isAvailable: boolean;
 }
@@ -21,7 +22,7 @@ interface SelectMovieProps {
     selectedSeats: Seat[];
     onRemoveSeat: (seatId: string) => void;
     standardCount: number;
-    vipCount: number;
+    standardPrice: number;
     convenienceFee: number;
     total: number;
     onProceedToPay: () => void;
@@ -36,7 +37,7 @@ const SelectMovie: React.FC<SelectMovieProps> = ({
     selectedSeats,
     onRemoveSeat,
     standardCount,
-    vipCount,
+    standardPrice,
     convenienceFee,
     total,
     onProceedToPay,
@@ -45,12 +46,18 @@ const SelectMovie: React.FC<SelectMovieProps> = ({
     const formatLKR = (amount: number) =>
         `LKR ${amount.toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
+    const imageSrc = posterUrl
+        ? posterUrl.startsWith("http")
+            ? posterUrl
+            : getImage(posterUrl, 'movies')
+        : "https://via.placeholder.com/150";
+
     return (
         <div className="bg-surface-dark border border-[#392828] rounded-xl overflow-hidden sticky top-24 shadow-2xl">
             <div className="p-6 border-b border-[#392828] bg-black/20 flex gap-4">
                 <Image
                     alt={title}
-                    src={posterUrl}
+                    src={imageSrc}
                     width={120}
                     height={180}
                     className="rounded-md shadow-lg object-cover"
@@ -102,17 +109,9 @@ const SelectMovie: React.FC<SelectMovieProps> = ({
                 <div className="space-y-3 pt-4 border-t border-[#392828] border-dashed">
                     {standardCount > 0 && (
                         <div className="flex justify-between items-center text-sm">
-                            <span className="text-text-secondary">Standard Seat (x{standardCount})</span>
+                            <span className="text-text-secondary">Seat (x{standardCount})</span>
                             <span className="text-white font-medium">
-                                {formatLKR(standardCount * 14)}
-                            </span>
-                        </div>
-                    )}
-                    {vipCount > 0 && (
-                        <div className="flex justify-between items-center text-sm">
-                            <span className="text-text-secondary">VIP Seat (x{vipCount})</span>
-                            <span className="text-white font-medium">
-                                {formatLKR(vipCount * 20)}
+                                {formatLKR(standardCount * standardPrice)}
                             </span>
                         </div>
                     )}

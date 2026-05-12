@@ -12,14 +12,34 @@ interface ShowtimesProps {
     onDateSelect: (date: string) => void;
     formatDateDisplay: (dateString: string) => { day: string; month: string; weekday: string };
     getShowtimesForDate: (theater: Theater, date: string) => { standard: TimeSlot[]; imax3d: TimeSlot[] };
+    movie?: any;
 }
 
-const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateDisplay, getShowtimesForDate }: ShowtimesProps) => {
+const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateDisplay, getShowtimesForDate, movie }: ShowtimesProps) => {
     const router = useRouter();
 
-    const handleShowtimeClick = (showtime: TimeSlot) => {
+    const handleShowtimeClick = (theater: Theater, showtime: TimeSlot) => {
         if (!showtime.isSoldOut) {
-            router.push("/select-seats");
+            const payload = {
+                movie: {
+                    id: movie?._id || movie?.id || null,
+                    title: movie?.title || "",
+                    poster: movie?.poster || "",
+                },
+                theater: {
+                    id: theater.theater_id,
+                    name: theater.name,
+                    address: theater.address,
+                },
+                date: selectedDate,
+                time: showtime.time,
+                price: showtime.price,
+                currency: showtime.currency,
+                format: "Standard",
+            };
+
+            const searchString = encodeURIComponent(JSON.stringify(payload));
+            router.push(`/select-seats?data=${searchString}`);
         }
     };
 
@@ -123,7 +143,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                                     <button
                                                         key={index}
                                                         disabled={showtime.isSoldOut}
-                                                        onClick={() => handleShowtimeClick(showtime)}
+                                                        onClick={() => handleShowtimeClick(theater, showtime)}
                                                         className={`group px-4 py-2 rounded border transition-all text-sm font-medium ${showtime.isSoldOut
                                                             ? 'opacity-50 cursor-not-allowed bg-[#221a1a] border-[#392828]'
                                                             : 'border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary'
@@ -152,7 +172,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                                     <button
                                                         key={index}
                                                         disabled={showtime.isSoldOut}
-                                                        onClick={() => handleShowtimeClick(showtime)}
+                                                        onClick={() => handleShowtimeClick(theater, showtime)}
                                                         className={`group px-4 py-2 rounded border transition-all text-sm font-medium ${showtime.isSoldOut
                                                             ? 'opacity-50 cursor-not-allowed bg-[#221a1a] border-[#392828]'
                                                             : 'border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary'
