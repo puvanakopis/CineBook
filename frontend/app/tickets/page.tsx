@@ -19,6 +19,22 @@ interface OrderData {
     subtotal: number;
     convenienceFee: number;
     total: number;
+    meta?: {
+        movie?: {
+            title?: string;
+            poster?: string;
+            rating?: number | string;
+        };
+        theater?: {
+            name?: string;
+        };
+        screen?: {
+            name?: string;
+        };
+        date?: string;
+        time?: string;
+        format?: string;
+    };
 }
 
 function TicketsContent() {
@@ -30,13 +46,15 @@ function TicketsContent() {
     const [printingSeatId, setPrintingSeatId] = useState<string | null>(null);
 
     const movieDetails = {
-        title: "Cyber Chronicles",
-        theater: "Cineplex Downtown",
-        screen: "4 - IMAX",
-        date: "Today, 14 Oct",
-        time: "06:00 PM",
-        poster: "https://lh3.googleusercontent.com/aida-public/AB6AXuDvw3Iq9pJqFd1KivIB51tyO1jy9jFbSkN9w08LctmE4KQXEiNLL2yzrMxjBatyPAPV9NEVdX11bhodeSTfRGLyKJHA4fSd3Foe0XjO3Fk75KIucJBXiGPV6fygqBWrnEdBlXY_9uNVbAn-yHDYhHlqtuAQfOrgfX1lUj6xdN6mlM0fSQlSofP8HzAUn_YWB_w6Gm3PceYzpZIFwMWYzVpkvX4x7zA1Gap3y4rqW7Rm920Jf2f7h0haie6n_FKgdYFzBWN5aat_76mm"
+        title: orderData?.meta?.movie?.title || (orderData as any)?.movieTitle || "Movie Title",
+        theater: orderData?.meta?.theater?.name || (orderData as any)?.theaterName || "Cinema",
+        screen: orderData?.meta?.screen?.name || orderData?.meta?.format || "Hall",
+        date: orderData?.meta?.date || ((orderData as any)?.dateTime ? new Date((orderData as any).dateTime).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : "Date"),
+        time: orderData?.meta?.time || (orderData as any)?.showTime || "Time",
+        poster: orderData?.meta?.movie?.poster || (orderData as any)?.poster || ""
     };
+
+    const bookingId = (orderData as any)?._id || (orderData as any)?.payment?.transactionId || "CBK-PENDING";
 
     useEffect(() => {
         if (dataString) {
@@ -108,6 +126,7 @@ function TicketsContent() {
                         key={seat.id}
                         seat={seat}
                         movieDetails={movieDetails}
+                        bookingId={bookingId}
                         printingSeatId={printingSeatId}
                         onPrintSingle={handlePrintSingle}
                     />
