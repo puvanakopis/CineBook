@@ -148,8 +148,6 @@ exports.getBookedSeats = async (req, res) => {
         if (showTime) query.showTime = showTime;
 
         if (date) {
-            // Assuming date is in format that can be parsed or matched
-            // If it's a date string like '2026-05-13', we can match the day
             const startDate = new Date(date);
             if (!isNaN(startDate.getTime())) {
                 startDate.setHours(0, 0, 0, 0);
