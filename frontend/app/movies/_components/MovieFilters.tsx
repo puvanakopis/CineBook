@@ -1,6 +1,4 @@
-'use client';
-
-import { MdCalendarMonth } from "react-icons/md";
+import { MdCalendarMonth, MdOutlineLocationOn } from "react-icons/md";
 import { MdOutlineMovieCreation } from "react-icons/md";
 import { GrLanguage } from "react-icons/gr";
 import { IoMdStarOutline } from "react-icons/io";
@@ -22,6 +20,9 @@ interface MovieFiltersProps {
     handleClearFilters: () => void;
     searchQuery: string;
     setSearchQuery: (q: string) => void;
+    selectedTheater: string;
+    setSelectedTheater: (t: string) => void;
+    allTheaters: string[];
 }
 
 const MovieFilters = ({
@@ -39,6 +40,9 @@ const MovieFilters = ({
     handleClearFilters,
     searchQuery,
     setSearchQuery,
+    selectedTheater,
+    setSelectedTheater,
+    allTheaters,
 }: MovieFiltersProps) => {
     return (
         <aside className="w-full lg:w-64 flex-shrink-0 space-y-8">
@@ -58,6 +62,29 @@ const MovieFilters = ({
                     />
                 </div>
             </div>
+
+            {/* Theater */}
+            <div className="pb-6 border-b border-[#392828]">
+                <h3 className="font-bold text-white mb-4 flex items-center justify-between">
+                    Theater
+                    <MdOutlineLocationOn className="text-text-secondary text-sm" />
+                </h3>
+                <div className="pt-2">
+                    <select
+                        value={selectedTheater}
+                        onChange={(e) => setSelectedTheater(e.target.value)}
+                        className="w-full bg-input-bg border border-[#392828] rounded px-3 py-2 text-sm text-text-secondary focus:border-primary focus:ring-1 focus:ring-primary outline-none cursor-pointer"
+                    >
+                        <option value="">All Locations</option>
+                        {allTheaters.map((theater) => (
+                            <option key={theater} value={theater}>
+                                {theater}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+
             {/* Show Date */}
             <div className="pb-6 border-b border-[#392828]">
                 <h3 className="font-bold text-white mb-4 flex items-center justify-between">
@@ -179,10 +206,10 @@ const MovieFilters = ({
             </div>
 
             {/* Clear filters button */}
-            {(searchQuery || selectedGenres.length > 0 || selectedLanguage !== 'All' || selectedRating || selectedDate) && (
+            {(searchQuery || selectedGenres.length > 0 || selectedLanguage !== 'All' || selectedRating || selectedDate || selectedTheater) && (
                 <button
                     onClick={handleClearFilters}
-                    className="w-full py-2 text-center text-sm text-primary border border-primary rounded-lg hover:bg-primary/10 transition-colors"
+                    className="w-full py-2 text-center text-sm text-primary border border-primary rounded-lg hover:bg-primary/10 transition-colors mt-6"
                 >
                     Clear all filters
                 </button>
