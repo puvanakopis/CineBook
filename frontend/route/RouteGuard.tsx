@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
@@ -55,7 +55,12 @@ const ALLOWED_PATHS = {
 export default function RouteGuard({ children }: RouteGuardProps) {
     const pathname = usePathname();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { user, isAuthenticated, isLoading } = useAuth();
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [pathname, searchParams]);
 
     const isPathAllowed = (path: string, allowedPaths: string[]) => {
         return allowedPaths.some((allowed) => {

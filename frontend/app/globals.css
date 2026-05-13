@@ -11,6 +11,10 @@
   --color-text-secondary: #b99d9d;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #181111;
   color: #b99d9d;
