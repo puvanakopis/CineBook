@@ -5,6 +5,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import TicketHeader from "./_components/TicketHeader";
 import TicketCard from "./_components/TicketCard";
 import Loading from "@/components/Loading";
+import { jsPDF } from "jspdf";
+import * as htmlToImage from "html-to-image";
+import { toast } from "react-hot-toast";
 
 interface Seat {
     id: string;
@@ -43,7 +46,6 @@ function TicketsContent() {
     const dataString = searchParams.get('data');
 
     const [orderData, setOrderData] = useState<OrderData | null>(null);
-    const [printingSeatId, setPrintingSeatId] = useState<string | null>(null);
 
     const movieDetails = {
         title: orderData?.meta?.movie?.title || (orderData as any)?.movieTitle || "Movie Title",
@@ -86,19 +88,97 @@ function TicketsContent() {
         }
     }, [dataString]);
 
-    const handlePrintSingle = (seatId: string) => {
-        setPrintingSeatId(seatId);
-        setTimeout(() => {
-            window.print();
-            setPrintingSeatId(null);
-        }, 100);
+    const handlePrintSingle = async (seatId: string) => {
+        const element = document.getElementById(`ticket-${seatId}`);
+        if (!element) return;
+
+        const loadingToast = toast.loading("Generating your E-Ticket PDF...");
+
+        try {
+            const dataUrl = await htmlToImage.toPng(element, {
+                quality: 1.0,
+                pixelRatio: 2,
+                backgroundColor: "#0F0F0F",
+                cacheBust: true,
+            });
+
+            // Create a temporary PDF just to get image properties
+            const tempPdf = new jsPDF();
+            const imgProps = tempPdf.getImageProperties(dataUrl);
+
+            // Calculate dimensions to fit the ticket exactly
+            const ticketWidth = 200; // mm
+            const ticketHeight = (imgProps.height * ticketWidth) / imgProps.width;
+
+            const pdf = new jsPDF({
+                orientation: imgProps.width > imgProps.height ? "landscape" : "portrait",
+                unit: "mm",
+                format: [ticketWidth, ticketHeight],
+            });
+
+            pdf.addImage(dataUrl, "PNG", 0, 0, ticketWidth, ticketHeight);
+            pdf.save(`${bookingId}_${seatId}.pdf`);
+            toast.success("E-Ticket downloaded successfully!", { id: loadingToast });
+        } catch (error: any) {
+            console.error("Error generating PDF:", error);
+            toast.error(`Failed to generate PDF: ${error.message || "Unknown error"}`, { id: loadingToast });
+        }
     };
 
-    const handlePrintAll = () => {
-        setPrintingSeatId(null);
-        setTimeout(() => {
-            window.print();
-        }, 100);
+    const handleDownloadAll = async () => {
+        if (!orderData) return;
+
+        const loadingToast = toast.loading("Generating your E-Tickets PDF...");
+
+        try {
+            // Initialize jsPDF
+            const pdf = new jsPDF({
+                orientation: "portrait",
+                unit: "mm",
+                format: "a4", // Default, will be overridden by pages
+            });
+
+            // Remove the first empty page
+            pdf.deletePage(1);
+
+            const tickets = orderData.seats;
+            let capturedCount = 0;
+
+            for (let i = 0; i < tickets.length; i++) {
+                const seat = tickets[i];
+                const element = document.getElementById(`ticket-${seat.id}`);
+
+                if (element) {
+                    const dataUrl = await htmlToImage.toPng(element, {
+                        quality: 1.0,
+                        pixelRatio: 2,
+                        backgroundColor: "#0F0F0F",
+                        cacheBust: true,
+                    });
+
+                    const imgProps = pdf.getImageProperties(dataUrl);
+
+                    const ticketWidth = 200;
+                    const ticketHeight = (imgProps.height * ticketWidth) / imgProps.width;
+
+                    // Add page with correct dimensions
+                    pdf.addPage([ticketWidth, ticketHeight], imgProps.width > imgProps.height ? "landscape" : "portrait");
+                    pdf.addImage(dataUrl, "PNG", 0, 0, ticketWidth, ticketHeight);
+                    capturedCount++;
+                }
+            }
+
+            if (capturedCount === 0) {
+                throw new Error("No ticket elements found to capture.");
+            }
+
+            // Save the PDF with the booking ID
+            pdf.save(`${bookingId}.pdf`);
+            toast.success("E-Tickets downloaded successfully!", { id: loadingToast });
+        } catch (error: any) {
+            console.error("Error generating PDF:", error);
+            toast.error(`Failed to generate PDF: ${error.message || "Unknown error"}`, { id: loadingToast });
+        }
     };
 
     if (!orderData || orderData.seats.length === 0) {
@@ -118,7 +198,7 @@ function TicketsContent() {
 
     return (
         <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-8">
-            <TicketHeader onPrintAll={handlePrintAll} />
+            <TicketHeader onPrintAll={handleDownloadAll} />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {orderData.seats.map((seat) => (
@@ -127,7 +207,6 @@ function TicketsContent() {
                         seat={seat}
                         movieDetails={movieDetails}
                         bookingId={bookingId}
-                        printingSeatId={printingSeatId}
                         onPrintSingle={handlePrintSingle}
                     />
                 ))}
