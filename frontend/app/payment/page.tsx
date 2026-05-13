@@ -2,7 +2,6 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-
 import PaymentHeader from "./_components/PaymentHeader";
 import PaymentForm from "./_components/PaymentForm";
 import OrderSummary from "./_components/OrderSummary";
@@ -21,6 +20,7 @@ interface OrderData {
     subtotal: number;
     convenienceFee: number;
     total: number;
+    meta?: any;
 }
 
 function PaymentContent() {
@@ -31,6 +31,7 @@ function PaymentContent() {
     const [orderData, setOrderData] = useState<OrderData | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentStatus, setPaymentStatus] = useState<"idle" | "success" | "error">("idle");
+    const [paymentMethod, setPaymentMethod] = useState<string>('card');
     const [formData, setFormData] = useState({
         cardName: "",
         cardNumber: "",
@@ -43,12 +44,38 @@ function PaymentContent() {
         if (dataString) {
             try {
                 const parsed = JSON.parse(decodeURIComponent(dataString));
-                setOrderData(parsed);
+                const normalizeSeat = (s: any) => {
+                    if (!s) return null;
+                    if (typeof s === 'string') {
+                        const id = s;
+                        const row = id.replace(/\d+/g, '') || id.charAt(0);
+                        const numMatch = id.match(/\d+/);
+                        const number = numMatch ? parseInt(numMatch[0], 10) : undefined;
+                        return { id, row, number, type: 'standard', price: 14, isAvailable: true };
+                    }
+                    return {
+                        id: s.id ?? `${s.row ?? ''}${s.number ?? ''}`,
+                        row: s.row ?? (typeof s.id === 'string' ? s.id.replace(/\d+/g, '') : undefined),
+                        number: s.number ?? (typeof s.id === 'string' ? parseInt((s.id.match(/\d+/) || [''])[0], 10) : undefined),
+                        type: s.type ?? 'standard',
+                        price: s.price ?? 14,
+                        isAvailable: s.isAvailable ?? true,
+                    };
+                };
+
+                const parsedSeats = Array.isArray(parsed.seats) ? parsed.seats.map(normalizeSeat).filter(Boolean) : [];
+                setOrderData({ ...parsed, seats: parsedSeats });
             } catch (e) {
                 console.error("Failed to parse order data", e);
             }
         }
     }, [dataString]);
+
+    useEffect(() => {
+        if (orderData && orderData.meta) {
+            setFormData((f) => ({ ...f, customerName: orderData.meta.movie?.customerName || f.customerName || '', customerEmail: orderData.meta.movie?.customerEmail || f.customerEmail || '' }));
+        }
+    }, [orderData]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -59,10 +86,16 @@ function PaymentContent() {
 
     const validateForm = () => {
         const newErrors: Record<string, string> = {};
-        if (!formData.cardName.trim()) newErrors.cardName = "Name is required";
-        if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s+/g, ''))) newErrors.cardNumber = "Invalid card number (16 digits required)";
-        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry)) newErrors.expiry = "Use MM/YY format";
-        if (!/^\d{3,4}$/.test(formData.cvv)) newErrors.cvv = "Invalid CVV (3-4 digits)";
+        if (!formData.customerName || !formData.customerName.toString().trim()) newErrors.customerName = "Name is required";
+        if (!formData.customerEmail || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(String(formData.customerEmail))) newErrors.customerEmail = "Valid email is required";
+        
+        if (paymentMethod === 'card') {
+            if (!formData.cardName?.toString().trim()) newErrors.cardName = "Cardholder name is required";
+            if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s+/g, ''))) newErrors.cardNumber = "Invalid card number (16 digits required)";
+            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry)) newErrors.expiry = "Use MM/YY format";
+            if (!/^\d{3,4}$/.test(formData.cvv)) newErrors.cvv = "Invalid CVV (3-4 digits)";
+        }
+        
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -74,16 +107,51 @@ function PaymentContent() {
 
         setIsProcessing(true);
         setPaymentStatus("idle");
+        try {
+            const API_BASE = (process.env.NEXT_PUBLIC_API_URL as string) || 'http://localhost:4000';
 
-        // Mock API call delay
-        setTimeout(() => {
-            if (Math.random() > 0.1) {
-                router.push(`/tickets?data=${encodeURIComponent(JSON.stringify(orderData))}`);
-            } else {
+            const paymentDetails = paymentMethod === 'card' 
+                ? {
+                    method: 'card',
+                    provider: 'MockGateway',
+                    cardName: formData.cardName,
+                    cardNumber: formData.cardNumber.replace(/\s+/g, ''),
+                  }
+                : {
+                    method: 'cash',
+                    provider: 'InPerson',
+                  };
+
+            const resp = await fetch(`${API_BASE}/api/payments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    orderData,
+                    paymentDetails,
+                    meta: {
+                        customerName: formData.customerName,
+                        customerEmail: formData.customerEmail,
+                        ...(orderData?.meta || {})
+                    }
+                })
+            });
+
+            if (!resp.ok) {
                 setIsProcessing(false);
-                setPaymentStatus("error");
+                setPaymentStatus('error');
+                return;
             }
-        }, 2500);
+
+            const data = await resp.json();
+            setIsProcessing(false);
+            setPaymentStatus('success');
+            const booking = data.booking || orderData;
+            router.push(`/tickets?data=${encodeURIComponent(JSON.stringify(booking))}`);
+        } catch (err) {
+            console.error('Payment request failed', err);
+            setIsProcessing(false);
+            setPaymentStatus('error');
+        }
     };
 
 
@@ -106,11 +174,11 @@ function PaymentContent() {
     return (
         <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-8">
             <PaymentHeader
-                movie="Cyber Chronicles"
-                theater="Cineplex Downtown"
-                hall="4 - IMAX"
-                date="Today, 14 Oct"
-                time="06:00 PM"
+                movie={orderData?.meta?.movie?.title || "Cyber Chronicles"}
+                theater={orderData?.meta?.theater?.name || "Cineplex Downtown"}
+                hall={orderData?.meta?.screen?.name || orderData?.meta?.format || "4 - IMAX"}
+                date={orderData?.meta?.date || "Today, 14 Oct"}
+                time={orderData?.meta?.time || "06:00 PM"}
             />
 
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
@@ -123,6 +191,8 @@ function PaymentContent() {
                     totalAmount={orderData.total}
                     onInputChange={handleInputChange}
                     onSubmit={handleSubmit}
+                    paymentMethod={paymentMethod}
+                    onMethodChange={setPaymentMethod}
                 />
 
                 <div className="w-full lg:w-[380px] flex-shrink-0">
@@ -131,6 +201,7 @@ function PaymentContent() {
                         subtotal={orderData.subtotal}
                         convenienceFee={orderData.convenienceFee}
                         total={orderData.total}
+                        meta={orderData.meta}
                     />
                 </div>
             </div>

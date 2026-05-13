@@ -57,6 +57,11 @@ const ScreenSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        which: {
+            type: String,
+            required: false,
+            default: ''
+        },
         shows: {
             type: [ShowSchema],
             default: []

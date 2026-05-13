@@ -25,7 +25,6 @@ export default function CineBotChat() {
     const chatContainerRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    // Scroll to bottom on new message
     useEffect(() => {
         chatContainerRef.current?.scrollTo({
             top: chatContainerRef.current.scrollHeight,
@@ -42,7 +41,6 @@ export default function CineBotChat() {
         };
         setMessages([...messages, newMessage]);
 
-        // Simulate bot response
         setTimeout(() => {
             const botMessage: Message = {
                 id: Date.now() + 1,

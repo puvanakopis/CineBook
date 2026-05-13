@@ -143,7 +143,7 @@ const SelectSeats: React.FC<SelectSeatsProps> = ({
                                                     onClick={() => handleSeatClick(seat)}
                                                     className={`${getSeatSize(seat.type)} ${getSeatClasses(seat)}`}
                                                     title={`${seat.row}${seat.number} - $${seat.price}`}
-                                                    disabled={!seat.isAvailable}
+                                                    disabled={seat.isAvailable === false}
                                                 >
                                                     {renderSeatContent(seat)}
                                                 </button>
@@ -173,10 +173,10 @@ const SelectSeats: React.FC<SelectSeatsProps> = ({
                             <span className="text-sm text-text-secondary font-medium">Booked</span>
                         </div>
                         <div className="flex items-center gap-3">
-                            <div className="w-6 h-6 rounded bg-[#392828] border border-yellow-500 text-yellow-500 flex items-center justify-center">
-                                <span className="material-symbols-outlined text-xs"><IoIosStarOutline /></span>
+                            <div className="w-6 h-6 rounded bg-[#392828] border border-primary text-primary flex items-center justify-center">
+                                <span className="text-xs">₨</span>
                             </div>
-                            <span className="text-sm text-text-secondary font-medium">VIP ($20)</span>
+                            <span className="text-sm text-text-secondary font-medium">Seat ({seats[0]?.price ? `LKR ${seats[0].price}` : "—"})</span>
                         </div>
                     </div>
                 </div>

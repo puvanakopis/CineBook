@@ -17,7 +17,6 @@ const MovieCard = ({ movie, viewMode }: MovieCardProps) => {
     const router = useRouter();
     const posterUrl = getImage(movie.poster, "movies");
 
-    // Calculate average rating from reviews
     const averageRating = useMemo(() => {
         if (!movie.reviews || movie.reviews.length === 0) return 0;
         const sum = movie.reviews.reduce((acc, review) => acc + review.rating, 0);

@@ -28,7 +28,7 @@ export default function PaymentHeader({ movie, theater, hall, date, time }: { mo
                     </div>
                     <div className="h-8 w-px bg-[#392828]"></div>
                     <div className="text-right">
-                        <span className="block text-xs text-[var(--color-text-secondary)] uppercase font-bold tracking-wider">Hall</span>
+                        <span className="block text-xs text-[var(--color-text-secondary)] uppercase font-bold tracking-wider">Screen</span>
                         <span className="block text-white font-bold">{hall || "4 - IMAX"}</span>
                     </div>
                 </div>

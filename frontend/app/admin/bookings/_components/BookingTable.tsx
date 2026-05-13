@@ -1,6 +1,6 @@
 'use client';
 
-import { Booking } from '@/interfaces/booking';
+import { Booking } from '@/interfaces/bookingInterface';
 import {
   MdMoreVert,
   MdVisibility,
@@ -54,7 +54,7 @@ export function BookingTable({ bookings }: BookingTableProps) {
                       />
                       <div className="flex flex-col">
                         <span className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">{booking.movieTitle}</span>
-                        <span className="text-[11px] text-slate-500 dark:text-[#b99d9d]">{booking.theaterName} • {booking.hallName}</span>
+                        <span className="text-[11px] text-slate-500 dark:text-[#b99d9d]">{booking.theaterName}{booking.screenId ? ` • ${booking.screenId}` : ''}</span>
                       </div>
                     </div>
                   </td>
@@ -69,11 +69,15 @@ export function BookingTable({ bookings }: BookingTableProps) {
                   </td>
                   <td className="p-4">
                     <div className="flex flex-wrap gap-1 max-w-[120px]">
-                      {booking.seats.map((seat) => (
-                        <span key={seat} className="text-[10px] bg-slate-100 dark:bg-[#3d2525] text-slate-600 dark:text-[#f8d7da] px-1.5 py-0.5 rounded border border-slate-200 dark:border-white/5 font-medium">
-                          {seat}
-                        </span>
-                      ))}
+                      {booking.seats.map((seatItem) => {
+                        const seatKey = typeof seatItem === 'string' ? seatItem : (seatItem.id ?? `${seatItem.row ?? ''}${seatItem.number ?? ''}`);
+                        const seatLabel = typeof seatItem === 'string' ? seatItem : `${seatItem.row ?? ''}${seatItem.number ?? ''}`;
+                        return (
+                          <span key={seatKey} className="text-[10px] bg-slate-100 dark:bg-[#3d2525] text-slate-600 dark:text-[#f8d7da] px-1.5 py-0.5 rounded border border-slate-200 dark:border-white/5 font-medium">
+                            {seatLabel}
+                          </span>
+                        );
+                      })}
                     </div>
                   </td>
                   <td className="p-4">

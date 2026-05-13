@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import MovieHeader from "./_components/MovieHeader";
 import MovieFilters from "./_components/MovieFilters";
 import MovieGrid from "./_components/MovieGrid";
@@ -13,14 +14,33 @@ import { Movie } from "@/interfaces/movieInterface";
 
 export default function Movies() {
   const { movies, isLoading, error } = useMovie();
+  const searchParams = useSearchParams();
+
+  // Get initial values from search params
+  const initialGenre = searchParams.get("genre");
+  const initialDate = searchParams.get("date");
+  const initialTheater = searchParams.get("theater");
+
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<string>('');
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string>(initialDate || '');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(initialGenre ? [initialGenre] : []);
+  const [selectedTheater, setSelectedTheater] = useState<string>(initialTheater || '');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All');
   const [selectedRating, setSelectedRating] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('Popularity');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  // Sync state with search params when they change
+  useEffect(() => {
+    const genre = searchParams.get("genre");
+    const date = searchParams.get("date");
+    const theater = searchParams.get("theater");
+
+    setSelectedGenres(genre ? [genre] : []);
+    setSelectedDate(date || '');
+    setSelectedTheater(theater || '');
+  }, [searchParams]);
 
   const moviesPerPage = 9;
 
@@ -56,7 +76,6 @@ export default function Movies() {
       return { ...movie, averageRating: avgRating };
     });
 
-    // Search filter
     const searched = searchQuery
       ? withRating.filter(movie =>
         movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -82,7 +101,6 @@ export default function Movies() {
       ? languageFiltered.filter(movie => movie.averageRating >= parseFloat(selectedRating))
       : languageFiltered;
 
-    // Show date filter: if a date is selected, only include movies that have a showing on that date
     const dateFiltered = selectedDate
       ? ratingFiltered.filter(movie =>
         (movie.showings || []).some(showing =>
@@ -93,7 +111,13 @@ export default function Movies() {
       )
       : ratingFiltered;
 
-    return dateFiltered.sort((a, b) => {
+    const theaterFiltered = selectedTheater
+      ? dateFiltered.filter(movie =>
+        (movie.showings || []).some(showing => showing.name === selectedTheater)
+      )
+      : dateFiltered;
+
+    return theaterFiltered.sort((a, b) => {
       switch (sortBy) {
         case 'Popularity':
           return b.averageRating - a.averageRating;
@@ -107,7 +131,7 @@ export default function Movies() {
           return 0;
       }
     });
-  }, [movies, selectedGenres, selectedLanguage, selectedRating, sortBy, searchQuery, selectedDate]);
+  }, [movies, selectedGenres, selectedLanguage, selectedRating, sortBy, searchQuery, selectedDate, selectedTheater]);
 
   const handleGenreToggle = (genre: string) => {
     setCurrentPage(1);
@@ -142,6 +166,8 @@ export default function Movies() {
     setSelectedGenres([]);
     setSelectedLanguage('All');
     setSelectedRating('');
+    setSelectedDate('');
+    setSelectedTheater('');
     setCurrentPage(1);
   };
 
@@ -165,6 +191,9 @@ export default function Movies() {
     handleClearFilters,
     searchQuery,
     setSearchQuery: handleSearchQueryChange,
+    selectedTheater,
+    setSelectedTheater,
+    allTheaters: Array.from(new Set(movies.flatMap(m => m.showings?.map(s => s.name) || []))).sort(),
   };
 
   if (isLoading) {

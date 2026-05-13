@@ -7,7 +7,7 @@ import { MdOutlineRateReview } from "react-icons/md";
 import { IoSendOutline } from "react-icons/io5";
 import { MdOutlineStar } from "react-icons/md";
 import { MdVerified } from "react-icons/md";
-import { Review } from "@/interfaces/movie";
+import { Review } from "@/interfaces/movieInterface";
 import Loading from '@/components/Loading';
 
 interface ReviewsProps {

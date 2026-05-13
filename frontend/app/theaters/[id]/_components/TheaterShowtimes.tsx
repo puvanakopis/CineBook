@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Screen, MovieShowtime, TimeSlot } from "@/interfaces/theater";
+import { Screen, MovieShowtime, TimeSlot } from "@/interfaces/theaterInterface";
 import Image from "next/image";
 import getImage from '@/utils/imageUrl';
 
@@ -54,9 +54,30 @@ const TheaterShowtimes = ({
         }
     };
 
-    const handleShowtimeClick = (st: { screen: Screen; showtime: TimeSlot; format: string }) => {
+    const handleShowtimeClick = (movie: MovieShowtime, st: { screen: Screen; showtime: TimeSlot; format: string }) => {
         if (!st.showtime.isSoldOut) {
-            router.push("/select-seats");
+            const payload = {
+                movie: {
+                    id: movie.movie_id,
+                    title: movie.title,
+                    poster: movie.poster,
+                    duration: movie.duration,
+                    rating: movie.rating,
+                    genres: movie.genres,
+                },
+                theater: {
+                    id: st.screen.screen_id,
+                    name: st.screen.name || "",
+                },
+                date: selectedDate,
+                time: st.showtime.time,
+                price: st.showtime.price,
+                currency: st.showtime.currency,
+                format: st.format,
+            };
+
+            const searchString = encodeURIComponent(JSON.stringify(payload));
+            router.push(`/select-seats?data=${searchString}`);
         }
     };
 
@@ -150,7 +171,7 @@ const TheaterShowtimes = ({
                                                     <button
                                                         key={`${st.screen.screen_id}-${st.showtime.time}-${idx}`}
                                                         disabled={st.showtime.isSoldOut}
-                                                        onClick={() => handleShowtimeClick(st)}
+                                                        onClick={() => handleShowtimeClick(movie, st)}
                                                         className={`group relative flex flex-col items-center justify-center py-2 px-2 rounded border transition-all ${st.showtime.isSoldOut
                                                             ? "opacity-50 cursor-not-allowed bg-[#221a1a] border-[#392828]"
                                                             : "border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary"

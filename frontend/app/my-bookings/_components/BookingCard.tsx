@@ -21,7 +21,7 @@ interface Booking {
     date: string;
     time: string;
     theater: string;
-    seats: string[];
+    seats: Array<string | { id?: string; row?: string; number?: number }>;
     status: 'confirmed' | 'pending' | 'cancelled';
     format: string;
     reference: string;
@@ -63,8 +63,13 @@ const statusConfig = {
 };
 
 export function BookingCard({ booking, onCancel, onModify, onViewTicket, onCompletePayment }: BookingCardProps) {
-    const statusInfo = statusConfig[booking.status];
+    const statusKey = (booking.status || '').toString().toLowerCase() as 'confirmed' | 'pending' | 'cancelled';
+    const statusInfo = statusConfig[statusKey] ?? statusConfig.confirmed;
     const StatusIcon = statusInfo.icon;
+
+    const seatsLabel = Array.isArray(booking.seats)
+        ? booking.seats.map(s => typeof s === 'string' ? s : (s.id ?? (s.row && s.number ? `${s.row}${s.number}` : ''))).filter(Boolean).join(', ')
+        : String(booking.seats || '');
 
     return (
         <div className="group relative overflow-hidden bg-[#291e1e]/30 rounded-2xl border border-[#392828] shadow-lg hover:shadow-primary/5 hover:border-primary/50 transition-all duration-300">
@@ -132,7 +137,7 @@ export function BookingCard({ booking, onCancel, onModify, onViewTicket, onCompl
                             <span className="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-1">
                                 <MdOutlineEventSeat className="text-sm" /> Seats
                             </span>
-                            <span className="text-white font-bold text-lg">{booking.seats.join(', ')}</span>
+                            <span className="text-white font-bold text-lg">{seatsLabel}</span>
                         </div>
                     </div>
 

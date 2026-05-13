@@ -11,7 +11,7 @@ export function HallStatus() {
   return (
     <div className="bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-[#392828] shadow-sm p-6 flex flex-col">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Hall 1 Live</h3>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Screen 1 Live</h3>
         <div className="flex items-center gap-2">
           <span className="size-2 rounded-full bg-red-500 animate-pulse"></span>
           <span className="text-xs text-red-500 font-bold uppercase">Showing Now</span>

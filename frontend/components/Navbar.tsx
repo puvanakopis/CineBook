@@ -17,7 +17,7 @@ const Navbar = () => {
     const authRef = useRef<HTMLDivElement | null>(null);
 
     const initials = user ? `${user.firstName?.[0] ?? ""}`.toUpperCase() : "";
-    
+
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (authRef.current && !authRef.current.contains(e.target as Node)) {
@@ -115,8 +115,8 @@ const Navbar = () => {
 
                         {open && (
                             <div className="absolute right-0 mt-2 w-48 bg-[#181111] border border-[#392828] rounded-md shadow-lg z-50">
-                                <Link href="/my-bookings" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">My Bookings</Link>
                                 <Link href="/profile" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Profile</Link>
+                                <Link href="/my-bookings" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">My Bookings</Link>
                                 <Link href="/settings" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Settings</Link>
                                 <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-white hover:bg-[#241818]">Logout</button>
                             </div>
