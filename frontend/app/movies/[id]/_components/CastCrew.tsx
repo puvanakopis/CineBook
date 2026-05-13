@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Cast } from "@/interfaces/movie";
+import { Cast } from "@/interfaces/movieInterface";
 
 interface CastCrewProps {
   cast: Cast[];

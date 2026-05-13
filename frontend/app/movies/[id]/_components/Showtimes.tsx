@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { MdOutlineCancel, MdOutlineFastfood, MdOutlineTheaterComedy } from "react-icons/md";
 import { FaRegCheckCircle, FaParking, FaWheelchair } from "react-icons/fa";
-import { Theater } from "@/interfaces/movie";
+import { Theater } from "@/interfaces/movieInterface";
 
 interface ShowtimesProps {
     theaters: Theater[];
@@ -19,7 +19,6 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
 
     const handleShowtimeClick = (theater: Theater, show: any) => {
         if (show.status !== 'sold-out') {
-            // Find the screen for this show
             const screen = (theater.screens || []).find(s => s.shows.some(sh => sh.date === show.date && sh.time === show.time));
             const payload = {
                 movie: {
@@ -32,7 +31,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                     name: theater.name,
                     address: theater.address,
                 },
-                screen: screen ? { screen_id: screen.screen_id, name: screen.name, type: screen.type } : undefined,
+                screen: screen ? { id: screen.screen_id, name: screen.name, type: screen.type } : undefined,
                 date: selectedDate,
                 time: show.time,
                 price: show.price,
@@ -77,10 +76,9 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                 {/* Theater Listings */}
                 <div className="space-y-6">
                     {theaters.map((theater) => {
-                        // For each screen in the theater, show its shows for the selected date
                         if (!theater.screens) return null;
-                        const screensWithShows = theater.screens.filter(screen =>
-                            screen.shows.some(show => show.date === selectedDate)
+                        const screensWithShows = (theater.screens || []).filter(screen =>
+                            (screen.shows || []).some(show => show.date === selectedDate)
                         );
                         if (screensWithShows.length === 0) return null;
                         return (
@@ -99,7 +97,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                     </div>
                                     <div className="flex flex-wrap gap-4 text-sm text-text-secondary">
                                         <span className="flex items-center gap-1">
-                                            {theater.features.mTicket ? (
+                                            {theater.features?.mTicket ? (
                                                 <FaRegCheckCircle className="text-green-500" />
                                             ) : (
                                                 <MdOutlineCancel className="text-text-secondary/50" />
@@ -107,7 +105,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                             M-Ticket
                                         </span>
                                         <span className="flex items-center gap-1">
-                                            {theater.features.foodBeverage ? (
+                                            {theater.features?.foodBeverage ? (
                                                 <MdOutlineFastfood className="text-yellow-500" />
                                             ) : (
                                                 <MdOutlineCancel className="text-text-secondary/50" />
@@ -115,7 +113,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                             F&B
                                         </span>
                                         <span className="flex items-center gap-1">
-                                            {theater.features.parking ? (
+                                            {theater.features?.parking ? (
                                                 <FaParking className="text-blue-500" />
                                             ) : (
                                                 <MdOutlineCancel className="text-text-secondary/50" />
@@ -123,7 +121,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                             Parking
                                         </span>
                                         <span className="flex items-center gap-1">
-                                            {theater.features.wheelchair ? (
+                                            {theater.features?.wheelchair ? (
                                                 <FaWheelchair className="text-purple-500" />
                                             ) : (
                                                 <MdOutlineCancel className="text-text-secondary/50" />
@@ -141,7 +139,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                                 Screen: {screen.name} ({screen.screen_id})
                                             </span>
                                             <div className="flex flex-wrap gap-3">
-                                                {screen.shows.filter(show => show.date === selectedDate).map((show, index) => (
+                                                {(screen.shows || []).filter(show => show.date === selectedDate).map((show, index) => (
                                                     <button
                                                         key={index}
                                                         disabled={show.status === 'sold-out'}
@@ -155,7 +153,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                                             {show.time}
                                                         </span>
                                                         <div className="text-[10px] text-text-secondary group-hover:text-white/80 mt-0.5">
-                                                            {show.status === 'sold-out' ? 'Sold Out' : `${show.currency} ${show.price.toFixed(2)}`}
+                                                            {show.status === 'sold-out' ? 'Sold Out' : `${show.currency || 'LKR'} ${(show.price || 0).toFixed(2)}`}
                                                         </div>
                                                     </button>
                                                 ))}

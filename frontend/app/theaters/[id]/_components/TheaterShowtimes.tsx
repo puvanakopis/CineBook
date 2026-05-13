@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Screen, MovieShowtime, TimeSlot } from "@/interfaces/theater";
+import { Screen, MovieShowtime, TimeSlot } from "@/interfaces/theaterInterface";
 import Image from "next/image";
 import getImage from '@/utils/imageUrl';
 

@@ -56,7 +56,6 @@ export default function Movies() {
       return { ...movie, averageRating: avgRating };
     });
 
-    // Search filter
     const searched = searchQuery
       ? withRating.filter(movie =>
         movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -82,7 +81,6 @@ export default function Movies() {
       ? languageFiltered.filter(movie => movie.averageRating >= parseFloat(selectedRating))
       : languageFiltered;
 
-    // Show date filter: if a date is selected, only include movies that have a showing on that date
     const dateFiltered = selectedDate
       ? ratingFiltered.filter(movie =>
         (movie.showings || []).some(showing =>

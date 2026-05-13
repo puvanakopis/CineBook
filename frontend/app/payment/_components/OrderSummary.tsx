@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import getImage from '@/utils/imageUrl';
 import { IoIosStarOutline, IoMdClose } from "react-icons/io";
-import { IoArrowForward } from "react-icons/io5";
 
 interface Seat {
     id: string;
@@ -67,7 +66,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = (props) => {
 
     const effectivePoster = posterUrl ?? meta?.movie?.poster;
     const effectiveTitle = title ?? meta?.movie?.title ?? 'Selected Movie';
-    // prefer explicit `rating` prop, but accept string values from meta
     const rawRating = rating ?? meta?.movie?.rating;
     let parsedRating: number | undefined;
     if (rawRating == null || rawRating === '') {
@@ -158,14 +156,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = (props) => {
                         <p className="text-3xl font-bold text-white mt-1">{formatLKR(total)}</p>
                     </div>
                 </div>
-                <button
-                    className={`w-full py-4 bg-primary text-white font-bold rounded-lg shadow-lg transition-all flex items-center justify-center gap-2 group text-lg ${seatsList.length === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-red-700 hover:shadow-primary/30"}`}
-                    disabled={seatsList.length === 0 || !onProceedToPay}
-                    onClick={onProceedToPay}
-                >
-                    Proceed to Pay
-                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform"><IoArrowForward /></span>
-                </button>
             </div>
         </div>
     );

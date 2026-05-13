@@ -70,9 +70,8 @@ const MovieFilters = ({
                             const d = new Date();
                             if (lbl === 'Today') return d.toISOString().split('T')[0];
                             if (lbl === 'Tomorrow') { d.setDate(d.getDate() + 1); return d.toISOString().split('T')[0]; }
-                            // This Weekend -> upcoming Saturday
                             const today = new Date();
-                            const day = today.getDay(); // 0 Sun .. 6 Sat
+                            const day = today.getDay();
                             const daysUntilSat = (6 - day + 7) % 7;
                             const sat = new Date();
                             sat.setDate(today.getDate() + (daysUntilSat === 0 ? 0 : daysUntilSat));

@@ -2,8 +2,6 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-// Stripe integration removed for now to avoid build-time dependency
-
 import PaymentHeader from "./_components/PaymentHeader";
 import PaymentForm from "./_components/PaymentForm";
 import OrderSummary from "./_components/OrderSummary";
@@ -46,7 +44,6 @@ function PaymentContent() {
         if (dataString) {
             try {
                 const parsed = JSON.parse(decodeURIComponent(dataString));
-                // Normalize seats: accept either strings like "A1" or seat objects
                 const normalizeSeat = (s: any) => {
                     if (!s) return null;
                     if (typeof s === 'string') {
@@ -56,7 +53,6 @@ function PaymentContent() {
                         const number = numMatch ? parseInt(numMatch[0], 10) : undefined;
                         return { id, row, number, type: 'standard', price: 14, isAvailable: true };
                     }
-                    // already an object
                     return {
                         id: s.id ?? `${s.row ?? ''}${s.number ?? ''}`,
                         row: s.row ?? (typeof s.id === 'string' ? s.id.replace(/\d+/g, '') : undefined),
@@ -75,7 +71,6 @@ function PaymentContent() {
         }
     }, [dataString]);
 
-    // ensure formData includes customer fields
     useEffect(() => {
         if (orderData && orderData.meta) {
             setFormData((f) => ({ ...f, customerName: orderData.meta.movie?.customerName || f.customerName || '', customerEmail: orderData.meta.movie?.customerEmail || f.customerEmail || '' }));
@@ -150,7 +145,6 @@ function PaymentContent() {
             const data = await resp.json();
             setIsProcessing(false);
             setPaymentStatus('success');
-            // Redirect to tickets with booking data returned from backend
             const booking = data.booking || orderData;
             router.push(`/tickets?data=${encodeURIComponent(JSON.stringify(booking))}`);
         } catch (err) {

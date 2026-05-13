@@ -1,6 +1,6 @@
 'use client';
 
-import { Booking } from '@/interfaces/booking';
+import { Booking } from '@/interfaces/bookingInterface';
 import {
   MdMoreVert,
   MdVisibility,

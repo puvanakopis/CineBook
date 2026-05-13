@@ -73,20 +73,11 @@ export interface AuthState {
 }
 
 export interface AuthContextType extends AuthState {
-    // Signup
     requestSignupOtp: (data: SignupRequestOtpRequest) => Promise<void>;
     verifyOtpAndSignup: (data: VerifyOtpAndSignupRequest) => Promise<void>;
-    
-    // Login
     login: (data: LoginRequest) => Promise<void>;
-    
-    // Password Reset
     requestPasswordReset: (data: ForgotPasswordRequest) => Promise<void>;
     verifyPasswordReset: (data: VerifyPasswordResetRequest) => Promise<void>;
-    
-    // Logout
     logout: () => void;
-    
-    // Utility
     clearError: () => void;
 }

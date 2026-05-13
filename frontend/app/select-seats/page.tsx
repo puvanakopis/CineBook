@@ -13,7 +13,7 @@ interface Seat {
     id: string;
     row: string;
     number: number;
-    type: "standard";
+    type: "standard" | "vip";
     price: number;
     isAvailable: boolean;
 }
@@ -81,14 +81,13 @@ export default function SelectSeats() {
                 let currentPrice = defaultStandardPrice;
                 let bookedSeatIds: string[] = [];
 
-                // 1. Fetch Pricing
                 if (payload.theater?.id) {
                     try {
                         const th = await theaterApi.getTheaterById(payload.theater.id);
                         let foundPrice: number | null = null;
                         (th.screens || []).forEach((screen) => {
                             (screen.shows || []).forEach((show) => {
-                                const movieId = typeof show.movie === 'object' && show.movie._id ? show.movie._id : String(show.movie);
+                                const movieId = show.movie && typeof show.movie === 'object' && '_id' in show.movie ? (show.movie as any)._id : String(show.movie);
                                 if (!foundPrice && payload.movie?.id && movieId === String(payload.movie.id) && show.date === payload.date) {
                                     foundPrice = show.price;
                                 }
@@ -102,7 +101,6 @@ export default function SelectSeats() {
                     }
                 }
 
-                // 2. Fetch Booked Seats
                 try {
                     bookedSeatIds = await bookingApi.getBookedSeats({
                         movieId: payload.movie?.id,
@@ -133,7 +131,6 @@ export default function SelectSeats() {
             subtotal,
             convenienceFee,
             total,
-            // include original payload so payment page/backend can access movie/theater meta
             meta: payload
         };
         const searchString = encodeURIComponent(JSON.stringify(orderData));

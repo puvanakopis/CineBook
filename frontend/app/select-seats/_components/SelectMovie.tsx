@@ -8,7 +8,7 @@ interface Seat {
     id: string;
     row: string;
     number: number;
-    type: "standard";
+    type: "standard" | "vip";
     price: number;
     isAvailable: boolean;
 }

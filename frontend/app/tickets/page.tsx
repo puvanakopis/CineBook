@@ -102,12 +102,10 @@ function TicketsContent() {
                 cacheBust: true,
             });
 
-            // Create a temporary PDF just to get image properties
             const tempPdf = new jsPDF();
             const imgProps = tempPdf.getImageProperties(dataUrl);
 
-            // Calculate dimensions to fit the ticket exactly
-            const ticketWidth = 200; // mm
+            const ticketWidth = 200;
             const ticketHeight = (imgProps.height * ticketWidth) / imgProps.width;
 
             const pdf = new jsPDF({
@@ -131,14 +129,12 @@ function TicketsContent() {
         const loadingToast = toast.loading("Generating your E-Tickets PDF...");
 
         try {
-            // Initialize jsPDF
             const pdf = new jsPDF({
                 orientation: "portrait",
                 unit: "mm",
-                format: "a4", // Default, will be overridden by pages
+                format: "a4", 
             });
 
-            // Remove the first empty page
             pdf.deletePage(1);
 
             const tickets = orderData.seats;
@@ -161,7 +157,6 @@ function TicketsContent() {
                     const ticketWidth = 200;
                     const ticketHeight = (imgProps.height * ticketWidth) / imgProps.width;
 
-                    // Add page with correct dimensions
                     pdf.addPage([ticketWidth, ticketHeight], imgProps.width > imgProps.height ? "landscape" : "portrait");
                     pdf.addImage(dataUrl, "PNG", 0, 0, ticketWidth, ticketHeight);
                     capturedCount++;
@@ -172,7 +167,6 @@ function TicketsContent() {
                 throw new Error("No ticket elements found to capture.");
             }
 
-            // Save the PDF with the booking ID
             pdf.save(`${bookingId}.pdf`);
             toast.success("E-Tickets downloaded successfully!", { id: loadingToast });
         } catch (error: any) {

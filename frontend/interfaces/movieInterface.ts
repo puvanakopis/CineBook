@@ -1,15 +1,69 @@
+import { StaticImageData } from "next/image";
+
+export interface TimeSlot {
+    time: string;
+    price: number;
+    currency: string;
+    isSoldOut: boolean;
+}
+
+export interface DateShowtime {
+    date: string;
+    times: TimeSlot[];
+}
+
+export interface Showtimes {
+    standard?: DateShowtime[];
+    imax3d?: DateShowtime[];
+}
+
+export interface TheaterFeatures {
+    mTicket: boolean;
+    foodBeverage: boolean;
+    parking: boolean;
+    wheelchair: boolean;
+    dolby?: boolean;
+    imax?: boolean;
+}
+
+export interface Theater {
+    theater_id: string;
+    name: string;
+    address: string;
+    features: TheaterFeatures;
+    showtimes?: Showtimes;
+    screens?: any[];
+    city?: string;
+    rating?: number;
+    amenities?: string[];
+    image?: string | StaticImageData;
+    description?: string;
+}
+
 export interface Cast {
+    cast_id?: string;
     name: string;
     role: string;
-    profilePicture: string;
+    type?: string;
+    imageUrl?: string | StaticImageData;
+    profilePicture?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
 
 export interface Review {
+    review_id?: string;
+    user_id?: string;
     user?: string;
+    author?: string;
+    date?: string;
     rating: number;
-    message: string;
+    content?: string;
+    message?: string;
+    initials?: string;
+    hasPremium?: boolean;
+    likes?: number;
+    verified?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -41,20 +95,23 @@ export interface MovieShowing {
 }
 
 export interface Movie {
-    _id: string;
+    _id?: string;
+    movie_id?: string;
     title: string;
+    rating?: number;
     genres: string[];
     duration: string;
     releaseDate: string;
-    languages: string[];
+    languages: string | string[];
     formats: string;
     synopsis: string;
-    poster: string;
+    poster: string | StaticImageData;
     trailerUrl: string;
+    theaters?: Theater[];
     cast: Cast[];
     reviews: Review[];
-    isNowShowing: boolean;
-    isUpcoming: boolean;
+    isNowShowing?: boolean;
+    isUpcoming?: boolean;
     showings?: MovieShowing[];
     createdAt?: Date;
     updatedAt?: Date;
@@ -65,7 +122,7 @@ export interface CreateMovieRequest {
     genres: string[];
     duration: string;
     releaseDate: string;
-    languages: string[];
+    languages: string | string[];
     formats: string;
     synopsis: string;
     poster?: File | string;
@@ -97,7 +154,6 @@ export interface DeleteMovieResponse {
 
 export type GetMoviesResponse = Movie[];
 
-// ----- ADD REVIEW TYPES -----
 export interface AddReviewRequest {
     rating: number;
     message: string;
@@ -108,7 +164,6 @@ export interface AddReviewResponse {
     reviews: Review[];
 }
 
-// ----- CONTEXT TYPE -----
 export interface MovieState {
     movies: Movie[];
     selectedMovie: Movie | null;
@@ -122,7 +177,7 @@ export interface MovieContextType extends MovieState {
     createMovie: (data: CreateMovieRequest) => Promise<void>;
     updateMovie: (id: string, data: UpdateMovieRequest) => Promise<void>;
     deleteMovie: (id: string) => Promise<void>;
-    addReview: (movieId: string, rating: number, message: string) => Promise<void>; // new method
+    addReview: (movieId: string, rating: number, message: string) => Promise<void>;
     clearError: () => void;
     clearSelectedMovie: () => void;
 }

@@ -1,5 +1,6 @@
 export interface Booking {
-    _id: string;
+    _id?: string;
+    id?: string;
     movieTitle: string;
     movieId?: string;
     customerName: string;
@@ -62,7 +63,6 @@ export interface CancelBookingResponse {
     booking?: Booking;
 }
 
-// ----- CONTEXT TYPES -----
 export interface BookingState {
     bookings: Booking[];
     myBookings: Booking[];

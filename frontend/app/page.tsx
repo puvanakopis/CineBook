@@ -13,7 +13,6 @@ export default async function Home() {
     if (res.ok) {
       const data = await res.json();
 
-      // Normalize poster URLs: if poster is a relative path, prefix with API base
       const apiBase = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
       movies = (data || []).map((m: any) => {
         const poster: string = m.poster || "";
@@ -26,11 +25,9 @@ export default async function Home() {
         const normalized = `${prefix}${poster.startsWith("/") ? poster : "/" + poster}`;
         return { ...m, poster: normalized };
       });
-      // show only first 8 movies on home page
       movies = movies.slice(0, 8);
     }
   } catch (err) {
-    // fail silently and render fallback UI
     movies = [];
   }
 

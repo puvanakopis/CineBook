@@ -115,7 +115,6 @@ export const movieApi = {
         return res.data;
     },
 
-    // ----- ADD REVIEW -----
     addReview: async (movieId: string, rating: number, message: string): Promise<AddReviewResponse> => {
         const body: AddReviewRequest = { rating, message };
         const res = await api.post<AddReviewResponse>(`/api/movies/${movieId}/reviews`, body);

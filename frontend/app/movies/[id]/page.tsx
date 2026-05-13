@@ -8,11 +8,12 @@ import CastCrew from "./_components/CastCrew";
 import Reviews from "./_components/Reviews";
 import { useMovie } from "@/contexts/MovieContext";
 import Loading from "@/components/Loading";
-import { Review, Theater, TimeSlot, Cast } from "@/interfaces/movie";
-import type {
-  Cast as BackendCast,
-  MovieShowing,
-  Review as BackendReview,
+import {
+  Review,
+  Theater,
+  TimeSlot,
+  Cast,
+  MovieShowing
 } from "@/interfaces/movieInterface";
 
 export default function MovieDetail() {
@@ -45,7 +46,7 @@ export default function MovieDetail() {
   }, [error, clearError]);
 
   const mappedCast: Cast[] = (selectedMovie?.cast || []).map(
-    (member: BackendCast, idx: number) => ({
+    (member: Cast, idx: number) => ({
       cast_id: idx.toString(),
       name: member.name,
       role: member.role,
@@ -54,7 +55,6 @@ export default function MovieDetail() {
     })
   );
 
-  // Map theaters and preserve screens and shows structure
   const mappedTheaters: Theater[] = (selectedMovie?.showings || []).map(
     (showing: MovieShowing) => ({
       theater_id: showing.theaterId,
@@ -79,7 +79,7 @@ export default function MovieDetail() {
   );
 
   const mappedReviews: Review[] = (selectedMovie?.reviews || []).map(
-    (review: BackendReview, idx: number) => ({
+    (review: Review, idx: number) => ({
       review_id: idx.toString(),
       user_id: review.user || "unknown",
       author: review.user || "Anonymous",
@@ -107,7 +107,6 @@ export default function MovieDetail() {
       selectedMovie.reviews.length
       : 0;
 
-  // Updated to support mappedTheaters with screens
   function getAllDates(theaters: Theater[]): string[] {
     const dateSet = new Set<string>();
     theaters.forEach((theater) => {
@@ -165,9 +164,9 @@ export default function MovieDetail() {
     date: string
   ): { standard: TimeSlot[]; imax3d: TimeSlot[] } {
     const standardShowtimes =
-      theater.showtimes.standard?.find((d) => d.date === date);
+      theater.showtimes?.standard?.find((d) => d.date === date);
     const imax3dShowtimes =
-      theater.showtimes.imax3d?.find((d) => d.date === date);
+      theater.showtimes?.imax3d?.find((d) => d.date === date);
 
     return {
       standard: standardShowtimes?.times || [],

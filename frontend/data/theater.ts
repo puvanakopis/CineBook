@@ -1,6 +1,6 @@
 import Coolie from "@/public/movies/goat.jpg"
 
-import { Theater } from "@/interfaces/theater";
+import { Theater } from "@/interfaces/theaterInterface";
 
 
 export const theaters: Theater[] = [
