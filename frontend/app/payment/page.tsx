@@ -93,10 +93,14 @@ function PaymentContent() {
         const newErrors: Record<string, string> = {};
         if (!formData.customerName || !formData.customerName.toString().trim()) newErrors.customerName = "Name is required";
         if (!formData.customerEmail || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(String(formData.customerEmail))) newErrors.customerEmail = "Valid email is required";
-        if (!formData.cardName?.toString().trim()) newErrors.cardName = "Cardholder name is required";
-        if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s+/g, ''))) newErrors.cardNumber = "Invalid card number (16 digits required)";
-        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry)) newErrors.expiry = "Use MM/YY format";
-        if (!/^\d{3,4}$/.test(formData.cvv)) newErrors.cvv = "Invalid CVV (3-4 digits)";
+        
+        if (paymentMethod === 'card') {
+            if (!formData.cardName?.toString().trim()) newErrors.cardName = "Cardholder name is required";
+            if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s+/g, ''))) newErrors.cardNumber = "Invalid card number (16 digits required)";
+            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry)) newErrors.expiry = "Use MM/YY format";
+            if (!/^\d{3,4}$/.test(formData.cvv)) newErrors.cvv = "Invalid CVV (3-4 digits)";
+        }
+        
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -111,21 +115,27 @@ function PaymentContent() {
         try {
             const API_BASE = (process.env.NEXT_PUBLIC_API_URL as string) || 'http://localhost:4000';
 
+            const paymentDetails = paymentMethod === 'card' 
+                ? {
+                    method: 'card',
+                    provider: 'MockGateway',
+                    cardName: formData.cardName,
+                    cardNumber: formData.cardNumber.replace(/\s+/g, ''),
+                  }
+                : {
+                    method: 'cash',
+                    provider: 'InPerson',
+                  };
+
             const resp = await fetch(`${API_BASE}/api/payments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     orderData,
-                    paymentDetails: {
-                        method: paymentMethod || 'card',
-                        provider: 'MockGateway',
-                        cardName: formData.cardName,
-                        cardNumber: formData.cardNumber.replace(/\s+/g, ''),
-                    },
+                    paymentDetails,
                     meta: {
-                        customerName: formData.customerName || formData.cardName,
-                        customerEmail: formData.customerEmail || undefined,
-                        // merge any meta sent from select-seats
+                        customerName: formData.customerName,
+                        customerEmail: formData.customerEmail,
                         ...(orderData?.meta || {})
                     }
                 })

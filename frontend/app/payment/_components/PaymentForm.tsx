@@ -1,6 +1,6 @@
 "use client";
 
-import { FaCreditCard, FaMoneyBillWave } from "react-icons/fa";
+import { FaCreditCard, FaMoneyBillWave, FaUser, FaEnvelope, FaInfoCircle } from "react-icons/fa";
 import { MdErrorOutline } from "react-icons/md";
 import Loading from "@/components/Loading";
 
@@ -38,11 +38,11 @@ export default function PaymentForm({
         <div className="flex-1 w-full bg-surface-dark rounded-xl border border-[#392828] shadow-2xl overflow-hidden transition-all duration-300">
             {/* Payment Methods Header */}
             <div className="p-6 border-b border-[#392828] bg-black/20">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 mb-4">
                     <button
                         type="button"
                         onClick={() => onMethodChange('card')}
-                        className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${paymentMethod === 'card' ? 'border-primary bg-primary/5' : 'border-[#392828] bg-black/20 hover:border-primary/50'}`}
+                        className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${paymentMethod === 'card' ? 'border-primary bg-primary/5 shadow-[0_0_20px_rgba(236,19,19,0.1)]' : 'border-[#392828] bg-black/20 hover:border-primary/50'}`}
                     >
                         <FaCreditCard className={`w-6 h-6 ${paymentMethod === 'card' ? 'text-primary' : 'text-text-secondary'}`} />
                         <span className={`text-xs font-bold uppercase tracking-widest ${paymentMethod === 'card' ? 'text-white' : 'text-text-secondary'}`}>Card Payment</span>
@@ -50,12 +50,17 @@ export default function PaymentForm({
                     <button
                         type="button"
                         onClick={() => onMethodChange('cash')}
-                        className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${paymentMethod === 'cash' ? 'border-primary bg-primary/5' : 'border-[#392828] bg-black/20 hover:border-primary/50'}`}
+                        className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${paymentMethod === 'cash' ? 'border-primary bg-primary/5 shadow-[0_0_20px_rgba(236,19,19,0.1)]' : 'border-[#392828] bg-black/20 hover:border-primary/50'}`}
                     >
                         <FaMoneyBillWave className={`w-6 h-6 ${paymentMethod === 'cash' ? 'text-primary' : 'text-text-secondary'}`} />
                         <span className={`text-xs font-bold uppercase tracking-widest ${paymentMethod === 'cash' ? 'text-white' : 'text-text-secondary'}`}>Cash at Counter</span>
                     </button>
                 </div>
+                <p className="text-[10px] text-text-secondary text-center uppercase tracking-[0.2em] font-medium opacity-80">
+                    {paymentMethod === 'card' 
+                        ? "Secure 256-bit encrypted card payment" 
+                        : "Reservation valid until 15 mins before showtime"}
+                </p>
             </div>
 
             <form onSubmit={onSubmit}>
@@ -75,31 +80,47 @@ export default function PaymentForm({
                         <span className="flex-shrink-0 mx-4 text-text-secondary text-sm">Customer Details</span>
                         <div className="flex-grow border-t border-[#392828]"></div>
                     </div>
-                <div>
-                    <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Full Name</label>
-                    <input
-                        type="text"
-                        name="customerName"
-                        value={formData.customerName || ''}
-                        onChange={onInputChange}
-                        placeholder="John Doe"
-                        className={`w-full bg-black/20 border ${errors.customerName ? 'border-red-500' : 'border-[#392828]'} text-white rounded-xl px-4 py-3 placeholder:text-text-secondary focus:outline-none focus:border-primary/50 transition-colors`}
-                    />
-                    {errors.customerName && <p className="text-red-500 text-xs mt-1">{errors.customerName}</p>}
-                </div>
+                    <div>
+                        <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Full Name</label>
+                        <div className="relative">
+                            <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-sm" />
+                            <input
+                                type="text"
+                                name="customerName"
+                                value={formData.customerName || ''}
+                                onChange={onInputChange}
+                                placeholder="John Doe"
+                                className={`w-full bg-black/20 border ${errors.customerName ? 'border-red-500' : 'border-[#392828]'} text-white rounded-xl pl-12 pr-4 py-3 placeholder:text-text-secondary focus:outline-none focus:border-primary/50 transition-colors`}
+                            />
+                        </div>
+                        {errors.customerName && <p className="text-red-500 text-xs mt-1">{errors.customerName}</p>}
+                    </div>
 
-                <div>
-                    <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Email</label>
-                    <input
-                        type="email"
-                        name="customerEmail"
-                        value={formData.customerEmail || ''}
-                        onChange={onInputChange}
-                        placeholder="you@example.com"
-                        className={`w-full bg-black/20 border ${errors.customerEmail ? 'border-red-500' : 'border-[#392828]'} text-white rounded-xl px-4 py-3 placeholder:text-text-secondary focus:outline-none focus:border-primary/50 transition-colors`}
-                    />
-                    {errors.customerEmail && <p className="text-red-500 text-xs mt-1">{errors.customerEmail}</p>}
-                </div>
+                    <div>
+                        <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Email</label>
+                        <div className="relative">
+                            <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-sm" />
+                            <input
+                                type="email"
+                                name="customerEmail"
+                                value={formData.customerEmail || ''}
+                                onChange={onInputChange}
+                                placeholder="you@example.com"
+                                className={`w-full bg-black/20 border ${errors.customerEmail ? 'border-red-500' : 'border-[#392828]'} text-white rounded-xl pl-12 pr-4 py-3 placeholder:text-text-secondary focus:outline-none focus:border-primary/50 transition-colors`}
+                            />
+                        </div>
+                        {errors.customerEmail && <p className="text-red-500 text-xs mt-1">{errors.customerEmail}</p>}
+                    </div>
+
+                    {paymentMethod === 'cash' && (
+                        <div className="bg-primary/5 border border-primary/20 p-4 rounded-xl flex gap-3 items-start animate-in fade-in slide-in-from-top-2 duration-300">
+                            <FaInfoCircle className="text-primary mt-0.5" />
+                            <div className="text-xs text-text-secondary leading-relaxed">
+                                <p className="text-white font-bold mb-1">Pay at Cinema Counter</p>
+                                <p>Your tickets will be reserved. Please present your booking ID at the counter to make the payment and collect your tickets.</p>
+                            </div>
+                        </div>
+                    )}
 
                 {paymentMethod === 'card' && (
                     <>
