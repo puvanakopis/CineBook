@@ -133,3 +133,44 @@ exports.updatePayment = async (req, res) => {
         res.status(500).json({ message: 'Server error updating payment' });
     }
 };
+
+exports.getBookedSeats = async (req, res) => {
+    try {
+        const { movieId, theaterId, screenId, date, showTime } = req.query;
+
+        let query = {
+            status: { $ne: 'Cancelled' }
+        };
+
+        if (movieId) query.movieId = movieId;
+        if (theaterId) query.theaterId = theaterId;
+        if (screenId) query.screenId = screenId;
+        if (showTime) query.showTime = showTime;
+
+        if (date) {
+            // Assuming date is in format that can be parsed or matched
+            // If it's a date string like '2026-05-13', we can match the day
+            const startDate = new Date(date);
+            if (!isNaN(startDate.getTime())) {
+                startDate.setHours(0, 0, 0, 0);
+                const endDate = new Date(date);
+                endDate.setHours(23, 59, 59, 999);
+                query.dateTime = { $gte: startDate, $lte: endDate };
+            }
+        }
+
+        const bookings = await Booking.find(query);
+        const bookedSeats = bookings.reduce((acc, booking) => {
+            if (booking.seats) {
+                booking.seats.forEach(seat => acc.push(seat.id));
+            }
+            return acc;
+        }, []);
+
+        res.json(bookedSeats);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error fetching booked seats' });
+    }
+};
+

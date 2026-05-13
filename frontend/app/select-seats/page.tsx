@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { theaterApi } from '@/services/theaterApi';
+import { bookingApi } from '@/services/bookingApi';
+
 import SelectSeatsHeader from "./_components/SelectSeatsHeader";
 import SeatSelection from "./_components/SelectSeats";
 import MovieInfoPanel from "./_components/SelectMovie";
@@ -18,7 +20,7 @@ interface Seat {
 
 const defaultStandardPrice = 14;
 
-const generateSeats = (standardPrice: number): Seat[] => {
+const generateSeats = (standardPrice: number, bookedSeatIds: string[] = []): Seat[] => {
     const rows = [
         { id: 'A' },
         { id: 'B' },
@@ -31,18 +33,20 @@ const generateSeats = (standardPrice: number): Seat[] => {
     const seats: Seat[] = [];
     rows.forEach((r) => {
         for (let i = 1; i <= 8; i++) {
+            const seatId = `${r.id}${i}`;
             seats.push({
-                id: `${r.id}${i}`,
+                id: seatId,
                 row: r.id,
                 number: i,
                 type: 'standard',
                 price: standardPrice,
-                isAvailable: Math.random() > 0.1,
+                isAvailable: !bookedSeatIds.includes(seatId),
             });
         }
     });
     return seats;
 };
+
 
 export default function SelectSeats() {
     const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
@@ -70,36 +74,57 @@ export default function SelectSeats() {
     };
 
     useEffect(() => {
-        const fetchPricing = async () => {
-            if (!payload || !payload.theater?.id) return;
+        const fetchData = async () => {
+            if (!payload) return;
+            
             try {
-                const th = await theaterApi.getTheaterById(payload.theater.id);
-                let foundPrice: number | null = null;
-                (th.screens || []).forEach((screen) => {
-                    (screen.shows || []).forEach((show) => {
-                        const movieId = typeof show.movie === 'object' && show.movie._id ? show.movie._id : String(show.movie);
-                        if (!foundPrice && payload.movie?.id && movieId === String(payload.movie.id) && show.date === payload.date) {
-            const standardCount = selectedSeats.filter(seat => seat.type === "standard").length;
-            const subtotal = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
-            const convenienceFee = 100;
-            const total = subtotal + convenienceFee;
-                            foundPrice = show.price;
-                        }
-                    });
-                });
+                let currentPrice = defaultStandardPrice;
+                let bookedSeatIds: string[] = [];
 
-                if (foundPrice !== null) {
-                    const sPrice = foundPrice;
-                    setStandardPrice(sPrice);
-                    setSeats(generateSeats(sPrice));
+                // 1. Fetch Pricing
+                if (payload.theater?.id) {
+                    try {
+                        const th = await theaterApi.getTheaterById(payload.theater.id);
+                        let foundPrice: number | null = null;
+                        (th.screens || []).forEach((screen) => {
+                            (screen.shows || []).forEach((show) => {
+                                const movieId = typeof show.movie === 'object' && show.movie._id ? show.movie._id : String(show.movie);
+                                if (!foundPrice && payload.movie?.id && movieId === String(payload.movie.id) && show.date === payload.date) {
+                                    foundPrice = show.price;
+                                }
+                            });
+                        });
+                        if (foundPrice !== null) {
+                            currentPrice = foundPrice;
+                        }
+                    } catch (err) {
+                        console.error('Failed to fetch theater pricing', err);
+                    }
                 }
+
+                // 2. Fetch Booked Seats
+                try {
+                    bookedSeatIds = await bookingApi.getBookedSeats({
+                        movieId: payload.movie?.id,
+                        theaterId: payload.theater?.id,
+                        screenId: payload.screen?.id,
+                        date: payload.date,
+                        showTime: payload.time
+                    });
+                } catch (err) {
+                    console.error('Failed to fetch booked seats', err);
+                }
+
+                setStandardPrice(currentPrice);
+                setSeats(generateSeats(currentPrice, bookedSeatIds));
             } catch (err) {
-                console.error('Failed to fetch theater pricing', err);
+                console.error('Failed to fetch initial data', err);
             }
         };
 
-        fetchPricing();
+        fetchData();
     }, [dataParam]);
+
 
     const handleProceedToPay = () => {
         if (selectedSeats.length === 0) return;

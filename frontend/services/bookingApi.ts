@@ -61,4 +61,16 @@ export const bookingApi = {
         const res = await api.post<CancelBookingResponse>(`/api/bookings/${id}/cancel`);
         return res.data;
     },
+
+    getBookedSeats: async (params: {
+        movieId?: string;
+        theaterId?: string;
+        screenId?: string;
+        date?: string;
+        showTime?: string;
+    }): Promise<string[]> => {
+        const res = await api.get<string[]>("/api/bookings/booked-seats", { params });
+        return res.data;
+    },
 };
+
