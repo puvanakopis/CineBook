@@ -13,8 +13,8 @@ exports.createBooking = async (req, res) => {
             totalPrice,
             payment,
             poster,
+            theaterId,
             theaterName,
-            hallName,
             screenId,
             showTime
         } = req.body;
@@ -36,8 +36,8 @@ exports.createBooking = async (req, res) => {
             totalPrice,
             payment,
             poster,
+            theaterId,
             theaterName,
-            hallName,
             screenId,
             showTime
         });

@@ -143,7 +143,7 @@ const SelectSeats: React.FC<SelectSeatsProps> = ({
                                                     onClick={() => handleSeatClick(seat)}
                                                     className={`${getSeatSize(seat.type)} ${getSeatClasses(seat)}`}
                                                     title={`${seat.row}${seat.number} - $${seat.price}`}
-                                                    disabled={!seat.isAvailable}
+                                                    disabled={seat.isAvailable === false}
                                                 >
                                                     {renderSeatContent(seat)}
                                                 </button>

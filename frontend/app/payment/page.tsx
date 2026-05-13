@@ -22,6 +22,7 @@ interface OrderData {
     subtotal: number;
     convenienceFee: number;
     total: number;
+    meta?: any;
 }
 
 function PaymentContent() {
@@ -171,7 +172,7 @@ function PaymentContent() {
             <PaymentHeader
                 movie={orderData?.meta?.movie?.title || "Cyber Chronicles"}
                 theater={orderData?.meta?.theater?.name || "Cineplex Downtown"}
-                hall={orderData?.meta?.format || "4 - IMAX"}
+                hall={orderData?.meta?.screen?.name || orderData?.meta?.format || "4 - IMAX"}
                 date={orderData?.meta?.date || "Today, 14 Oct"}
                 time={orderData?.meta?.time || "06:00 PM"}
             />

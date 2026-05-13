@@ -9,7 +9,6 @@ export interface Booking {
   status: 'Confirmed' | 'Pending' | 'Cancelled';
   poster: string;
   theaterName: string;
-  hallName: string;
   screenId?: string;
   showTime?: string;
 }

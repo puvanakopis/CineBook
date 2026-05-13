@@ -27,7 +27,7 @@ export default function Header({ movie, theater, hall, date, time }) {
                     </div>
                     <div className="h-8 w-px bg-[#392828]"></div>
                     <div className="text-right">
-                        <span className="block text-xs text-text-secondary uppercase font-bold tracking-wider">Hall</span>
+                        <span className="block text-xs text-text-secondary uppercase font-bold tracking-wider">Screen</span>
                         <span className="block text-white font-bold">{hall}</span>
                     </div>
                 </div>

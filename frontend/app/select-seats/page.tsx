@@ -44,7 +44,7 @@ const generateSeats = (standardPrice: number): Seat[] => {
     return seats;
 };
 
-export default function SelectSeatsPage() {
+export default function SelectSeats() {
     const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
     const [seats, setSeats] = useState<Seat[]>(generateSeats(defaultStandardPrice));
     const [standardPrice, setStandardPrice] = useState<number>(defaultStandardPrice);
@@ -79,6 +79,10 @@ export default function SelectSeatsPage() {
                     (screen.shows || []).forEach((show) => {
                         const movieId = typeof show.movie === 'object' && show.movie._id ? show.movie._id : String(show.movie);
                         if (!foundPrice && payload.movie?.id && movieId === String(payload.movie.id) && show.date === payload.date) {
+            const standardCount = selectedSeats.filter(seat => seat.type === "standard").length;
+            const subtotal = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+            const convenienceFee = 100;
+            const total = subtotal + convenienceFee;
                             foundPrice = show.price;
                         }
                     });
@@ -116,7 +120,7 @@ export default function SelectSeatsPage() {
             <SelectSeatsHeader
                 movie={payload?.movie?.title || "Cyber Chronicles"}
                 theater={payload?.theater?.name || "Cineplex Downtown"}
-                hall={payload?.format || "4 - IMAX"}
+                hall={payload?.screen?.name || payload?.format || "4 - IMAX"}
                 date={payload?.date || "Today, 14 Oct"}
                 time={payload?.time || "06:00 PM"}
             />

@@ -21,7 +21,7 @@ interface Booking {
     date: string;
     time: string;
     theater: string;
-    seats: string[];
+    seats: Array<string | { id?: string; row?: string; number?: number }>;
     status: 'confirmed' | 'pending' | 'cancelled';
     format: string;
     reference: string;

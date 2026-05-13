@@ -32,7 +32,7 @@ function TicketsContent() {
     const movieDetails = {
         title: "Cyber Chronicles",
         theater: "Cineplex Downtown",
-        hall: "4 - IMAX",
+        screen: "4 - IMAX",
         date: "Today, 14 Oct",
         time: "06:00 PM",
         poster: "https://lh3.googleusercontent.com/aida-public/AB6AXuDvw3Iq9pJqFd1KivIB51tyO1jy9jFbSkN9w08LctmE4KQXEiNLL2yzrMxjBatyPAPV9NEVdX11bhodeSTfRGLyKJHA4fSd3Foe0XjO3Fk75KIucJBXiGPV6fygqBWrnEdBlXY_9uNVbAn-yHDYhHlqtuAQfOrgfX1lUj6xdN6mlM0fSQlSofP8HzAUn_YWB_w6Gm3PceYzpZIFwMWYzVpkvX4x7zA1Gap3y4rqW7Rm920Jf2f7h0haie6n_FKgdYFzBWN5aat_76mm"

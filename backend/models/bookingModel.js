@@ -67,9 +67,6 @@ const bookingSchema = new mongoose.Schema({
     theaterName: {
         type: String
     },
-    hallName: {
-        type: String
-    },
     screenId: {
         type: String
     },

@@ -54,6 +54,7 @@ export default function MovieDetail() {
     })
   );
 
+  // Map theaters and preserve screens and shows structure
   const mappedTheaters: Theater[] = (selectedMovie?.showings || []).map(
     (showing: MovieShowing) => ({
       theater_id: showing.theaterId,
@@ -65,23 +66,15 @@ export default function MovieDetail() {
         parking: true,
         wheelchair: true,
       },
-      showtimes: {
-        standard: showing.screens.flatMap((screen) =>
-          screen.shows.map((show) => ({
-            date: show.date,
-            times: [
-              {
-                time:
-                  show.time || (show.startTime && show.endTime ? `${show.startTime} - ${show.endTime}` : ""),
-                price: show.price,
-                currency: "LKR",
-                isSoldOut: show.status === "sold-out",
-              },
-            ],
-          }))
-        ),
-        imax3d: [],
-      },
+      screens: showing.screens.map((screen) => ({
+        screen_id: screen.screen_id,
+        name: screen.name,
+        type: screen.type,
+        shows: screen.shows.map((show) => ({
+          ...show,
+          time: show.time || (show.startTime && show.endTime ? `${show.startTime} - ${show.endTime}` : ""),
+        })),
+      })),
     })
   );
 
@@ -114,17 +107,19 @@ export default function MovieDetail() {
       selectedMovie.reviews.length
       : 0;
 
+  // Updated to support mappedTheaters with screens
   function getAllDates(theaters: Theater[]): string[] {
     const dateSet = new Set<string>();
     theaters.forEach((theater) => {
-      if (theater.showtimes.standard) {
-        theater.showtimes.standard.forEach((dateShowtime) => {
-          dateSet.add(dateShowtime.date);
-        });
-      }
-      if (theater.showtimes.imax3d) {
-        theater.showtimes.imax3d.forEach((dateShowtime) => {
-          dateSet.add(dateShowtime.date);
+      if (theater.screens) {
+        theater.screens.forEach((screen) => {
+          if (screen.shows) {
+            screen.shows.forEach((show) => {
+              if (show.date) {
+                dateSet.add(show.date);
+              }
+            });
+          }
         });
       }
     });
@@ -217,7 +212,6 @@ export default function MovieDetail() {
         allDates={allDates}
         onDateSelect={setSelectedDate}
         formatDateDisplay={formatDateDisplay}
-        getShowtimesForDate={getShowtimesForDate}
         movie={selectedMovie}
       />
       <CastCrew cast={mappedCast} />

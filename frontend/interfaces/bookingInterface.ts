@@ -10,7 +10,6 @@ export interface Booking {
     status: 'Confirmed' | 'Pending' | 'Cancelled';
     poster: string;
     theaterName: string;
-    hallName: string;
     screenId?: string;
     showTime?: string;
     createdAt?: Date;
@@ -38,7 +37,6 @@ export interface CreateBookingRequest {
     movieTitle: string;
     theaterId?: string;
     theaterName: string;
-    hallName: string;
     screenId?: string;
     showTime?: string;
     dateTime: string;

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { MdOutlineCancel, MdOutlineFastfood, MdOutlineTheaterComedy } from "react-icons/md";
 import { FaRegCheckCircle, FaParking, FaWheelchair } from "react-icons/fa";
-import { Theater, TimeSlot } from "@/interfaces/movie";
+import { Theater } from "@/interfaces/movie";
 
 interface ShowtimesProps {
     theaters: Theater[];
@@ -11,15 +11,16 @@ interface ShowtimesProps {
     allDates: string[];
     onDateSelect: (date: string) => void;
     formatDateDisplay: (dateString: string) => { day: string; month: string; weekday: string };
-    getShowtimesForDate: (theater: Theater, date: string) => { standard: TimeSlot[]; imax3d: TimeSlot[] };
     movie?: any;
 }
 
-const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateDisplay, getShowtimesForDate, movie }: ShowtimesProps) => {
+const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateDisplay, movie }: ShowtimesProps) => {
     const router = useRouter();
 
-    const handleShowtimeClick = (theater: Theater, showtime: TimeSlot) => {
-        if (!showtime.isSoldOut) {
+    const handleShowtimeClick = (theater: Theater, show: any) => {
+        if (show.status !== 'sold-out') {
+            // Find the screen for this show
+            const screen = (theater.screens || []).find(s => s.shows.some(sh => sh.date === show.date && sh.time === show.time));
             const payload = {
                 movie: {
                     id: movie?._id || movie?.id || null,
@@ -31,10 +32,11 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                     name: theater.name,
                     address: theater.address,
                 },
+                screen: screen ? { screen_id: screen.screen_id, name: screen.name, type: screen.type } : undefined,
                 date: selectedDate,
-                time: showtime.time,
-                price: showtime.price,
-                currency: showtime.currency,
+                time: show.time,
+                price: show.price,
+                currency: show.currency,
                 format: "Standard",
             };
 
@@ -75,11 +77,12 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                 {/* Theater Listings */}
                 <div className="space-y-6">
                     {theaters.map((theater) => {
-                        const { standard, imax3d } = getShowtimesForDate(theater, selectedDate);
-                        const hasShowtimes = standard.length > 0 || imax3d.length > 0;
-
-                        if (!hasShowtimes) return null;
-
+                        // For each screen in the theater, show its shows for the selected date
+                        if (!theater.screens) return null;
+                        const screensWithShows = theater.screens.filter(screen =>
+                            screen.shows.some(show => show.date === selectedDate)
+                        );
+                        if (screensWithShows.length === 0) return null;
                         return (
                             <div
                                 key={theater.theater_id}
@@ -130,65 +133,35 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                     </div>
                                 </div>
 
-                                {/* Showtimes */}
+                                {/* Showtimes by Screen */}
                                 <div className="space-y-4">
-                                    {/* Standard Showtimes */}
-                                    {standard.length > 0 && (
-                                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                            <span className="text-xs font-bold text-text-secondary uppercase w-16">
-                                                Standard
+                                    {screensWithShows.map((screen, idx) => (
+                                        <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                                            <span className="text-xs font-bold text-text-secondary uppercase w-32">
+                                                Screen: {screen.name} ({screen.screen_id})
                                             </span>
                                             <div className="flex flex-wrap gap-3">
-                                                {standard.map((showtime, index) => (
+                                                {screen.shows.filter(show => show.date === selectedDate).map((show, index) => (
                                                     <button
                                                         key={index}
-                                                        disabled={showtime.isSoldOut}
-                                                        onClick={() => handleShowtimeClick(theater, showtime)}
-                                                        className={`group px-4 py-2 rounded border transition-all text-sm font-medium ${showtime.isSoldOut
+                                                        disabled={show.status === 'sold-out'}
+                                                        onClick={() => handleShowtimeClick(theater, show)}
+                                                        className={`group px-4 py-2 rounded border transition-all text-sm font-medium ${show.status === 'sold-out'
                                                             ? 'opacity-50 cursor-not-allowed bg-[#221a1a] border-[#392828]'
                                                             : 'border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary'
                                                             }`}
                                                     >
-                                                        <span className={showtime.isSoldOut ? 'text-white/50' : 'text-white'}>
-                                                            {showtime.time}
+                                                        <span className={show.status === 'sold-out' ? 'text-white/50' : 'text-white'}>
+                                                            {show.time}
                                                         </span>
                                                         <div className="text-[10px] text-text-secondary group-hover:text-white/80 mt-0.5">
-                                                            {showtime.isSoldOut ? 'Sold Out' : `${showtime.currency} ${showtime.price.toFixed(2)}`}
+                                                            {show.status === 'sold-out' ? 'Sold Out' : `${show.currency} ${show.price.toFixed(2)}`}
                                                         </div>
                                                     </button>
                                                 ))}
                                             </div>
                                         </div>
-                                    )}
-
-                                    {/* IMAX 3D Showtimes */}
-                                    {imax3d.length > 0 && (
-                                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                            <span className="text-xs font-bold text-primary uppercase w-16">
-                                                IMAX 3D
-                                            </span>
-                                            <div className="flex flex-wrap gap-3">
-                                                {imax3d.map((showtime, index) => (
-                                                    <button
-                                                        key={index}
-                                                        disabled={showtime.isSoldOut}
-                                                        onClick={() => handleShowtimeClick(theater, showtime)}
-                                                        className={`group px-4 py-2 rounded border transition-all text-sm font-medium ${showtime.isSoldOut
-                                                            ? 'opacity-50 cursor-not-allowed bg-[#221a1a] border-[#392828]'
-                                                            : 'border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary'
-                                                            }`}
-                                                    >
-                                                        <span className={showtime.isSoldOut ? 'text-white/50' : 'text-white'}>
-                                                            {showtime.time}
-                                                        </span>
-                                                        <div className="text-[10px] text-text-secondary group-hover:text-white/80 mt-0.5">
-                                                            {showtime.isSoldOut ? 'Sold Out' : `${showtime.currency} ${showtime.price.toFixed(2)}`}
-                                                        </div>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
+                                    ))}
                                 </div>
                             </div>
                         );
@@ -197,6 +170,6 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
             </div>
         </section>
     );
-};
+}
 
 export default Showtimes;

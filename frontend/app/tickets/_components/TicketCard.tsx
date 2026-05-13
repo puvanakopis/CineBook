@@ -14,7 +14,7 @@ interface TicketCardProps {
     movieDetails: {
         title: string;
         theater: string;
-        hall: string;
+        screen: string;
         date: string;
         time: string;
         poster: string;
@@ -47,7 +47,7 @@ export default function TicketCard({ seat, movieDetails, printingSeatId, onPrint
                         <div>
                             <p className="text-[var(--color-text-secondary)] text-xs uppercase tracking-wider font-bold mb-1 print:text-gray-500">Admit One</p>
                             <h3 className="text-2xl font-bold text-white leading-tight mb-2 print:text-black">{movieDetails.title}</h3>
-                            <p className="text-[var(--color-text-secondary)] text-sm print:text-gray-600">{movieDetails.theater} • {movieDetails.hall}</p>
+                            <p className="text-[var(--color-text-secondary)] text-sm print:text-gray-600">{movieDetails.theater} • {movieDetails.screen}</p>
                             <p className="text-[var(--color-text-secondary)] text-sm print:text-gray-600">{movieDetails.date} at {movieDetails.time}</p>
                         </div>
                         <div className="w-16 h-16 bg-white rounded flex items-center justify-center p-1 shrink-0">

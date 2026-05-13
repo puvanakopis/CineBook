@@ -16,13 +16,52 @@ exports.processPayment = async (req, res) => {
             return res.status(402).json({ message: 'Payment failed' });
         }
 
+        const movieId = meta?.movie?.id || meta?.movie?._id || meta?.movieId || null;
+        const movieTitle = meta?.movie?.title || meta?.movieTitle || meta?.title || 'Unknown Movie';
+        const theaterId = meta?.theater?.id || meta?.theater?._id || meta?.theaterId || null;
+        const theaterName = meta?.theater?.name || meta?.theaterName || null;
+        const screenId = meta?.screen?.id || meta?.screenId || null;
+        const showTime = meta?.showTime || meta?.time || null;
+        const customerName = meta?.customerName || meta?.customer?.name || 'Guest';
+        const customerEmail = meta?.customerEmail || meta?.customer?.email || 'guest@cinebook.local';
+        const parseDateTime = () => {
+            if (meta?.dateTime) {
+                const dt = new Date(meta.dateTime);
+                if (!isNaN(dt.valueOf())) return dt;
+            }
+
+            if (meta?.date) {
+                const timeRaw = meta?.time || '';
+                const startTime = (typeof timeRaw === 'string' && timeRaw.includes('-')) ? timeRaw.split('-')[0].trim() : timeRaw.trim();
+
+                // Try ISO combine first
+                if (startTime) {
+                    const iso = `${meta.date}T${startTime}`;
+                    const dtIso = new Date(iso);
+                    if (!isNaN(dtIso.valueOf())) return dtIso;
+
+                    // Fallback to space-separated
+                    const dtSpace = new Date(`${meta.date} ${startTime}`);
+                    if (!isNaN(dtSpace.valueOf())) return dtSpace;
+                }
+
+                // Try date-only
+                const dtDateOnly = new Date(meta.date);
+                if (!isNaN(dtDateOnly.valueOf())) return dtDateOnly;
+            }
+
+            return new Date();
+        };
+
+        const dateTime = parseDateTime();
+
         // Build booking payload - fill gaps with sensible defaults
         const bookingPayload = {
-            movieId: meta?.movieId || null,
-            movieTitle: meta?.movieTitle || 'Unknown Movie',
-            customerName: meta?.customerName || 'Guest',
-            customerEmail: meta?.customerEmail || 'guest@cinebook.local',
-            dateTime: meta?.dateTime || new Date(),
+            movieId,
+            movieTitle,
+            customerName,
+            customerEmail,
+            dateTime,
             seats: orderData.seats.map(s => ({ id: s.id, row: s.row, number: s.number, type: s.type, price: s.price })),
             totalPrice: orderData.total || (orderData.subtotal + (orderData.convenienceFee || 0)),
             payment: {
@@ -32,11 +71,11 @@ exports.processPayment = async (req, res) => {
                 status: paymentDetails?.status || 'Paid',
                 provider: paymentDetails?.provider || 'MockGateway'
             },
-            poster: meta?.poster || null,
-            theaterName: meta?.theaterName || null,
-            hallName: meta?.hallName || null,
-            screenId: meta?.screenId || null,
-            showTime: meta?.showTime || null
+            poster: meta?.movie?.poster || meta?.poster || null,
+            theaterId,
+            theaterName,
+            screenId,
+            showTime
         };
 
         const booking = new Booking(bookingPayload);
