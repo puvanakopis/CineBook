@@ -10,9 +10,6 @@ export function ProfileHero() {
     const { userInfo, uploadProfilePicture } = useAuth();
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-    const avatarUrl = userInfo?.profilePicture 
-        ? `${process.env.NEXT_PUBLIC_API_URL}${userInfo.profilePicture}`
-        : "https://lh3.googleusercontent.com/aida-public/AB6AXuBtLVHRuSfBjd2mcg9wuEI_gTfwCJRim11sLijh4Zz4eLKNL_YmzkffvNm2j_iNer5JLJM0o3U4pQDjzjYVF1jbbqhD-nMJjia33G72LPBciwlTkSHlw7ddZvTQYnaQd14xHJgmMwNuWZHU46fgfgH-OcF-FStDxz-qAndtmJkKJTru9o0dRgzbNka-sJ7oFsJOX-CbzEezYAdbNMv1yILiBJCqJ2tO8abP9CCxLrZ1Lalxutp1U-hM-W9cyu_L0qyUd47ZQS3VLZ-h";
 
     const firstName = userInfo ? `${userInfo.firstName}` : "Loading...";
     const email = userInfo ? userInfo.email : "loading...";
@@ -63,12 +60,20 @@ export function ProfileHero() {
                             className="relative w-full h-full rounded-full overflow-hidden shadow-2xl border-4 border-[#392828] group cursor-pointer"
                             onClick={handleCameraClick}
                         >
-                            <Image
-                                src={avatarUrl}
-                                alt="User Avatar"
-                                fill
-                                className="object-cover"
-                            />
+                            {userInfo?.profilePicture ? (
+                                <Image
+                                    src={`${process.env.NEXT_PUBLIC_API_URL}${userInfo.profilePicture}`}
+                                    alt="User Avatar"
+                                    fill
+                                    className="object-cover"
+                                />
+                            ) : (
+                                <div className="w-full h-full bg-primary/20 flex items-center justify-center">
+                                    <span className="text-primary text-5xl md:text-6xl font-black uppercase">
+                                        {userInfo?.firstName?.[0] || 'U'}
+                                    </span>
+                                </div>
+                            )}
                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
                                 <IoCameraOutline className="text-3xl text-white" />
                             </div>

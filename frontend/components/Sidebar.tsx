@@ -47,17 +47,22 @@ export function Sidebar() {
 
                     {/* Avatar */}
                     <div className="relative">
-                        <div
-                            className="size-12 rounded-full bg-center bg-cover ring-2 ring-primary/40 shadow-md"
-                            style={{
-                                backgroundImage: `url(${userInfo?.profilePicture
-                                    ? `${process.env.NEXT_PUBLIC_API_URL}${userInfo.profilePicture}`
-                                    : "https://lh3.googleusercontent.com/aida-public/AB6AXuBtLVHRuSfBjd2mcg9wuEI_gTfwCJRim11sLijh4Zz4eLKNL_YmzkffvNm2j_iNer5JLJM0o3U4pQDjzjYVF1jbbqhD-nMJjia33G72LPBciwlTkSHlw7ddZvTQYnaQd14xHJgmMwNuWZHU46fgfgH-OcF-FStDxz-qAndtmJkKJTru9o0dRgzbNka-sJ7oFsJOX-CbzEezYAdbNMv1yILiBJCqJ2tO8abP9CCxLrZ1Lalxutp1U-hM-W9cyu_L0qyUd47ZQS3VLZ-h"
-                                    })`,
-                            }}
-                            role="img"
-                            aria-label="User avatar"
-                        />
+                        {userInfo?.profilePicture ? (
+                            <div
+                                className="size-12 rounded-full bg-center bg-cover ring-2 ring-primary/40 shadow-md"
+                                style={{
+                                    backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${userInfo.profilePicture})`,
+                                }}
+                                role="img"
+                                aria-label="User avatar"
+                            />
+                        ) : (
+                            <div className="size-12 rounded-full bg-primary/20 flex items-center justify-center ring-2 ring-primary/40 shadow-md border border-primary/20">
+                                <span className="text-primary text-xl font-bold uppercase">
+                                    {userInfo?.firstName?.[0] || 'U'}
+                                </span>
+                            </div>
+                        )}
 
                         {/* small online indicator */}
                         <span className="absolute bottom-0 right-0 size-3 rounded-full bg-green-500 border-2 border-[#0b0b0f]" />
