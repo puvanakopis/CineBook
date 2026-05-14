@@ -4,11 +4,9 @@ import { useState } from 'react';
 import { Sidebar } from '@/components/Sidebar';
 import { SettingsHeader } from './_components/SettingsHeader';
 import { NotificationSettings } from './_components/NotificationSettings';
-import { DisplayAccessibility } from './_components/DisplayAccessibility';
 import { PrivacyData } from './_components/PrivacyData';
-import { SettingsActions } from './_components/SettingsActions';
 
-export default function SettingsPage() {
+export default function Settings() {
     const [emailReleases, setEmailReleases] = useState(true);
     const [emailPromos, setEmailPromos] = useState(false);
     const [pushReminders, setPushReminders] = useState(true);
@@ -24,13 +22,13 @@ export default function SettingsPage() {
     };
 
     return (
-        <div className="flex flex-1 w-full mx-auto">
+        <div className="flex w-full min-h-screen bg-[#0b0909]">
             <Sidebar />
-            <main className="flex-1 p-6 md:p-10 lg:px-16 overflow-y-auto">
-                <div className="max-w-6xl mx-auto space-y-10">
+            <main className="flex-1 overflow-x-hidden">
+                <div className="max-w-[1200px] mx-auto px-4 md:px-10 py-16 space-y-20">
                     <SettingsHeader />
 
-                    <div className="space-y-12">
+                    <div className="space-y-16">
                         <NotificationSettings
                             emailReleases={emailReleases}
                             onEmailReleasesChange={setEmailReleases}
@@ -41,12 +39,10 @@ export default function SettingsPage() {
                             pushAlerts={pushAlerts}
                             onPushAlertsChange={setPushAlerts}
                         />
-                        <DisplayAccessibility />
                         <PrivacyData
                             dataSharing={dataSharing}
                             onDataSharingChange={setDataSharing}
                         />
-                        <SettingsActions onDiscard={handleDiscard} />
                     </div>
                 </div>
             </main>

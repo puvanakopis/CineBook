@@ -1,9 +1,30 @@
 
 export interface User {
+    id: string;
     email: string;
     role: 'user' | 'admin';
     firstName: string;
     lastName: string;
+    phone: string;
+    profilePicture?: string;
+    preferences?: {
+        theme: string;
+        notifications: boolean;
+        favoriteGenres: string[];
+        preferredCinema: string;
+    };
+    createdAt: string;
+    paymentMethods?: PaymentMethod[];
+}
+
+export interface PaymentMethod {
+    _id: string;
+    cardholderName: string;
+    cardNumber: string;
+    expiryDate: string;
+    brand: 'visa' | 'mastercard' | 'amex' | string;
+    lastFour: string;
+    isDefault: boolean;
 }
 
 export interface SignupRequestOtpRequest {
@@ -59,6 +80,15 @@ export interface VerifyPasswordResetResponse {
     message: string;
 }
 
+export interface UpdatePasswordRequest {
+    currentPassword: string;
+    newPassword: string;
+}
+
+export interface DeactivateAccountResponse {
+    message: string;
+}
+
 export interface AuthResponse {
     success: boolean;
     message?: string;
@@ -73,20 +103,19 @@ export interface AuthState {
 }
 
 export interface AuthContextType extends AuthState {
-    // Signup
     requestSignupOtp: (data: SignupRequestOtpRequest) => Promise<void>;
     verifyOtpAndSignup: (data: VerifyOtpAndSignupRequest) => Promise<void>;
-    
-    // Login
     login: (data: LoginRequest) => Promise<void>;
-    
-    // Password Reset
     requestPasswordReset: (data: ForgotPasswordRequest) => Promise<void>;
     verifyPasswordReset: (data: VerifyPasswordResetRequest) => Promise<void>;
-    
-    // Logout
     logout: () => void;
-    
-    // Utility
     clearError: () => void;
+    userInfo: User | null;
+    fetchUserInfo: () => Promise<void>;
+    uploadProfilePicture: (file: File) => Promise<void>;
+    addPaymentMethod: (data: Partial<PaymentMethod>) => Promise<void>;
+    updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => Promise<void>;
+    deletePaymentMethod: (id: string) => Promise<void>;
+    updatePassword: (data: UpdatePasswordRequest) => Promise<void>;
+    deactivateAccount: () => Promise<void>;
 }

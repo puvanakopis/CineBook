@@ -1,4 +1,3 @@
-// TheaterFilters.tsx (updated)
 'use client';
 
 import { IoMdSearch } from "react-icons/io";

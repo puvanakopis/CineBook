@@ -1,3 +1,5 @@
+"use client";
+
 const MovieHeader = () => {
     return (
         <div className="relative py-12 bg-surface-dark border-b border-[#392828]">

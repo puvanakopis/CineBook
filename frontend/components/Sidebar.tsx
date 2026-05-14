@@ -1,7 +1,8 @@
 'use client';
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import {
     IoPersonOutline,
     IoPerson,
@@ -26,6 +27,13 @@ const navItems = [
 
 export function Sidebar() {
     const pathname = usePathname();
+    const router = useRouter();
+    const { userInfo, logout } = useAuth();
+
+    const handleLogout = () => {
+        logout();
+        router.push("/");
+    };
 
     const isActive = (href: string) => {
         if (href === "/profile") return pathname === href;
@@ -33,22 +41,55 @@ export function Sidebar() {
     };
 
     return (
-        <aside className="hidden lg:flex w-72 flex-col gap-6 border-r border-[#392828] bg-surface-dark/30 p-6 h-[calc(100vh-65px)] sticky top-[65px]">
-            <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-3 pb-4 border-b border-[#392828]">
-                    <div
-                        className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 ring-2 ring-primary/30"
-                        style={{ backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuCfK6ZjyVSGXNZcfDWLCCntU3naLJN3ubWzeoJtu2h-xUeocG2sv6FoSvcIRf10jqqPprvVH3bQJJli2_foHY7yps_jZ4nOM2z3kjussiHisO-uN7IdSYH9_yGa173mPucRWe3N0tuvdQQNFyh-qTh3SQ1dsN-zV7dtXDU5-F514iZBcoCBGEUMEfKe9TRp15SV3CGS9FQwoY3G8YxPxgVMABu21YqS4Jf-94XqIx13ubQ6XTMs67ImkCesSy_ixL9uB7srUIJZHfQR")` }}
-                        role="img"
-                        aria-label="User avatar"
-                    />
-                    <div className="flex flex-col">
-                        <h1 className="text-white text-base font-bold leading-normal">Alex Doe</h1>
-                        <p className="text-text-secondary text-xs font-normal leading-normal">alex.doe@example.com</p>
+        <aside className="hidden lg:flex w-72 flex-col gap-10 border-r border-[#392828]  bg-surface-dark p-8 h-[calc(100vh-65px)] sticky top-[65px] z-40">
+            <div className="flex flex-col gap-5">
+                <div className="flex items-center gap-4 p-4">
+
+                    {/* Avatar */}
+                    <div className="relative">
+                        {userInfo?.profilePicture ? (
+                            <div
+                                className="size-12 rounded-full bg-center bg-cover ring-2 ring-primary/40 shadow-md"
+                                style={{
+                                    backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${userInfo.profilePicture})`,
+                                }}
+                                role="img"
+                                aria-label="User avatar"
+                            />
+                        ) : (
+                            <div className="size-12 rounded-full bg-primary/20 flex items-center justify-center ring-2 ring-primary/40 shadow-md border border-primary/20">
+                                <span className="text-primary text-xl font-bold uppercase">
+                                    {userInfo?.firstName?.[0] || 'U'}
+                                </span>
+                            </div>
+                        )}
+
+                        {/* small online indicator */}
+                        <span className="absolute bottom-0 right-0 size-3 rounded-full bg-green-500 border-2 border-[#0b0b0f]" />
+                    </div>
+
+                    {/* User Info */}
+                    <div className="flex flex-col min-w-0">
+                        <h1 className="text-white text-sm font-semibold truncate leading-tight">
+                            {userInfo?.firstName}
+                        </h1>
+                        <p className="text-text-secondary text-[11px] truncate">
+                            {userInfo?.email}
+                        </p>
+
+                        {/* optional subtle label */}
+                        <span className="mt-1 text-[10px] text-primary/70 font-medium uppercase tracking-wider">
+                            Active Account
+                        </span>
                     </div>
                 </div>
+            </div>
 
-                <nav className="flex flex-col gap-2 mt-2">
+            <div className="flex flex-col gap-6">
+                <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">
+                    Menu
+                </p>
+                <nav className="flex flex-col gap-2">
                     {navItems.map((item) => {
                         const active = isActive(item.href);
                         const Icon = active ? item.activeIcon : item.icon;
@@ -57,13 +98,16 @@ export function Sidebar() {
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${active
-                                    ? "bg-primary text-white shadow-[0_0_15px_rgba(236,19,19,0.3)]"
-                                    : "hover:bg-[#291e1e] group"
+                                className={`flex items-center gap-3 px-4 py-3 rounded-md transition-all duration-300 relative group ${active
+                                    ? "bg-primary/10 text-white"
+                                    : "text-text-secondary hover:text-white hover:bg-white/5"
                                     }`}
                             >
-                                <Icon className={`text-xl ${!active ? "text-text-secondary group-hover:text-white transition-colors" : ""}`} />
-                                <p className={`text-sm font-medium leading-normal ${!active ? "text-text-secondary group-hover:text-white transition-colors" : ""}`}>
+                                {active && (
+                                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full shadow-[0_0_10px_rgba(236,19,19,0.5)]" />
+                                )}
+                                <Icon className={`text-lg transition-transform duration-300 ${active ? "scale-110 text-primary" : "group-hover:scale-110"}`} />
+                                <p className={`text-[11px] font-bold uppercase tracking-wider ${active ? "text-white" : ""}`}>
                                     {item.name}
                                 </p>
                             </Link>
@@ -72,14 +116,14 @@ export function Sidebar() {
                 </nav>
             </div>
 
-            <div className="mt-auto">
-                <Link
-                    href="/logout"
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#291e1e] text-red-400 hover:text-red-500 transition-colors"
+            <div className="mt-auto pt-6 border-t border-[#392828]/50">
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-4 py-3 rounded-md text-red-400 hover:text-red-500 hover:bg-red-500/5 transition-all group w-full text-left"
                 >
-                    <IoLogOutOutline className="text-xl" />
-                    <p className="text-sm font-medium leading-normal">Log Out</p>
-                </Link>
+                    <IoLogOutOutline className="text-lg group-hover:scale-110 transition-transform" />
+                    <p className="text-[11px] font-bold uppercase tracking-wider">Log Out</p>
+                </button>
             </div>
         </aside>
     );

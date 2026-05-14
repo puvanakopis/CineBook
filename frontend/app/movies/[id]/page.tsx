@@ -8,11 +8,12 @@ import CastCrew from "./_components/CastCrew";
 import Reviews from "./_components/Reviews";
 import { useMovie } from "@/contexts/MovieContext";
 import Loading from "@/components/Loading";
-import { Review, Theater, TimeSlot, Cast } from "@/interfaces/movie";
-import type {
-  Cast as BackendCast,
-  MovieShowing,
-  Review as BackendReview,
+import {
+  Review,
+  Theater,
+  TimeSlot,
+  Cast,
+  MovieShowing
 } from "@/interfaces/movieInterface";
 
 export default function MovieDetail() {
@@ -45,7 +46,7 @@ export default function MovieDetail() {
   }, [error, clearError]);
 
   const mappedCast: Cast[] = (selectedMovie?.cast || []).map(
-    (member: BackendCast, idx: number) => ({
+    (member: Cast, idx: number) => ({
       cast_id: idx.toString(),
       name: member.name,
       role: member.role,
@@ -65,28 +66,20 @@ export default function MovieDetail() {
         parking: true,
         wheelchair: true,
       },
-      showtimes: {
-        standard: showing.screens.flatMap((screen) =>
-          screen.shows.map((show) => ({
-            date: show.date,
-            times: [
-              {
-                time:
-                  show.time || (show.startTime && show.endTime ? `${show.startTime} - ${show.endTime}` : ""),
-                price: show.price,
-                currency: "LKR",
-                isSoldOut: show.status === "sold-out",
-              },
-            ],
-          }))
-        ),
-        imax3d: [],
-      },
+      screens: showing.screens.map((screen) => ({
+        screen_id: screen.screen_id,
+        name: screen.name,
+        type: screen.type,
+        shows: screen.shows.map((show) => ({
+          ...show,
+          time: show.time || (show.startTime && show.endTime ? `${show.startTime} - ${show.endTime}` : ""),
+        })),
+      })),
     })
   );
 
   const mappedReviews: Review[] = (selectedMovie?.reviews || []).map(
-    (review: BackendReview, idx: number) => ({
+    (review: Review, idx: number) => ({
       review_id: idx.toString(),
       user_id: review.user || "unknown",
       author: review.user || "Anonymous",
@@ -117,14 +110,15 @@ export default function MovieDetail() {
   function getAllDates(theaters: Theater[]): string[] {
     const dateSet = new Set<string>();
     theaters.forEach((theater) => {
-      if (theater.showtimes.standard) {
-        theater.showtimes.standard.forEach((dateShowtime) => {
-          dateSet.add(dateShowtime.date);
-        });
-      }
-      if (theater.showtimes.imax3d) {
-        theater.showtimes.imax3d.forEach((dateShowtime) => {
-          dateSet.add(dateShowtime.date);
+      if (theater.screens) {
+        theater.screens.forEach((screen) => {
+          if (screen.shows) {
+            screen.shows.forEach((show) => {
+              if (show.date) {
+                dateSet.add(show.date);
+              }
+            });
+          }
         });
       }
     });
@@ -170,9 +164,9 @@ export default function MovieDetail() {
     date: string
   ): { standard: TimeSlot[]; imax3d: TimeSlot[] } {
     const standardShowtimes =
-      theater.showtimes.standard?.find((d) => d.date === date);
+      theater.showtimes?.standard?.find((d) => d.date === date);
     const imax3dShowtimes =
-      theater.showtimes.imax3d?.find((d) => d.date === date);
+      theater.showtimes?.imax3d?.find((d) => d.date === date);
 
     return {
       standard: standardShowtimes?.times || [],
@@ -217,7 +211,8 @@ export default function MovieDetail() {
         allDates={allDates}
         onDateSelect={setSelectedDate}
         formatDateDisplay={formatDateDisplay}
-        getShowtimesForDate={getShowtimesForDate}
+        movie={selectedMovie}
+        averageRating={averageRating}
       />
       <CastCrew cast={mappedCast} />
       <Reviews

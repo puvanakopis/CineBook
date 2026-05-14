@@ -1,20 +1,18 @@
 'use client';
 
-import { 
-  MdMovieFilter, 
-  MdStar, 
-  MdMovie, 
-  MdOutlineLocalMovies 
+import {
+  MdMovieFilter,
+  MdStar,
+  MdMovie,
+  MdOutlineLocalMovies
 } from 'react-icons/md';
 
 interface MovieStatsGridProps {
   total: number;
   nowShowing: number;
   comingSoon: number;
-  archived: number;
 }
-
-export function MovieStatsGrid({ total, nowShowing, comingSoon, archived }: MovieStatsGridProps) {
+export function MovieStatsGrid({ total, nowShowing, comingSoon }: MovieStatsGridProps) {
   const stats = [
     {
       label: 'Total Movies',
@@ -34,16 +32,10 @@ export function MovieStatsGrid({ total, nowShowing, comingSoon, archived }: Movi
       icon: MdStar,
       bgColor: 'bg-amber-500/10 text-amber-600',
     },
-    {
-      label: 'Archived',
-      value: archived.toLocaleString(),
-      icon: MdMovie,
-      bgColor: 'bg-slate-500/10 text-slate-600',
-    },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {stats.map((stat, index) => (
         <div
           key={index}

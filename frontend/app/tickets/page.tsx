@@ -5,6 +5,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import TicketHeader from "./_components/TicketHeader";
 import TicketCard from "./_components/TicketCard";
 import Loading from "@/components/Loading";
+import { jsPDF } from "jspdf";
+import * as htmlToImage from "html-to-image";
+import { toast } from "react-hot-toast";
 
 interface Seat {
     id: string;
@@ -19,6 +22,22 @@ interface OrderData {
     subtotal: number;
     convenienceFee: number;
     total: number;
+    meta?: {
+        movie?: {
+            title?: string;
+            poster?: string;
+            rating?: number | string;
+        };
+        theater?: {
+            name?: string;
+        };
+        screen?: {
+            name?: string;
+        };
+        date?: string;
+        time?: string;
+        format?: string;
+    };
 }
 
 function TicketsContent() {
@@ -27,41 +46,133 @@ function TicketsContent() {
     const dataString = searchParams.get('data');
 
     const [orderData, setOrderData] = useState<OrderData | null>(null);
-    const [printingSeatId, setPrintingSeatId] = useState<string | null>(null);
 
     const movieDetails = {
-        title: "Cyber Chronicles",
-        theater: "Cineplex Downtown",
-        hall: "4 - IMAX",
-        date: "Today, 14 Oct",
-        time: "06:00 PM",
-        poster: "https://lh3.googleusercontent.com/aida-public/AB6AXuDvw3Iq9pJqFd1KivIB51tyO1jy9jFbSkN9w08LctmE4KQXEiNLL2yzrMxjBatyPAPV9NEVdX11bhodeSTfRGLyKJHA4fSd3Foe0XjO3Fk75KIucJBXiGPV6fygqBWrnEdBlXY_9uNVbAn-yHDYhHlqtuAQfOrgfX1lUj6xdN6mlM0fSQlSofP8HzAUn_YWB_w6Gm3PceYzpZIFwMWYzVpkvX4x7zA1Gap3y4rqW7Rm920Jf2f7h0haie6n_FKgdYFzBWN5aat_76mm"
+        title: orderData?.meta?.movie?.title || (orderData as any)?.movieTitle || "Movie Title",
+        theater: orderData?.meta?.theater?.name || (orderData as any)?.theaterName || "Cinema",
+        screen: orderData?.meta?.screen?.name || orderData?.meta?.format || "Hall",
+        date: orderData?.meta?.date || ((orderData as any)?.dateTime ? new Date((orderData as any).dateTime).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : "Date"),
+        time: orderData?.meta?.time || (orderData as any)?.showTime || "Time",
+        poster: orderData?.meta?.movie?.poster || (orderData as any)?.poster || ""
     };
+
+    const bookingId = (orderData as any)?._id || (orderData as any)?.payment?.transactionId || "CBK-PENDING";
 
     useEffect(() => {
         if (dataString) {
             try {
                 const parsed = JSON.parse(decodeURIComponent(dataString));
-                setOrderData(parsed);
+                const normalizeSeat = (s: any) => {
+                    if (!s) return null;
+                    if (typeof s === 'string') {
+                        const id = s;
+                        const row = id.replace(/\d+/g, '') || id.charAt(0);
+                        const numMatch = id.match(/\d+/);
+                        const number = numMatch ? parseInt(numMatch[0], 10) : undefined;
+                        return { id, row, number, type: 'standard', price: 14 };
+                    }
+                    return {
+                        id: s.id ?? `${s.row ?? ''}${s.number ?? ''}`,
+                        row: s.row ?? (typeof s.id === 'string' ? s.id.replace(/\d+/g, '') : undefined),
+                        number: s.number ?? (typeof s.id === 'string' ? parseInt((s.id.match(/\d+/) || [''])[0], 10) : undefined),
+                        type: s.type ?? 'standard',
+                        price: s.price ?? 14,
+                    };
+                };
+
+                const parsedSeats = Array.isArray(parsed.seats) ? parsed.seats.map(normalizeSeat).filter(Boolean) : [];
+                setOrderData({ ...parsed, seats: parsedSeats });
             } catch (e) {
                 console.error("Failed to parse order data", e);
             }
         }
     }, [dataString]);
 
-    const handlePrintSingle = (seatId: string) => {
-        setPrintingSeatId(seatId);
-        setTimeout(() => {
-            window.print();
-            setPrintingSeatId(null);
-        }, 100);
+    const handlePrintSingle = async (seatId: string) => {
+        const element = document.getElementById(`ticket-${seatId}`);
+        if (!element) return;
+
+        const loadingToast = toast.loading("Generating your E-Ticket PDF...");
+
+        try {
+            const dataUrl = await htmlToImage.toPng(element, {
+                quality: 1.0,
+                pixelRatio: 2,
+                backgroundColor: "#0F0F0F",
+                cacheBust: true,
+            });
+
+            const tempPdf = new jsPDF();
+            const imgProps = tempPdf.getImageProperties(dataUrl);
+
+            const ticketWidth = 200;
+            const ticketHeight = (imgProps.height * ticketWidth) / imgProps.width;
+
+            const pdf = new jsPDF({
+                orientation: imgProps.width > imgProps.height ? "landscape" : "portrait",
+                unit: "mm",
+                format: [ticketWidth, ticketHeight],
+            });
+
+            pdf.addImage(dataUrl, "PNG", 0, 0, ticketWidth, ticketHeight);
+            pdf.save(`${bookingId}_${seatId}.pdf`);
+            toast.success("E-Ticket downloaded successfully!", { id: loadingToast });
+        } catch (error: any) {
+            console.error("Error generating PDF:", error);
+            toast.error(`Failed to generate PDF: ${error.message || "Unknown error"}`, { id: loadingToast });
+        }
     };
 
-    const handlePrintAll = () => {
-        setPrintingSeatId(null);
-        setTimeout(() => {
-            window.print();
-        }, 100);
+    const handleDownloadAll = async () => {
+        if (!orderData) return;
+
+        const loadingToast = toast.loading("Generating your E-Tickets PDF...");
+
+        try {
+            const pdf = new jsPDF({
+                orientation: "portrait",
+                unit: "mm",
+                format: "a4", 
+            });
+
+            pdf.deletePage(1);
+
+            const tickets = orderData.seats;
+            let capturedCount = 0;
+
+            for (let i = 0; i < tickets.length; i++) {
+                const seat = tickets[i];
+                const element = document.getElementById(`ticket-${seat.id}`);
+
+                if (element) {
+                    const dataUrl = await htmlToImage.toPng(element, {
+                        quality: 1.0,
+                        pixelRatio: 2,
+                        backgroundColor: "#0F0F0F",
+                        cacheBust: true,
+                    });
+
+                    const imgProps = pdf.getImageProperties(dataUrl);
+
+                    const ticketWidth = 200;
+                    const ticketHeight = (imgProps.height * ticketWidth) / imgProps.width;
+
+                    pdf.addPage([ticketWidth, ticketHeight], imgProps.width > imgProps.height ? "landscape" : "portrait");
+                    pdf.addImage(dataUrl, "PNG", 0, 0, ticketWidth, ticketHeight);
+                    capturedCount++;
+                }
+            }
+
+            if (capturedCount === 0) {
+                throw new Error("No ticket elements found to capture.");
+            }
+
+            pdf.save(`${bookingId}.pdf`);
+            toast.success("E-Tickets downloaded successfully!", { id: loadingToast });
+        } catch (error: any) {
+            console.error("Error generating PDF:", error);
+            toast.error(`Failed to generate PDF: ${error.message || "Unknown error"}`, { id: loadingToast });
+        }
     };
 
     if (!orderData || orderData.seats.length === 0) {
@@ -81,7 +192,7 @@ function TicketsContent() {
 
     return (
         <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-8">
-            <TicketHeader onPrintAll={handlePrintAll} />
+            <TicketHeader onPrintAll={handleDownloadAll} />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {orderData.seats.map((seat) => (
@@ -89,7 +200,7 @@ function TicketsContent() {
                         key={seat.id}
                         seat={seat}
                         movieDetails={movieDetails}
-                        printingSeatId={printingSeatId}
+                        bookingId={bookingId}
                         onPrintSingle={handlePrintSingle}
                     />
                 ))}

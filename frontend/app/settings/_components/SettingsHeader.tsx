@@ -1,17 +1,12 @@
 export function SettingsHeader() {
     return (
-        <section className="pb-8 border-b border-[#392828]">
+        <section className="mb-16">
             <div className="flex flex-col gap-6">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-                    <div>
-                        <h1 className="text-white text-3xl md:text-4xl font-bold tracking-tight mb-2">
-                            Account Settings
-                        </h1>
-                        <p className="text-text-secondary text-base">
-                            Manage your cinema experience and privacy preferences in the same style as security settings.
-                        </p>
-                    </div>
-                </div>
+                <h1 className="text-2xl md:text-4xl font-extrabold text-white border-l-4 border-primary pl-6 tracking-wide">                    Settings
+                </h1>
+                <p className="text-text-secondary text-base md:text-lg leading-relaxed">
+                    Manage your preferences for notifications, display settings, and privacy to enhance your cinematic experience.
+                </p>
             </div>
         </section>
     );

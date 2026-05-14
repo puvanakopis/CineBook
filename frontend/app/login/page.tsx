@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MdOutlineMovie } from "react-icons/md";
 import toast from "react-hot-toast";
-
-import LoginBackground from "@/public//LoginBackground.png";
-
+import LoginBackground from "@/public/LoginBackground.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { authApi } from "@/services/authApi";
 import LoginForm from "./_components/LoginForm";

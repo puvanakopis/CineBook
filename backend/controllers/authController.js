@@ -113,12 +113,29 @@ exports.verifyOtpAndSignup = async (req, res) => {
         firstName: otpRecord.firstName,
         lastName: otpRecord.lastName,
         role: otpRecord.role,
+        phone: "",
+        preferences: {
+            theme: "dark",
+            notifications: true,
+        }
     });
 
     await newUser.save();
     await OTP.deleteOne({ email: email.toLowerCase() });
 
-    res.status(201).json({ message: 'Signup successful', user: { email: newUser.email, role: newUser.role, firstName: newUser.firstName, lastName: newUser.lastName } });
+    res.status(201).json({ 
+        message: 'Signup successful', 
+        user: { 
+            email: newUser.email, 
+            role: newUser.role, 
+            firstName: newUser.firstName, 
+            lastName: newUser.lastName, 
+            phone: newUser.phone, 
+            profilePicture: newUser.profilePicture, 
+            createdAt: newUser.createdAt,
+            paymentMethods: newUser.paymentMethods 
+        } 
+    });
 };
 
 exports.login = async (req, res) => {
@@ -128,11 +145,27 @@ exports.login = async (req, res) => {
     const user = await getUserByEmail(email);
     if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
+    if (user.isActive === false) {
+        return res.status(401).json({ message: 'Account is deactivated' });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-    res.status(200).json({ token, user: { email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName } });
+    res.status(200).json({ 
+        token, 
+        user: { 
+            email: user.email, 
+            role: user.role, 
+            firstName: user.firstName, 
+            lastName: user.lastName, 
+            phone: user.phone, 
+            profilePicture: user.profilePicture, 
+            createdAt: user.createdAt,
+            paymentMethods: user.paymentMethods 
+        } 
+    });
 };
 
 exports.requestPasswordReset = async (req, res) => {
@@ -194,10 +227,85 @@ exports.getCurrentUser = async (req, res) => {
                 role: user.role,
                 firstName: user.firstName,
                 lastName: user.lastName,
+                phone: user.phone,
+                profilePicture: user.profilePicture,
+                preferences: user.preferences,
+                createdAt: user.createdAt,
+                paymentMethods: user.paymentMethods || [],
             },
         });
     } catch (err) {
         res.status(500).json({ message: 'Error fetching user', error: err.message });
+    }
+};
+
+
+// Update user personal information and preferences
+exports.updateUserInfo = async (req, res) => {
+    try {
+        const { firstName, lastName, phone, preferences } = req.body;
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { firstName, lastName, phone, preferences },
+            { returnDocument: 'after', runValidators: true }
+        );
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({
+            user: {
+                id: user._id,
+                email: user.email,
+                role: user.role,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                phone: user.phone,
+                profilePicture: user.profilePicture,
+                preferences: user.preferences,
+                createdAt: user.createdAt,
+                paymentMethods: user.paymentMethods,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+};
+
+exports.uploadProfilePicture = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: "No file uploaded" });
+        }
+
+        const profilePicture = `/uploads/users/${req.file.filename}`;
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { profilePicture },
+            { returnDocument: 'after' }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "Profile picture uploaded successfully",
+            profilePicture,
+            user: {
+                id: user._id,
+                email: user.email,
+                role: user.role,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                phone: user.phone,
+                profilePicture: user.profilePicture,
+                preferences: user.preferences,
+                createdAt: user.createdAt,
+                paymentMethods: user.paymentMethods,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
     }
 };
 
@@ -207,4 +315,131 @@ exports.googleCallback = async (req, res) => {
     }
 
     return issueAuthCookieAndRedirect(res, req.user);
+};
+
+// --- Payment Methods ---
+
+exports.addPaymentMethod = async (req, res) => {
+    try {
+        const { cardholderName, cardNumber, expiryDate, brand, lastFour } = req.body;
+        const user = await User.findById(req.user.id);
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const newMethod = {
+            cardholderName,
+            cardNumber,
+            expiryDate,
+            brand,
+            lastFour,
+            isDefault: user.paymentMethods.length === 0
+        };
+
+        user.paymentMethods.push(newMethod);
+        await user.save();
+
+        res.status(201).json({ message: "Payment method added", paymentMethods: user.paymentMethods });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+exports.getPaymentMethods = async (req, res) => {
+    try {
+        const user = req.user;
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.status(200).json({ paymentMethods: user.paymentMethods || [] });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+exports.updatePaymentMethod = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { cardholderName, expiryDate, isDefault } = req.body;
+        const user = await User.findById(req.user.id);
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const method = user.paymentMethods.id(id);
+        if (!method) return res.status(404).json({ message: "Payment method not found" });
+
+        if (cardholderName) method.cardholderName = cardholderName;
+        if (expiryDate) method.expiryDate = expiryDate;
+        
+        if (isDefault) {
+            user.paymentMethods.forEach(m => m.isDefault = false);
+            method.isDefault = true;
+        }
+
+        await user.save();
+        res.status(200).json({ message: "Payment method updated", paymentMethods: user.paymentMethods });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+exports.deletePaymentMethod = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(req.user.id);
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        user.paymentMethods = user.paymentMethods.filter(m => m._id.toString() !== id);
+        
+        if (user.paymentMethods.length > 0 && !user.paymentMethods.some(m => m.isDefault)) {
+            user.paymentMethods[0].isDefault = true;
+        }
+
+        await user.save();
+        res.status(200).json({ message: "Payment method deleted", paymentMethods: user.paymentMethods });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+exports.updatePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const Model = getModelByRole(req.user.role);
+        const user = await Model.findById(req.user._id || req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: "Account not found" });
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Incorrect current password" });
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+exports.deactivateAccount = async (req, res) => {
+    try {
+        const Model = getModelByRole(req.user.role);
+        const user = await Model.findByIdAndUpdate(
+            req.user._id || req.user.id,
+            { isActive: false },
+            { returnDocument: 'after' }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: "Account not found" });
+        }
+
+        res.status(200).json({ message: "Account deactivated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
 };

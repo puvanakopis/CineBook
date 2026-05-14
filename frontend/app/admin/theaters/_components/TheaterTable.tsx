@@ -33,7 +33,7 @@ export function TheaterTable({ theaters, onEdit, onDelete }: TheaterTableProps) 
               <th className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-[#b99d9d]">Image</th>
               <th className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-[#b99d9d]">Theater</th>
               <th className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-[#b99d9d]">Location</th>
-              <th className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-[#b99d9d]">Movies</th>
+              {/* Movies column removed per request */}
               <th className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-[#b99d9d]">Actions</th>
             </tr>
           </thead>
@@ -64,22 +64,7 @@ export function TheaterTable({ theaters, onEdit, onDelete }: TheaterTableProps) 
                       <p className="mt-1 text-xs uppercase tracking-[0.25em] text-slate-400 dark:text-[#8f7676]">{theater.city}</p>
                     </td>
 
-                    <td className="px-6 py-4 align-top">
-                      <div className="flex flex-wrap gap-2">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                          <MdMovie />
-                          {theater.movies?.length ?? 0} assigned
-                        </span>
-                        {(theater.movies || []).slice(0, 3).map((movie) => (
-                          <span
-                            key={movie._id}
-                            className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600 dark:bg-[#1f1212] dark:text-[#b99d9d]"
-                          >
-                            {movie.title}
-                          </span>
-                        ))}
-                      </div>
-                    </td>
+                    {/* Movies column removed - assigned movies hidden */}
 
                     <td className="px-6 py-4 align-top">
                       <div className="flex items-center gap-2">
@@ -102,7 +87,7 @@ export function TheaterTable({ theaters, onEdit, onDelete }: TheaterTableProps) 
               })
             ) : (
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
                   No theaters match the selected filters.
                 </td>
               </tr>

@@ -1,20 +1,13 @@
-// TheaterCard.tsx (updated)
 import Image from "next/image";
 import getImage from '@/utils/imageUrl';
 import { useRouter } from 'next/navigation';
 import { IoMdStarOutline } from "react-icons/io";
 import { CiLocationOn } from "react-icons/ci";
 
+import { Theater } from "@/interfaces/theaterInterface";
+
 interface TheaterCardProps {
-    theater: {
-        _id: string;
-        name: string;
-        address: string;
-        avgRating: number;
-        amenities: string[];
-        image: string;
-        city: string;
-    };
+    theater: Theater & { avgRating: number };
     viewMode: 'grid' | 'list';
 }
 
@@ -25,7 +18,7 @@ const TheaterCard = ({ theater, viewMode }: TheaterCardProps) => {
         return (
             <div
                 className="group bg-surface-dark rounded-xl overflow-hidden border border-[#392828] hover:border-primary/50 transition-all hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col sm:flex-row h-full cursor-pointer"
-                onClick={() => router.push(`/theaters/${theater._id}`)}
+                onClick={() => router.push(`/theaters/${theater._id || theater.theater_id || ""}`)}
             >
                 <div className="relative w-full sm:w-48 h-48 sm:h-auto overflow-hidden bg-gray-800">
                     <Image
@@ -65,7 +58,7 @@ const TheaterCard = ({ theater, viewMode }: TheaterCardProps) => {
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            router.push(`/theaters/${theater._id}`);
+                            router.push(`/theaters/${theater._id || theater.theater_id || ""}`);
                         }}
                         className="mt-auto w-max px-8 border border-primary bg-primary text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors"
                     >
@@ -79,7 +72,7 @@ const TheaterCard = ({ theater, viewMode }: TheaterCardProps) => {
     return (
         <div
             className="group bg-surface-dark rounded-xl overflow-hidden border border-[#392828] hover:border-primary/50 transition-all hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col h-full cursor-pointer"
-            onClick={() => router.push(`/theaters/${theater._id}`)}
+            onClick={() => router.push(`/theaters/${theater._id || theater.theater_id || ""}`)}
         >
             <div className="relative aspect-video overflow-hidden bg-gray-800">
                 <Image
@@ -119,7 +112,7 @@ const TheaterCard = ({ theater, viewMode }: TheaterCardProps) => {
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
-                        router.push(`/theaters/${theater._id}`);
+                        router.push(`/theaters/${theater._id || theater.theater_id || ""}`);
                     }}
                     className="mt-auto w-full border border-primary bg-primary text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors"
                 >

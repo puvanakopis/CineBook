@@ -41,7 +41,7 @@ adminSchema.pre('save', async function () {
         const counter = await Counter.findByIdAndUpdate(
             'admin',
             { $inc: { seq: 1 } },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         );
         this._id = `admin_${String(counter.seq).padStart(2, '0')}`;
     }

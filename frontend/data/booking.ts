@@ -1,4 +1,4 @@
-import { Booking } from '@/interfaces/booking';
+import { Booking } from '@/interfaces/bookingInterface';
 
 export const bookings: Booking[] = [
   {
@@ -12,7 +12,6 @@ export const bookings: Booking[] = [
     status: 'Confirmed',
     poster: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCeW6VfhpatRIJUymWYpduBnZDCI2dUeK_K0TTlDbgoiEdIHJNGYGkod1Zbnko8qWRV-xDJClYfT6WwOhNQd3sOGgyp-g2wrnG8WYIwU862Qt8pcR2fY6nIC8gIYWzl6KU4uB0LH7mj0E3ThKjhIqB9OJjjR-ZfHVD27rc3DpzGytLM5s8LohF8zHelkzxNgK_isfi_1PDugDMJraHxkmN714F4OlAObgjrxprr4RVNHlR1vjtxvr4zN_M0D_wEjUre14z5666FgwnW',
     theaterName: 'Grand Cinema',
-    hallName: 'IMAX 1',
   },
   {
     id: '#BK-9020',
@@ -22,10 +21,9 @@ export const bookings: Booking[] = [
     dateTime: 'Oct 24, 2024 - 19:00',
     seats: ['H5'],
     totalPrice: 12.00,
-    status: 'Pending',
+    status: 'Completed',
     poster: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAg6mTfy3Df2IeDZToEqUEsTy1gXxFRpKtjbvfDrZnqQ3gIa79AqnRvmxKMmSWiHvlDevjOxuG3pSdtPW8HsU-BRaEm_p-FObU2YXZJi28izpCB5xo-vjPHnCOHcq2YdDkRss4W7Q35RcWX_8Zckk1xJr7C9-NgQmLAx_Tb6GBlTWX-gjFtrXm6VYIsKxsVTDB64q0gG94G2-p-EMFJpLuNQ0rmb_1BMnXLFZWKJ5piuDvTKfSJ-Ui-9x2hVOKOReHbT_bTG-0inRAD',
     theaterName: 'City Center Plaza',
-    hallName: 'Hall 4',
   },
   {
     id: '#BK-9019',
@@ -38,7 +36,6 @@ export const bookings: Booking[] = [
     status: 'Confirmed',
     poster: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBrjNXXFlcXvFTv25VNui4C2TskehGOr20VYOEEoOT98oNk_VomHkC7taYwJ1XB7iJdeo5nSAKUsU_Rjdk3sjcrgp7hJeu3caHUHpr0sCPBe8XaoS2BOM3u95Onb-xCKwaZ9dA_hWChQr5qaz1uvDQukXY5rK9H9-FimzWMGTxSpBpLuSZR_Q6yjaXwwS0AJjHfCE6GSM2ESlI-MAxSGfYqfNIk0qyplyooNk4Va_Ht_9zLyQEftz2ulLxx78KQ0eg3ComyZa6lqY',
     theaterName: 'Grand Cinema',
-    hallName: 'Hall 2',
   },
   {
     id: '#BK-9018',
@@ -51,7 +48,6 @@ export const bookings: Booking[] = [
     status: 'Cancelled',
     poster: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkyQXYqF8dB2lI8PxpEvqaZ-hB6oyQu7nc2vTeOlB6TqRE0jEw334mAeoabZJQpAjnJ2F-Vez0HaUs9xLH_T8Yv70l_fUcrIScrYUQL_uhG4WPbXxWDqBOdeeL2Z3MOxT1c3dKvMxIwLrzvhdhC7lU4AS3ebv908RMmW27S37MTvQ7yw_RUMOab4LmovjVvbRICUMmRJi4CdD408tuMz2bTfQO_UvkOwGHjLsM8oirnxI_IGM7UlMfLso_tzaQ8zKeFXeQjwdnmAs6',
     theaterName: 'Cineplex Plaza',
-    hallName: 'Hall 5',
   },
   {
     id: '#BK-9017',
@@ -64,6 +60,5 @@ export const bookings: Booking[] = [
     status: 'Confirmed',
     poster: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCyW6VfhpatRIJUymWYpduBnZDCI2dUeK_K0TTlDbgoiEdIHJNGYGkod1Zbnko8qWRV-xDJClYfT6WwOhNQd3sOGgyp-g2wrnG8WYIwU862Qt8pcR2fY6nIC8gIYWzl6KU4uB0LH7mj0E3ThKjhIqB9OJjjR-ZfHVD27rc3DpzGytLM5s8LohF8zHelkzxNgK_isfi_1PDugDMJraHxkmN714F4OlAObgjrxprr4RVNHlR1vjtxvr4zN_M0D_wEjUre14z5666FgwnW',
     theaterName: 'Grand Cinema',
-    hallName: 'Hall 1',
   },
 ];

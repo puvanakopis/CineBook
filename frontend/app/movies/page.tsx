@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import MovieHeader from "./_components/MovieHeader";
 import MovieFilters from "./_components/MovieFilters";
 import MovieGrid from "./_components/MovieGrid";
@@ -13,13 +14,33 @@ import { Movie } from "@/interfaces/movieInterface";
 
 export default function Movies() {
   const { movies, isLoading, error } = useMovie();
-  const [selectedDate, setSelectedDate] = useState<string>('');
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const searchParams = useSearchParams();
+
+  // Get initial values from search params
+  const initialGenre = searchParams.get("genre");
+  const initialDate = searchParams.get("date");
+  const initialTheater = searchParams.get("theater");
+
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>(initialDate || '');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(initialGenre ? [initialGenre] : []);
+  const [selectedTheater, setSelectedTheater] = useState<string>(initialTheater || '');
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All');
   const [selectedRating, setSelectedRating] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('Popularity');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  // Sync state with search params when they change
+  useEffect(() => {
+    const genre = searchParams.get("genre");
+    const date = searchParams.get("date");
+    const theater = searchParams.get("theater");
+
+    setSelectedGenres(genre ? [genre] : []);
+    setSelectedDate(date || '');
+    setSelectedTheater(theater || '');
+  }, [searchParams]);
 
   const moviesPerPage = 9;
 
@@ -48,16 +69,24 @@ export default function Movies() {
   ];
 
   const filteredMovies = useMemo<Movie[]>(() => {
-    const filtered = movies.map(movie => {
+    const withRating = movies.map(movie => {
       const avgRating = movie.reviews && movie.reviews.length > 0
         ? movie.reviews.reduce((acc, r) => acc + r.rating, 0) / movie.reviews.length
         : 0;
       return { ...movie, averageRating: avgRating };
     });
 
+    const searched = searchQuery
+      ? withRating.filter(movie =>
+        movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (movie.synopsis || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        movie.genres.some(g => g.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+      : withRating;
+
     const genreFiltered = selectedGenres.length > 0
-      ? filtered.filter(movie => movie.genres.some(genre => selectedGenres.includes(genre)))
-      : filtered;
+      ? searched.filter(movie => movie.genres.some(genre => selectedGenres.includes(genre)))
+      : searched;
 
     const languageFiltered = selectedLanguage !== 'All'
       ? genreFiltered.filter(movie => {
@@ -72,7 +101,23 @@ export default function Movies() {
       ? languageFiltered.filter(movie => movie.averageRating >= parseFloat(selectedRating))
       : languageFiltered;
 
-    return ratingFiltered.sort((a, b) => {
+    const dateFiltered = selectedDate
+      ? ratingFiltered.filter(movie =>
+        (movie.showings || []).some(showing =>
+          showing.screens.some(screen =>
+            screen.shows.some(show => show.date === selectedDate)
+          )
+        )
+      )
+      : ratingFiltered;
+
+    const theaterFiltered = selectedTheater
+      ? dateFiltered.filter(movie =>
+        (movie.showings || []).some(showing => showing.name === selectedTheater)
+      )
+      : dateFiltered;
+
+    return theaterFiltered.sort((a, b) => {
       switch (sortBy) {
         case 'Popularity':
           return b.averageRating - a.averageRating;
@@ -86,7 +131,7 @@ export default function Movies() {
           return 0;
       }
     });
-  }, [movies, selectedGenres, selectedLanguage, selectedRating, sortBy]);
+  }, [movies, selectedGenres, selectedLanguage, selectedRating, sortBy, searchQuery, selectedDate, selectedTheater]);
 
   const handleGenreToggle = (genre: string) => {
     setCurrentPage(1);
@@ -95,6 +140,11 @@ export default function Movies() {
     } else {
       setSelectedGenres([...selectedGenres, genre]);
     }
+  };
+
+  const handleSearchQueryChange = (query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
   };
 
   const handleLanguageChange = (language: string) => {
@@ -116,6 +166,8 @@ export default function Movies() {
     setSelectedGenres([]);
     setSelectedLanguage('All');
     setSelectedRating('');
+    setSelectedDate('');
+    setSelectedTheater('');
     setCurrentPage(1);
   };
 
@@ -137,6 +189,11 @@ export default function Movies() {
     ratings,
     handleGenreToggle,
     handleClearFilters,
+    searchQuery,
+    setSearchQuery: handleSearchQueryChange,
+    selectedTheater,
+    setSelectedTheater,
+    allTheaters: Array.from(new Set(movies.flatMap(m => m.showings?.map(s => s.name) || []))).sort(),
   };
 
   if (isLoading) {
@@ -162,7 +219,7 @@ export default function Movies() {
 
   return (
     <div>
-      <MovieHeader />
+      <MovieHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <div className="flex flex-col lg:flex-row max-w-[1400px] mx-auto w-full px-4 md:px-10 lg:px-20 py-10 gap-8">
         <MovieFilters {...filterProps} />
 

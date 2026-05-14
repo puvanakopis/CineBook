@@ -1,6 +1,6 @@
 'use client';
 
-import { User } from '@/interfaces/user';
+import { User } from '@/interfaces/userInterfaces';
 import { MdEdit, MdBlock, MdCheckCircleOutline } from 'react-icons/md';
 
 interface UserTableProps {

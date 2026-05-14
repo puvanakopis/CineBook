@@ -5,20 +5,19 @@ import { useState, useMemo, useEffect } from "react";
 import { useTheater } from "@/contexts/TheaterContext";
 import { theaterApi } from '@/services/theaterApi';
 import { movieApi } from '@/services/movieApi';
-import { Theater as ApiTheater } from "@/interfaces/theaterInterface";
+import { Theater, Screen, MovieShowtime, TimeSlot } from "@/interfaces/theaterInterface";
 import { Movie as ApiMovie } from '@/interfaces/movieInterface';
-import { Theater as UITheater, Screen, MovieShowtime, TimeSlot } from "@/interfaces/theater";
 import TheaterHero from "./_components/TheaterHero";
 import TheaterShowtimes from "./_components/TheaterShowtimes";
 import TheaterInfo from "./_components/TheaterInfo";
 import LocationMap from "./_components/LocationMap";
 
-export default function TheaterDetailPage() {
+export default function TheaterDetail() {
     const params = useParams();
     const theaterId = params?.id ? (params.id as string) : null;
     const { theaters: apiTheaters, selectedTheater } = useTheater();
 
-    const [theater, setTheater] = useState<UITheater | null>(null);
+    const [theater, setTheater] = useState<Theater | null>(null);
     const [selectedDate, setSelectedDate] = useState<string>("");
     const [selectedMovieFilter, setSelectedMovieFilter] = useState<string>("all");
 
@@ -26,20 +25,16 @@ export default function TheaterDetailPage() {
         if (!theaterId) return;
 
         (async () => {
-            let apiT: ApiTheater | undefined;
+            let apiT: Theater | undefined;
 
             try {
-                // request authoritative theater (should include populated movies)
                 apiT = await theaterApi.getTheaterById(theaterId);
             } catch {
-                // fallback to context-provided theater if API call fails
                 apiT = selectedTheater ?? apiTheaters.find(t => t._id === theaterId);
             }
 
             if (!apiT) return;
 
-            // transform API theater to UI theater shape used by existing components
-            // fetch movie objects referenced by shows (backend may not include `movies` field)
             const moviesMap = new Map<string, ApiMovie | null>();
             const movieIdSet = new Set<string>();
             (apiT.screens || []).forEach((s) => {
@@ -112,8 +107,8 @@ export default function TheaterDetailPage() {
                 } as Screen;
             });
 
-            const uiTheater: UITheater = {
-                theater_id: apiT._id,
+            const uiTheater: Theater = {
+                theater_id: apiT._id || apiT.theater_id || "",
                 name: apiT.name,
                 address: apiT.address,
                 city: apiT.city,
@@ -125,33 +120,31 @@ export default function TheaterDetailPage() {
                 description: apiT.description,
                 phone: apiT.phone,
                 email: apiT.email || "",
-                location: apiT.location ? { lat: apiT.location.lat, lng: apiT.location.lng } : undefined,
+                location: apiT.location ? { lat: apiT.location.lat, lng: apiT.location.lng } : { lat: 0, lng: 0 },
                 features: {
-                    mTicket: !!apiT.features?.mTicket,
-                    foodBeverage: !!apiT.features?.foodBeverage,
-                    parking: !!apiT.features?.parking,
-                    wheelchair: !!apiT.features?.wheelchair,
-                    dolby: !!apiT.features?.dolby,
-                    imax: !!apiT.features?.imax,
-                    recliners: !!apiT.features?.recliners,
-                    fourK: !!apiT.features?.fourK,
+                    mTicket: !!(apiT.features as any)?.mTicket,
+                    foodBeverage: !!(apiT.features as any)?.foodBeverage,
+                    parking: !!(apiT.features as any)?.parking,
+                    wheelchair: !!(apiT.features as any)?.wheelchair,
+                    dolby: !!(apiT.features as any)?.dolby,
+                    imax: !!(apiT.features as any)?.imax,
+                    recliners: !!(apiT.features as any)?.recliners,
+                    fourK: !!(apiT.features as any)?.fourK,
                 },
                 screens: uiScreens,
             };
 
             setTheater(uiTheater);
-            // default selected date
-            const allDates = uiScreens.flatMap(s => s.currentMovies.flatMap(m => m.showtimes.map(st => st.date)));
+            const allDates = uiScreens.flatMap(s => (s.currentMovies || []).flatMap(m => m.showtimes.map(st => st.date)));
             setSelectedDate(allDates.sort()[0] || "");
         })();
     }, [selectedTheater, apiTheaters, theaterId]);
 
-    // (removed unused helper getDefaultDate)
 
     function getAllDates(screens: Screen[]): string[] {
         const dateSet = new Set<string>();
         screens.forEach((screen) => {
-            screen.currentMovies.forEach((movie) => {
+            (screen.currentMovies || []).forEach((movie) => {
                 movie.showtimes.forEach((showtime) => {
                     dateSet.add(showtime.date);
                 });
@@ -200,7 +193,7 @@ export default function TheaterDetailPage() {
         >();
 
         screens.forEach((screen) => {
-            screen.currentMovies.forEach((movie) => {
+            (screen.currentMovies || []).forEach((movie) => {
                 const showtimeForDate = movie.showtimes.find((st) => st.date === date);
                 if (showtimeForDate && showtimeForDate.times.length > 0) {
                     if (!movieMap.has(movie.movie_id)) {
@@ -226,7 +219,7 @@ export default function TheaterDetailPage() {
     function getUniqueMovies(screens: Screen[]): { id: number; title: string }[] {
         const movieSet = new Map<number, string>();
         screens.forEach((screen) => {
-            screen.currentMovies.forEach((movie) => {
+            (screen.currentMovies || []).forEach((movie) => {
                 movieSet.set(movie.movie_id, movie.title);
             });
         });
@@ -275,6 +268,9 @@ export default function TheaterDetailPage() {
                 <div className="flex flex-col lg:flex-row gap-8">
                     <div className="lg:w-2/3">
                         <TheaterShowtimes
+                            theaterId={theater.theater_id}
+                            theaterName={theater.name}
+                            theaterAddress={theater.address}
                             screens={theater.screens}
                             selectedDate={selectedDate}
                             allDates={allDates}
@@ -292,7 +288,7 @@ export default function TheaterDetailPage() {
                             description={theater.description}
                             phone={theater.phone}
                             email={theater.email}
-                            features={theater.features}
+                            features={theater.features as TheaterFeatures}
                             amenities={theater.amenities}
                         />
                         <LocationMap

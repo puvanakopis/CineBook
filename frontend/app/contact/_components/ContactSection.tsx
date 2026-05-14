@@ -1,4 +1,3 @@
-import React from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { GoMail } from "react-icons/go";
 import { MdAccessible, MdAlternateEmail, MdOutlineConfirmationNumber, MdOutlineExpandMore, MdOutlineSupportAgent } from "react-icons/md";

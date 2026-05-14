@@ -1,11 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Screen, MovieShowtime, TimeSlot } from "@/interfaces/theater";
+import { Screen, MovieShowtime, TimeSlot } from "@/interfaces/theaterInterface";
 import Image from "next/image";
 import getImage from '@/utils/imageUrl';
+import { navigateToSelectSeats, BookingPayload } from "@/utils/bookingNavigation";
 
 interface TheaterShowtimesProps {
+    theaterId: string;
+    theaterName: string;
+    theaterAddress: string;
     screens: Screen[];
     selectedDate: string;
     allDates: string[];
@@ -21,6 +25,9 @@ interface TheaterShowtimesProps {
 }
 
 const TheaterShowtimes = ({
+    theaterId,
+    theaterName,
+    theaterAddress,
     selectedDate,
     allDates,
     onDateSelect,
@@ -54,9 +61,35 @@ const TheaterShowtimes = ({
         }
     };
 
-    const handleShowtimeClick = (st: { screen: Screen; showtime: TimeSlot; format: string }) => {
+    const handleShowtimeClick = (movie: MovieShowtime, st: { screen: Screen; showtime: TimeSlot; format: string }) => {
         if (!st.showtime.isSoldOut) {
-            router.push("/select-seats");
+            const payload: BookingPayload = {
+                movie: {
+                    id: movie.movie_id,
+                    title: movie.title,
+                    poster: movie.poster,
+                    duration: movie.duration,
+                    rating: movie.rating,
+                    genres: movie.genres,
+                },
+                theater: {
+                    id: theaterId,
+                    name: theaterName,
+                    address: theaterAddress,
+                },
+                screen: {
+                    id: st.screen.screen_id,
+                    name: st.screen.name || "",
+                    type: st.format,
+                },
+                date: selectedDate,
+                time: st.showtime.time,
+                price: st.showtime.price,
+                currency: st.showtime.currency,
+                format: st.format,
+            };
+
+            navigateToSelectSeats(router, payload);
         }
     };
 
@@ -150,7 +183,7 @@ const TheaterShowtimes = ({
                                                     <button
                                                         key={`${st.screen.screen_id}-${st.showtime.time}-${idx}`}
                                                         disabled={st.showtime.isSoldOut}
-                                                        onClick={() => handleShowtimeClick(st)}
+                                                        onClick={() => handleShowtimeClick(movie, st)}
                                                         className={`group relative flex flex-col items-center justify-center py-2 px-2 rounded border transition-all ${st.showtime.isSoldOut
                                                             ? "opacity-50 cursor-not-allowed bg-[#221a1a] border-[#392828]"
                                                             : "border-[#392828] bg-[#221a1a] hover:bg-primary hover:border-primary"
