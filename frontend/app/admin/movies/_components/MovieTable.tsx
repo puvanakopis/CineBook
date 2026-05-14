@@ -36,18 +36,6 @@ export function MovieTable({
 
     return (
         <section className="rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-[#392828] shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-gray-200 dark:border-[#392828] flex items-center justify-between">
-                <div>
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">Movie catalog</h3>
-                    <p className="text-sm text-slate-500 dark:text-[#b99d9d] mt-1">
-                        Browse the current movie selection and track release status at a glance.
-                    </p>
-                </div>
-                <span className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-[#b99d9d] font-semibold">
-                    {movies.length} results
-                </span>
-            </div>
-
             <div className="overflow-x-auto">
                 <table className="min-w-full text-left border-collapse">
                     <thead className="bg-slate-50 dark:bg-[#1a0f0f]">

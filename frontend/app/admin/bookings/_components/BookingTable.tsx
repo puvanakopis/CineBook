@@ -41,80 +41,85 @@ export function BookingTable({ bookings }: BookingTableProps) {
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-[#392828]">
             {bookings.length > 0 ? (
-              bookings.map((booking) => (
-                <tr key={booking.id} className="hover:bg-slate-50/50 dark:hover:bg-[#1f1212] transition-colors relative group">
-                  <td className="p-4">
-                    <span className="text-sm font-mono font-medium text-slate-900 dark:text-white">{booking.id}</span>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="h-10 w-7 rounded bg-cover bg-center shrink-0 border border-black/10 dark:border-white/5"
-                        style={{ backgroundImage: `url("${booking.poster}")` }}
-                      />
+              bookings.map((booking) => {
+                const bookingId = booking._id || booking.id || '';
+                const displayDate = booking.dateTime ? new Date(booking.dateTime).toLocaleString() : 'N/A';
+                
+                return (
+                  <tr key={bookingId} className="hover:bg-slate-50/50 dark:hover:bg-[#1f1212] transition-colors relative group">
+                    <td className="p-4">
+                      <span className="text-sm font-mono font-medium text-slate-900 dark:text-white">{bookingId}</span>
+                    </td>
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="h-10 w-7 rounded bg-cover bg-center shrink-0 border border-black/10 dark:border-white/5"
+                          style={{ backgroundImage: `url("${booking.poster}")` }}
+                        />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">{booking.movieTitle}</span>
+                          <span className="text-[11px] text-slate-500 dark:text-[#b99d9d]">{booking.theaterName}{booking.screenId ? ` • ${booking.screenId}` : ''}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-4">
                       <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">{booking.movieTitle}</span>
-                        <span className="text-[11px] text-slate-500 dark:text-[#b99d9d]">{booking.theaterName}{booking.screenId ? ` • ${booking.screenId}` : ''}</span>
+                        <span className="text-sm font-medium text-slate-900 dark:text-white">{booking.customerName}</span>
+                        <span className="text-[11px] text-slate-500 dark:text-[#b99d9d]">{booking.customerEmail}</span>
                       </div>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium text-slate-900 dark:text-white">{booking.customerName}</span>
-                      <span className="text-[11px] text-slate-500 dark:text-[#b99d9d]">{booking.customerEmail}</span>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <span className="text-sm text-slate-600 dark:text-[#b99d9d]">{booking.dateTime}</span>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex flex-wrap gap-1 max-w-[120px]">
-                      {booking.seats.map((seatItem) => {
-                        const seatKey = typeof seatItem === 'string' ? seatItem : (seatItem.id ?? `${seatItem.row ?? ''}${seatItem.number ?? ''}`);
-                        const seatLabel = typeof seatItem === 'string' ? seatItem : `${seatItem.row ?? ''}${seatItem.number ?? ''}`;
-                        return (
-                          <span key={seatKey} className="text-[10px] bg-slate-100 dark:bg-[#3d2525] text-slate-600 dark:text-[#f8d7da] px-1.5 py-0.5 rounded border border-slate-200 dark:border-white/5 font-medium">
-                            {seatLabel}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">${booking.totalPrice.toFixed(2)}</span>
-                  </td>
-                  <td className="p-4">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusStyles[booking.status]}`}>
-                      {booking.status}
-                    </span>
-                  </td>
-                  <td className="p-4 text-right relative">
-                    <button
-                      onClick={() => setActiveMenu(activeMenu === booking.id ? null : booking.id)}
-                      className="p-1 rounded hover:bg-slate-200 dark:hover:bg-[#3d2525] text-slate-500 dark:text-[#b99d9d] transition-colors"
-                    >
-                      <MdMoreVert className="text-xl" />
-                    </button>
-
-                    {activeMenu === booking.id && (
-                      <div className="absolute right-4 top-12 w-36 bg-surface-light dark:bg-[#2b1a1a] rounded-lg shadow-xl border border-gray-200 dark:border-[#392828] z-50 overflow-hidden py-1">
-                        <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-[#b99d9d] hover:bg-slate-100 dark:hover:bg-[#3d2525] transition-colors">
-                          <MdVisibility className="text-lg text-blue-500" />
-                          View Details
-                        </button>
-                        <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-[#b99d9d] hover:bg-slate-100 dark:hover:bg-[#3d2525] transition-colors">
-                          <MdEdit className="text-lg text-amber-500" />
-                          Edit Status
-                        </button>
-                        <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
-                          <MdDelete className="text-lg" />
-                          Delete
-                        </button>
+                    </td>
+                    <td className="p-4">
+                      <span className="text-sm text-slate-600 dark:text-[#b99d9d]">{displayDate}</span>
+                    </td>
+                    <td className="p-4">
+                      <div className="flex flex-wrap gap-1 max-w-[120px]">
+                        {booking.seats?.map((seatItem, index) => {
+                          const seatKey = typeof seatItem === 'string' ? seatItem : (seatItem.id || `${seatItem.row}${seatItem.number}` || `seat-${index}`);
+                          const seatLabel = typeof seatItem === 'string' ? seatItem : `${seatItem.row || ''}${seatItem.number || ''}`;
+                          return (
+                            <span key={seatKey} className="text-[10px] bg-slate-100 dark:bg-[#3d2525] text-slate-600 dark:text-[#f8d7da] px-1.5 py-0.5 rounded border border-slate-200 dark:border-white/5 font-medium">
+                              {seatLabel}
+                            </span>
+                          );
+                        })}
                       </div>
-                    )}
-                  </td>
-                </tr>
-              ))
+                    </td>
+                    <td className="p-4">
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">${booking.totalPrice?.toFixed(2) || '0.00'}</span>
+                    </td>
+                    <td className="p-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusStyles[booking.status] || 'bg-gray-100 text-gray-800'}`}>
+                        {booking.status}
+                      </span>
+                    </td>
+                    <td className="p-4 text-right relative">
+                      <button
+                        onClick={() => setActiveMenu(activeMenu === bookingId ? null : bookingId)}
+                        className="p-1 rounded hover:bg-slate-200 dark:hover:bg-[#3d2525] text-slate-500 dark:text-[#b99d9d] transition-colors"
+                      >
+                        <MdMoreVert className="text-xl" />
+                      </button>
+  
+                      {activeMenu === bookingId && (
+                        <div className="absolute right-4 top-12 w-36 bg-surface-light dark:bg-[#2b1a1a] rounded-lg shadow-xl border border-gray-200 dark:border-[#392828] z-50 overflow-hidden py-1">
+                          <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-[#b99d9d] hover:bg-slate-100 dark:hover:bg-[#3d2525] transition-colors">
+                            <MdVisibility className="text-lg text-blue-500" />
+                            View Details
+                          </button>
+                          <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-[#b99d9d] hover:bg-slate-100 dark:hover:bg-[#3d2525] transition-colors">
+                            <MdEdit className="text-lg text-amber-500" />
+                            Edit Status
+                          </button>
+                          <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+                            <MdDelete className="text-lg" />
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
                 <td colSpan={8} className="p-12 text-center">
