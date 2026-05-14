@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { AxiosError } from "axios";
 import { authApi } from "@/services/authApi";
+
 import {
     AuthContextType,
     User,
@@ -13,7 +14,7 @@ import {
     VerifyPasswordResetRequest
 } from "@/interfaces/authInterface";
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
@@ -27,11 +28,54 @@ interface AuthProviderProps {
     children: ReactNode;
 }
 
+interface AuthContextType {
+    user: User | null;
+    isAuthenticated: boolean;
+    isLoading: boolean;
+    error: string | null;
+    requestSignupOtp: (data: SignupRequestOtpRequest) => Promise<void>;
+    verifyOtpAndSignup: (data: VerifyOtpAndSignupRequest) => Promise<void>;
+    login: (data: LoginRequest) => Promise<void>;
+    requestPasswordReset: (data: ForgotPasswordRequest) => Promise<void>;
+    verifyPasswordReset: (data: VerifyPasswordResetRequest) => Promise<void>;
+    logout: () => void;
+    clearError: () => void;
+    userInfo: {
+        firstName: string;
+        lastName: string;
+        email: string;
+        phone: string;
+        profilePicture?: string;
+        preferences: {
+            theme: string;
+            notifications: boolean;
+            favoriteGenres: string[];
+            preferredCinema: string;
+        };
+        createdAt: string;
+    } | null;
+    fetchUserInfo: () => Promise<void>;
+    updateUserInfo: (data: {
+        firstName: string;
+        lastName: string;
+        email: string;
+        phone: string;
+        preferences: {
+            theme: string;
+            notifications: boolean;
+            favoriteGenres: string[];
+            preferredCinema: string;
+        };
+    }) => Promise<void>;
+    uploadProfilePicture: (file: File) => Promise<void>;
+}
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [userInfo, setUserInfo] = useState<AuthContextType["userInfo"]>(null);
 
     useEffect(() => {
         const initializeUser = async () => {
@@ -157,6 +201,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsAuthenticated(false);
     };
 
+    const fetchUserInfoHandler = React.useCallback(async () => {
+        try {
+            const data = await authApi.fetchUserInfo();
+            setUserInfo(data);
+            setUser(data);
+        } catch (err) {
+            console.error("Error fetching user info:", err);
+        }
+    }, []);
+
+    const updateUserInfoHandler = React.useCallback(async (data: any) => {
+        try {
+            const updatedData = await authApi.updateUserInfo(data);
+            setUserInfo(updatedData);
+            setUser(updatedData);
+        } catch (err) {
+            console.error("Error updating user info:", err);
+            handleError(err);
+        }
+    }, []);
+
+    const uploadProfilePictureHandler = async (file: File) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await authApi.uploadProfilePicture(file);
+            if (response.user) {
+                setUser(response.user);
+                setUserInfo(response.user);
+            }
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -171,6 +253,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 verifyPasswordReset,
                 logout,
                 clearError,
+                userInfo,
+                fetchUserInfo: fetchUserInfoHandler,
+                updateUserInfo: updateUserInfoHandler,
+                uploadProfilePicture: uploadProfilePictureHandler,
             }}
         >
             {children}

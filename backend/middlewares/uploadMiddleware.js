@@ -19,7 +19,7 @@ const storage = (folderName) =>
         },
         filename: function (req, file, cb) {
             const ext = path.extname(file.originalname);
-            const id = req.body._id || Date.now();
+            const id = (req.user && req.user.id) || req.body._id || Date.now();
             cb(null, `${id}${ext}`);
         },
     });

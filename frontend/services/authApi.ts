@@ -109,4 +109,27 @@ export const authApi = {
         const res = await api.get("/api/auth/me");
         return res.data.user;
     },
+
+    fetchUserInfo: async (): Promise<any> => {
+        const response = await api.get("/api/auth/me");
+        return response.data.user;
+    },
+
+    updateUserInfo: async (data: any): Promise<any> => {
+        const response = await api.put("/api/auth/me", data);
+        return response.data.user;
+    },
+    uploadProfilePicture: async (file: File): Promise<any> => {
+        const formData = new FormData();
+        formData.append("profilePicture", file);
+        const response = await api.post("/api/auth/upload-dp", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data;
+    },
 };
+
+export const fetchUserInfo = authApi.fetchUserInfo;
+export const updateUserInfo = authApi.updateUserInfo;

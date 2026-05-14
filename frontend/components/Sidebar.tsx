@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import {
     IoPersonOutline,
     IoPerson,
@@ -26,6 +27,7 @@ const navItems = [
 
 export function Sidebar() {
     const pathname = usePathname();
+    const { userInfo } = useAuth();
 
     const isActive = (href: string) => {
         if (href === "/profile") return pathname === href;
@@ -34,17 +36,40 @@ export function Sidebar() {
 
     return (
         <aside className="hidden lg:flex w-72 flex-col gap-10 border-r border-[#392828]  bg-surface-dark p-8 h-[calc(100vh-65px)] sticky top-[65px] z-40">
-            <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-4 pb-6 border-b border-[#392828]/50">
-                    <div
-                        className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 ring-2 ring-primary/30"
-                        style={{ backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuCfK6ZjyVSGXNZcfDWLCCntU3naLJN3ubWzeoJtu2h-xUeocG2sv6FoSvcIRf10jqqPprvVH3bQJJli2_foHY7yps_jZ4nOM2z3kjussiHisO-uN7IdSYH9_yGa173mPucRWe3N0tuvdQQNFyh-qTh3SQ1dsN-zV7dtXDU5-F514iZBcoCBGEUMEfKe9TRp15SV3CGS9FQwoY3G8YxPxgVMABu21YqS4Jf-94XqIx13ubQ6XTMs67ImkCesSy_ixL9uB7srUIJZHfQR")` }}
-                        role="img"
-                        aria-label="User avatar"
-                    />
-                    <div className="flex flex-col overflow-hidden">
-                        <h1 className="text-white text-sm font-bold truncate">Alex Doe</h1>
-                        <p className="text-text-secondary text-[10px] truncate">alex.doe@example.com</p>
+            <div className="flex flex-col gap-5">
+                <div className="flex items-center gap-4 p-4">
+
+                    {/* Avatar */}
+                    <div className="relative">
+                        <div
+                            className="size-12 rounded-full bg-center bg-cover ring-2 ring-primary/40 shadow-md"
+                            style={{
+                                backgroundImage: `url(${userInfo?.profilePicture
+                                    ? `${process.env.NEXT_PUBLIC_API_URL}${userInfo.profilePicture}`
+                                    : "https://lh3.googleusercontent.com/aida-public/AB6AXuBtLVHRuSfBjd2mcg9wuEI_gTfwCJRim11sLijh4Zz4eLKNL_YmzkffvNm2j_iNer5JLJM0o3U4pQDjzjYVF1jbbqhD-nMJjia33G72LPBciwlTkSHlw7ddZvTQYnaQd14xHJgmMwNuWZHU46fgfgH-OcF-FStDxz-qAndtmJkKJTru9o0dRgzbNka-sJ7oFsJOX-CbzEezYAdbNMv1yILiBJCqJ2tO8abP9CCxLrZ1Lalxutp1U-hM-W9cyu_L0qyUd47ZQS3VLZ-h"
+                                    })`,
+                            }}
+                            role="img"
+                            aria-label="User avatar"
+                        />
+
+                        {/* small online indicator */}
+                        <span className="absolute bottom-0 right-0 size-3 rounded-full bg-green-500 border-2 border-[#0b0b0f]" />
+                    </div>
+
+                    {/* User Info */}
+                    <div className="flex flex-col min-w-0">
+                        <h1 className="text-white text-sm font-semibold truncate leading-tight">
+                            {userInfo?.firstName}
+                        </h1>
+                        <p className="text-text-secondary text-[11px] truncate">
+                            {userInfo?.email}
+                        </p>
+
+                        {/* optional subtle label */}
+                        <span className="mt-1 text-[10px] text-primary/70 font-medium uppercase tracking-wider">
+                            Active Account
+                        </span>
                     </div>
                 </div>
             </div>

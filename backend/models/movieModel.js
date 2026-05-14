@@ -110,7 +110,7 @@ MovieSchema.pre("save", async function () {
         const counter = await Counter.findByIdAndUpdate(
             "movie",
             { $inc: { seq: 1 } },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         );
         this._id = `movie_${String(counter.seq).padStart(2, "0")}`;
     }

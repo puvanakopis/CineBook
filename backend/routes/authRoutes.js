@@ -3,6 +3,7 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const passport = require('../config/passport');
 const { protect } = require('../middlewares/authMiddleware');
+const { uploadImage } = require('../middlewares/uploadMiddleware');
 
 // Signup & OTP
 router.post('/signup/request-otp', authController.requestOtp);
@@ -23,7 +24,9 @@ router.get(
 router.post('/forgot-password/request-otp', authController.requestPasswordReset);
 router.post('/forgot-password/verify-otp', authController.verifyPasswordResetOtp);
 
-// Get Current User
+// Get & Update Current User
 router.get('/me', protect, authController.getCurrentUser);
+router.put('/me', protect, authController.updateUserInfo);
+router.post('/upload-dp', protect, uploadImage('users').single('profilePicture'), authController.uploadProfilePicture);
 
 module.exports = router;

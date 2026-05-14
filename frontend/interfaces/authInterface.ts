@@ -1,9 +1,19 @@
 
 export interface User {
+    id: string;
     email: string;
     role: 'user' | 'admin';
     firstName: string;
     lastName: string;
+    phone: string;
+    profilePicture?: string;
+    preferences?: {
+        theme: string;
+        notifications: boolean;
+        favoriteGenres: string[];
+        preferredCinema: string;
+    };
+    createdAt: string;
 }
 
 export interface SignupRequestOtpRequest {
@@ -80,4 +90,5 @@ export interface AuthContextType extends AuthState {
     verifyPasswordReset: (data: VerifyPasswordResetRequest) => Promise<void>;
     logout: () => void;
     clearError: () => void;
+    uploadProfilePicture: (file: File) => Promise<void>;
 }

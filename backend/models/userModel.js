@@ -34,6 +34,18 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    phone: {
+        type: String
+    },
+    profilePicture: {
+        type: String
+    },
+    preferences: {
+        theme: { type: String, default: "dark" },
+        notifications: { type: Boolean, default: true },
+        favoriteGenres: [{ type: String }],
+        preferredCinema: { type: String },
+    },
 }, {
 
     timestamps: true
@@ -44,7 +56,7 @@ userSchema.pre('save', async function () {
         const counter = await Counter.findByIdAndUpdate(
             'user',
             { $inc: { seq: 1 } },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         );
         this._id = `user_${String(counter.seq).padStart(2, '0')}`;
     }

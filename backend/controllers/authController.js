@@ -113,12 +113,17 @@ exports.verifyOtpAndSignup = async (req, res) => {
         firstName: otpRecord.firstName,
         lastName: otpRecord.lastName,
         role: otpRecord.role,
+        phone: "",
+        preferences: {
+            theme: "dark",
+            notifications: true,
+        }
     });
 
     await newUser.save();
     await OTP.deleteOne({ email: email.toLowerCase() });
 
-    res.status(201).json({ message: 'Signup successful', user: { email: newUser.email, role: newUser.role, firstName: newUser.firstName, lastName: newUser.lastName } });
+    res.status(201).json({ message: 'Signup successful', user: { email: newUser.email, role: newUser.role, firstName: newUser.firstName, lastName: newUser.lastName, phone: newUser.phone, profilePicture: newUser.profilePicture, createdAt: newUser.createdAt } });
 };
 
 exports.login = async (req, res) => {
@@ -132,7 +137,7 @@ exports.login = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-    res.status(200).json({ token, user: { email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName } });
+    res.status(200).json({ token, user: { email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName, phone: user.phone, profilePicture: user.profilePicture, createdAt: user.createdAt } });
 };
 
 exports.requestPasswordReset = async (req, res) => {
@@ -194,10 +199,82 @@ exports.getCurrentUser = async (req, res) => {
                 role: user.role,
                 firstName: user.firstName,
                 lastName: user.lastName,
+                phone: user.phone,
+                profilePicture: user.profilePicture,
+                preferences: user.preferences,
+                createdAt: user.createdAt,
             },
         });
     } catch (err) {
         res.status(500).json({ message: 'Error fetching user', error: err.message });
+    }
+};
+
+
+// Update user personal information and preferences
+exports.updateUserInfo = async (req, res) => {
+    try {
+        const { firstName, lastName, phone, preferences } = req.body;
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { firstName, lastName, phone, preferences },
+            { returnDocument: 'after', runValidators: true }
+        );
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({
+            user: {
+                id: user._id,
+                email: user.email,
+                role: user.role,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                phone: user.phone,
+                profilePicture: user.profilePicture,
+                preferences: user.preferences,
+                createdAt: user.createdAt,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+};
+
+exports.uploadProfilePicture = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: "No file uploaded" });
+        }
+
+        const profilePicture = `/uploads/users/${req.file.filename}`;
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { profilePicture },
+            { returnDocument: 'after' }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "Profile picture uploaded successfully",
+            profilePicture,
+            user: {
+                id: user._id,
+                email: user.email,
+                role: user.role,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                phone: user.phone,
+                profilePicture: user.profilePicture,
+                preferences: user.preferences,
+                createdAt: user.createdAt,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
     }
 };
 
