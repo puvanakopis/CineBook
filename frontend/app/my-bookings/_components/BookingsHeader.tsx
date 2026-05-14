@@ -1,8 +1,8 @@
 'use client';
 
 interface BookingsHeaderProps {
-  activeTab: 'upcoming' | 'past' | 'cancelled';
-  setActiveTab: (tab: 'upcoming' | 'past' | 'cancelled') => void;
+  activeTab: 'confirmed' | 'completed' | 'cancelled';
+  setActiveTab: (tab: 'confirmed' | 'completed' | 'cancelled') => void;
 }
 
 export function BookingsHeader({ }: BookingsHeaderProps) {

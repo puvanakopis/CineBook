@@ -10,11 +10,11 @@ import {
 interface BookingStatsGridProps {
   total: number;
   revenue: number;
-  pending: number;
+  completed: number;
   cancelled: number;
 }
 
-export function BookingStatsGrid({ total, revenue, pending, cancelled }: BookingStatsGridProps) {
+export function BookingStatsGrid({ total, revenue, completed, cancelled }: BookingStatsGridProps) {
   const stats = [
     {
       label: 'Total Bookings',
@@ -31,11 +31,11 @@ export function BookingStatsGrid({ total, revenue, pending, cancelled }: Booking
       bgColor: 'bg-green-500/10 text-green-600',
     },
     {
-      label: 'Pending',
-      value: pending.toLocaleString(),
-      icon: MdPendingActions,
-      color: 'amber',
-      bgColor: 'bg-amber-500/10 text-amber-600',
+      label: 'Completed',
+      value: completed.toLocaleString(),
+      icon: MdConfirmationNumber, // Or another icon
+      color: 'emerald',
+      bgColor: 'bg-emerald-500/10 text-emerald-600',
     },
     {
       label: 'Cancelled',

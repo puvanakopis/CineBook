@@ -11,7 +11,7 @@ import { BiLoaderAlt } from "react-icons/bi";
 
 export default function Bookings() {
   const { myBookings, isLoading, error, getMyBookings, cancelBooking } = useBooking();
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'past' | 'cancelled'>('upcoming');
+  const [activeTab, setActiveTab] = useState<'confirmed' | 'completed' | 'cancelled'>('confirmed');
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -22,26 +22,17 @@ export default function Bookings() {
 
   const filteredBookings = useMemo(() => {
     if (!myBookings) return [];
-    
+
     let filtered = myBookings.slice();
 
-    // Filter by tab status
-    const now = new Date();
-    if (activeTab === 'upcoming') {
-      filtered = filtered.filter(booking => 
-        (booking.status === 'Confirmed' || booking.status === 'Pending') && 
-        new Date(booking.dateTime) >= now
-      );
-    } else if (activeTab === 'past') {
-      filtered = filtered.filter(booking => 
-        booking.status === 'Confirmed' && 
-        new Date(booking.dateTime) < now
-      );
+    if (activeTab === 'confirmed') {
+      filtered = filtered.filter(booking => booking.status === 'Confirmed');
+    } else if (activeTab === 'completed') {
+      filtered = filtered.filter(booking => booking.status === 'Completed');
     } else {
       filtered = filtered.filter(booking => booking.status === 'Cancelled');
     }
 
-    // Filter by search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(booking =>
@@ -67,18 +58,15 @@ export default function Bookings() {
 
   const handleModifyBooking = (bookingId: string) => {
     console.log('Modify booking:', bookingId);
-    // Implement modification logic - e.g. navigate to seat selection with existing seats
   };
 
   const handleViewTicket = (bookingId: string) => {
     console.log('View ticket:', bookingId);
-    // Implement view ticket logic - e.g. navigate to ticket page
     window.location.href = `/tickets/${bookingId}`;
   };
 
   const handleCompletePayment = (bookingId: string) => {
     console.log('Complete payment:', bookingId);
-    // Implement payment logic - e.g. navigate to payment page
     window.location.href = `/payment/${bookingId}`;
   };
 

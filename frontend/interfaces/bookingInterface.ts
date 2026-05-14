@@ -8,7 +8,7 @@ export interface Booking {
     dateTime: string;
     seats: Seat[];
     totalPrice: number;
-    status: 'Confirmed' | 'Pending' | 'Cancelled';
+    status: 'Confirmed' | 'Cancelled' | 'Completed';
     payment?: PaymentInfo;
     poster: string;
     theaterName: string;

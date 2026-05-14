@@ -30,19 +30,19 @@ const statusConfig = {
         textColor: 'text-emerald-400',
         border: 'border-emerald-500/20'
     },
-    Pending: {
-        icon: IoTime,
-        text: 'Payment Pending',
-        bg: 'bg-amber-500/10',
-        textColor: 'text-amber-400',
-        border: 'border-amber-500/20'
-    },
     Cancelled: {
         icon: IoCloseCircle,
         text: 'Cancelled',
         bg: 'bg-red-500/10',
         textColor: 'text-red-400',
         border: 'border-red-500/20'
+    },
+    Completed: {
+        icon: IoCheckmarkCircle,
+        text: 'Completed',
+        bg: 'bg-blue-500/10',
+        textColor: 'text-blue-400',
+        border: 'border-blue-500/20'
     }
 };
 
@@ -168,7 +168,7 @@ export function BookingCard({
 
                         <div className="flex flex-wrap gap-3">
 
-                            {booking.status !== 'Cancelled' && (
+                            {booking.status === 'Confirmed' && (
                                 <>
                                     <button
                                         onClick={() => onModify(bookingId)}
@@ -186,22 +186,13 @@ export function BookingCard({
                                 </>
                             )}
 
-                            {booking.status === 'Confirmed' && (
+                            {(booking.status === 'Confirmed' || booking.status === 'Completed') && (
                                 <button
                                     onClick={() => onViewTicket(bookingId)}
                                     className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold flex items-center gap-2"
                                 >
                                     <IoQrCodeOutline />
                                     Ticket
-                                </button>
-                            )}
-
-                            {booking.status === 'Pending' && (
-                                <button
-                                    onClick={() => onCompletePayment(bookingId)}
-                                    className="px-4 py-2 border border-primary text-primary rounded-lg text-sm font-bold"
-                                >
-                                    Pay Now
                                 </button>
                             )}
 

@@ -3,8 +3,8 @@
 import { IoSearchOutline } from "react-icons/io5";
 
 interface BookingFiltersProps {
-    activeTab: 'upcoming' | 'past' | 'cancelled';
-    setActiveTab: (tab: 'upcoming' | 'past' | 'cancelled') => void;
+    activeTab: 'confirmed' | 'completed' | 'cancelled';
+    setActiveTab: (tab: 'confirmed' | 'completed' | 'cancelled') => void;
     searchQuery: string;
     setSearchQuery: (query: string) => void;
 }
@@ -33,8 +33,8 @@ export function BookingFilters({
         <div className="flex flex-col md:flex-row justify-between gap-6">
 
             <div className="bg-[#1a1414] p-2 rounded-xl border border-[#392828] flex gap-2">
-                {Tab('upcoming', 'Upcoming')}
-                {Tab('past', 'Past')}
+                {Tab('confirmed', 'Confirmed')}
+                {Tab('completed', 'Completed')}
                 {Tab('cancelled', 'Cancelled')}
             </div>
 

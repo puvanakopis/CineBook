@@ -7,7 +7,7 @@ import { BookingFilters } from './_components/BookingFilters';
 import { BookingTable } from './_components/BookingTable';
 import { bookings } from '@/data/booking';
 
-const statuses = ['Confirmed', 'Pending', 'Cancelled'];
+const statuses = ['Confirmed', 'Completed', 'Cancelled'];
 
 export default function AdminBookings() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,8 +32,8 @@ export default function AdminBookings() {
   const stats = useMemo(() => {
     return {
       total: bookings.length,
-      revenue: bookings.filter(b => b.status === 'Confirmed').reduce((acc, b) => acc + b.totalPrice, 0),
-      pending: bookings.filter(b => b.status === 'Pending').length,
+      revenue: bookings.filter(b => b.status === 'Confirmed' || b.status === 'Completed').reduce((acc, b) => acc + b.totalPrice, 0),
+      completed: bookings.filter(b => b.status === 'Completed').length,
       cancelled: bookings.filter(b => b.status === 'Cancelled').length,
     };
   }, []);
@@ -45,7 +45,7 @@ export default function AdminBookings() {
       <BookingStatsGrid
         total={stats.total}
         revenue={stats.revenue}
-        pending={stats.pending}
+        completed={stats.completed}
         cancelled={stats.cancelled}
       />
 
