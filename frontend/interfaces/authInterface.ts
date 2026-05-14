@@ -14,6 +14,17 @@ export interface User {
         preferredCinema: string;
     };
     createdAt: string;
+    paymentMethods?: PaymentMethod[];
+}
+
+export interface PaymentMethod {
+    _id: string;
+    cardholderName: string;
+    cardNumber: string;
+    expiryDate: string;
+    brand: 'visa' | 'mastercard' | 'amex' | string;
+    lastFour: string;
+    isDefault: boolean;
 }
 
 export interface SignupRequestOtpRequest {
@@ -91,4 +102,7 @@ export interface AuthContextType extends AuthState {
     logout: () => void;
     clearError: () => void;
     uploadProfilePicture: (file: File) => Promise<void>;
+    addPaymentMethod: (data: Partial<PaymentMethod>) => Promise<void>;
+    updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => Promise<void>;
+    deletePaymentMethod: (id: string) => Promise<void>;
 }

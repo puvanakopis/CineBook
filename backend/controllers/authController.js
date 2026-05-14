@@ -285,3 +285,88 @@ exports.googleCallback = async (req, res) => {
 
     return issueAuthCookieAndRedirect(res, req.user);
 };
+
+// --- Payment Methods ---
+
+exports.addPaymentMethod = async (req, res) => {
+    try {
+        const { cardholderName, cardNumber, expiryDate, brand, lastFour } = req.body;
+        const user = await User.findById(req.user.id);
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const newMethod = {
+            cardholderName,
+            cardNumber,
+            expiryDate,
+            brand,
+            lastFour,
+            isDefault: user.paymentMethods.length === 0
+        };
+
+        user.paymentMethods.push(newMethod);
+        await user.save();
+
+        res.status(201).json({ message: "Payment method added", paymentMethods: user.paymentMethods });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+exports.getPaymentMethods = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.status(200).json({ paymentMethods: user.paymentMethods });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+exports.updatePaymentMethod = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { cardholderName, expiryDate, isDefault } = req.body;
+        const user = await User.findById(req.user.id);
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const method = user.paymentMethods.id(id);
+        if (!method) return res.status(404).json({ message: "Payment method not found" });
+
+        if (cardholderName) method.cardholderName = cardholderName;
+        if (expiryDate) method.expiryDate = expiryDate;
+        
+        if (isDefault) {
+            user.paymentMethods.forEach(m => m.isDefault = false);
+            method.isDefault = true;
+        }
+
+        await user.save();
+        res.status(200).json({ message: "Payment method updated", paymentMethods: user.paymentMethods });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+exports.deletePaymentMethod = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(req.user.id);
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        user.paymentMethods = user.paymentMethods.filter(m => m._id.toString() !== id);
+        
+        // If we deleted the default one, set the first remaining one as default
+        if (user.paymentMethods.length > 0 && !user.paymentMethods.some(m => m.isDefault)) {
+            user.paymentMethods[0].isDefault = true;
+        }
+
+        await user.save();
+        res.status(200).json({ message: "Payment method deleted", paymentMethods: user.paymentMethods });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};

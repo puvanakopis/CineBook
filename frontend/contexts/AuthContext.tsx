@@ -68,6 +68,9 @@ interface AuthContextType {
         };
     }) => Promise<void>;
     uploadProfilePicture: (file: File) => Promise<void>;
+    addPaymentMethod: (data: any) => Promise<void>;
+    updatePaymentMethod: (id: string, data: any) => Promise<void>;
+    deletePaymentMethod: (id: string) => Promise<void>;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -239,6 +242,54 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
+    const addPaymentMethodHandler = async (data: any) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await authApi.addPaymentMethod(data);
+            if (response.paymentMethods) {
+                setUser(prev => prev ? { ...prev, paymentMethods: response.paymentMethods } : null);
+            }
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const updatePaymentMethodHandler = async (id: string, data: any) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await authApi.updatePaymentMethod(id, data);
+            if (response.paymentMethods) {
+                setUser(prev => prev ? { ...prev, paymentMethods: response.paymentMethods } : null);
+            }
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const deletePaymentMethodHandler = async (id: string) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await authApi.deletePaymentMethod(id);
+            if (response.paymentMethods) {
+                setUser(prev => prev ? { ...prev, paymentMethods: response.paymentMethods } : null);
+            }
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -257,6 +308,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 fetchUserInfo: fetchUserInfoHandler,
                 updateUserInfo: updateUserInfoHandler,
                 uploadProfilePicture: uploadProfilePictureHandler,
+                addPaymentMethod: addPaymentMethodHandler,
+                updatePaymentMethod: updatePaymentMethodHandler,
+                deletePaymentMethod: deletePaymentMethodHandler,
             }}
         >
             {children}

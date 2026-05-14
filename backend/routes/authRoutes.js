@@ -29,4 +29,10 @@ router.get('/me', protect, authController.getCurrentUser);
 router.put('/me', protect, authController.updateUserInfo);
 router.post('/upload-dp', protect, uploadImage('users').single('profilePicture'), authController.uploadProfilePicture);
 
+// Payment Methods
+router.post('/payment-methods', protect, authController.addPaymentMethod);
+router.get('/payment-methods', protect, authController.getPaymentMethods);
+router.put('/payment-methods/:id', protect, authController.updatePaymentMethod);
+router.delete('/payment-methods/:id', protect, authController.deletePaymentMethod);
+
 module.exports = router;

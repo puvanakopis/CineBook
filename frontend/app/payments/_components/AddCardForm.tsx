@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from "react";
-import { IoAddCircleOutline } from "react-icons/io5";
+import { useState, useEffect } from "react";
+import { IoAddCircleOutline, IoCloseCircleOutline } from "react-icons/io5";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { MdOutlineLocalOffer } from "react-icons/md";
 
@@ -15,9 +15,11 @@ export interface CardFormData {
 
 interface AddCardFormProps {
     onAddCard: (cardData: CardFormData) => void;
+    initialData?: CardFormData | null;
+    onCancel?: () => void;
 }
 
-export function AddCardForm({ onAddCard }: AddCardFormProps) {
+export function AddCardForm({ onAddCard, initialData, onCancel }: AddCardFormProps) {
 
     const [formData, setFormData] = useState<CardFormData>({
         cardholderName: '',
@@ -27,17 +29,33 @@ export function AddCardForm({ onAddCard }: AddCardFormProps) {
         saveCard: false,
     });
 
+    useEffect(() => {
+        if (initialData) {
+            setFormData(initialData);
+        } else {
+            setFormData({
+                cardholderName: '',
+                cardNumber: '',
+                expiryDate: '',
+                cvv: '',
+                saveCard: false,
+            });
+        }
+    }, [initialData]);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onAddCard(formData);
 
-        setFormData({
-            cardholderName: '',
-            cardNumber: '',
-            expiryDate: '',
-            cvv: '',
-            saveCard: false,
-        });
+        if (!initialData) {
+            setFormData({
+                cardholderName: '',
+                cardNumber: '',
+                expiryDate: '',
+                cvv: '',
+                saveCard: false,
+            });
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,12 +90,27 @@ export function AddCardForm({ onAddCard }: AddCardFormProps) {
         <section>
 
             {/* Header */}
-            <div className="flex items-center gap-3 mb-8">
-                <IoAddCircleOutline className="text-primary text-xl" />
+            <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                    {initialData ? (
+                        <IoCloseCircleOutline className="text-primary text-xl" />
+                    ) : (
+                        <IoAddCircleOutline className="text-primary text-xl" />
+                    )}
 
-                <h2 className="text-xl font-bold text-white tracking-wider">
-                    Add Payment Method
-                </h2>
+                    <h2 className="text-xl font-bold text-white tracking-wider">
+                        {initialData ? 'Edit Payment Method' : 'Add Payment Method'}
+                    </h2>
+                </div>
+
+                {initialData && onCancel && (
+                    <button
+                        onClick={onCancel}
+                        className="text-text-secondary hover:text-white transition-colors text-sm font-medium"
+                    >
+                        Cancel Edit
+                    </button>
+                )}
             </div>
 
             {/* Container */}
@@ -181,7 +214,7 @@ export function AddCardForm({ onAddCard }: AddCardFormProps) {
                             type="submit"
                             className="px-6 py-3 rounded-xl bg-primary hover:bg-red-600 text-white text-sm font-semibold tracking-wide shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5"
                         >
-                            Add Payment Method
+                            {initialData ? 'Update Payment Method' : 'Add Payment Method'}
                         </button>
                     </div>
 

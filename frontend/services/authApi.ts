@@ -129,6 +129,22 @@ export const authApi = {
         });
         return response.data;
     },
+    addPaymentMethod: async (data: any): Promise<any> => {
+        const response = await api.post("/api/auth/payment-methods", data);
+        return response.data;
+    },
+    getPaymentMethods: async (): Promise<any> => {
+        const response = await api.get("/api/auth/payment-methods");
+        return response.data;
+    },
+    updatePaymentMethod: async (id: string, data: any): Promise<any> => {
+        const response = await api.put(`/api/auth/payment-methods/${id}`, data);
+        return response.data;
+    },
+    deletePaymentMethod: async (id: string): Promise<any> => {
+        const response = await api.delete(`/api/auth/payment-methods/${id}`);
+        return response.data;
+    },
 };
 
 export const fetchUserInfo = authApi.fetchUserInfo;

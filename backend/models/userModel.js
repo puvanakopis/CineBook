@@ -41,11 +41,47 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     preferences: {
-        theme: { type: String, default: "dark" },
-        notifications: { type: Boolean, default: true },
-        favoriteGenres: [{ type: String }],
-        preferredCinema: { type: String },
+        theme: {
+            type: String,
+            default: "dark"
+        },
+        notifications: {
+            type: Boolean,
+            default: true
+        },
+        favoriteGenres: [{
+            type: String
+        }],
+        preferredCinema: {
+            type: String
+        },
     },
+    paymentMethods: [{
+        cardholderName: {
+            type: String,
+            required: true
+        },
+        cardNumber: {
+            type: String,
+            required: true
+        },
+        expiryDate: {
+            type: String,
+            required: true
+        },
+        brand: {
+            type: String,
+            required: true
+        },
+        lastFour: {
+            type: String,
+            required: true
+        },
+        isDefault: {
+            type: Boolean,
+            default: false
+        }
+    }]
 }, {
 
     timestamps: true
