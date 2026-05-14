@@ -56,10 +56,6 @@ export default function Bookings() {
     }
   };
 
-  const handleModifyBooking = (bookingId: string) => {
-    console.log('Modify booking:', bookingId);
-  };
-
   const handleViewTicket = (bookingId: string) => {
     console.log('View ticket:', bookingId);
     window.location.href = `/tickets/${bookingId}`;
@@ -102,7 +98,6 @@ export default function Bookings() {
               <BookingList
                 bookings={filteredBookings}
                 onCancelBooking={handleCancelBooking}
-                onModifyBooking={handleModifyBooking}
                 onViewTicket={handleViewTicket}
                 onCompletePayment={handleCompletePayment}
               />

@@ -4,7 +4,6 @@ import { BookingCard } from "./BookingCard";
 interface BookingListProps {
   bookings: Booking[];
   onCancelBooking: (id: string) => void;
-  onModifyBooking: (id: string) => void;
   onViewTicket: (id: string) => void;
   onCompletePayment: (id: string) => void;
 }
@@ -12,7 +11,6 @@ interface BookingListProps {
 export function BookingList({
   bookings,
   onCancelBooking,
-  onModifyBooking,
   onViewTicket,
   onCompletePayment
 }: BookingListProps) {
@@ -25,7 +23,6 @@ export function BookingList({
           key={booking.id}
           booking={booking}
           onCancel={onCancelBooking}
-          onModify={onModifyBooking}
           onViewTicket={onViewTicket}
           onCompletePayment={onCompletePayment}
         />

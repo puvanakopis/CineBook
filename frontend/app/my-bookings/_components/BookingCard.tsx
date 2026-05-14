@@ -17,7 +17,6 @@ import { getImage } from "@/utils/imageUrl";
 interface BookingCardProps {
     booking: Booking;
     onCancel: (id: string) => void;
-    onModify: (id: string) => void;
     onViewTicket: (id: string) => void;
     onCompletePayment: (id: string) => void;
 }
@@ -49,12 +48,11 @@ const statusConfig = {
 export function BookingCard({
     booking,
     onCancel,
-    onModify,
     onViewTicket,
     onCompletePayment
 }: BookingCardProps) {
 
-    const status = statusConfig[booking.status] || statusConfig.Pending;
+    const status = statusConfig[booking.status] || statusConfig.Confirmed;
     const StatusIcon = status.icon;
 
     const seatsLabel = Array.isArray(booking.seats)
@@ -169,21 +167,12 @@ export function BookingCard({
                         <div className="flex flex-wrap gap-3">
 
                             {booking.status === 'Confirmed' && (
-                                <>
-                                    <button
-                                        onClick={() => onModify(bookingId)}
-                                        className="text-sm text-text-secondary hover:text-white"
-                                    >
-                                        Modify
-                                    </button>
-
-                                    <button
-                                        onClick={() => onCancel(bookingId)}
-                                        className="text-sm text-primary hover:text-red-400"
-                                    >
-                                        Cancel
-                                    </button>
-                                </>
+                                <button
+                                    onClick={() => onCancel(bookingId)}
+                                    className="text-sm text-primary hover:text-red-400"
+                                >
+                                    Cancel
+                                </button>
                             )}
 
                             {(booking.status === 'Confirmed' || booking.status === 'Completed') && (
