@@ -11,6 +11,8 @@ import {
     ForgotPasswordResponse,
     VerifyPasswordResetRequest,
     VerifyPasswordResetResponse,
+    UpdatePasswordRequest,
+    DeactivateAccountResponse,
 } from "@/interfaces/authInterface";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -143,6 +145,14 @@ export const authApi = {
     },
     deletePaymentMethod: async (id: string): Promise<any> => {
         const response = await api.delete(`/api/auth/payment-methods/${id}`);
+        return response.data;
+    },
+    updatePassword: async (data: UpdatePasswordRequest): Promise<{ message: string }> => {
+        const response = await api.put<{ message: string }>("/api/auth/update-password", data);
+        return response.data;
+    },
+    deactivateAccount: async (): Promise<DeactivateAccountResponse> => {
+        const response = await api.post<DeactivateAccountResponse>("/api/auth/deactivate-account");
         return response.data;
     },
 };

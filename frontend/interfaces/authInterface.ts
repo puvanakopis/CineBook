@@ -80,6 +80,15 @@ export interface VerifyPasswordResetResponse {
     message: string;
 }
 
+export interface UpdatePasswordRequest {
+    currentPassword: string;
+    newPassword: string;
+}
+
+export interface DeactivateAccountResponse {
+    message: string;
+}
+
 export interface AuthResponse {
     success: boolean;
     message?: string;
@@ -105,4 +114,6 @@ export interface AuthContextType extends AuthState {
     addPaymentMethod: (data: Partial<PaymentMethod>) => Promise<void>;
     updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => Promise<void>;
     deletePaymentMethod: (id: string) => Promise<void>;
+    updatePassword: (data: UpdatePasswordRequest) => Promise<void>;
+    deactivateAccount: () => Promise<void>;
 }

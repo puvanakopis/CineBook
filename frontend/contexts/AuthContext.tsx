@@ -11,7 +11,8 @@ import {
     VerifyOtpAndSignupRequest,
     LoginRequest,
     ForgotPasswordRequest,
-    VerifyPasswordResetRequest
+    VerifyPasswordResetRequest,
+    UpdatePasswordRequest,
 } from "@/interfaces/authInterface";
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -255,6 +256,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
+    const updatePasswordHandler = async (data: UpdatePasswordRequest) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            await authApi.updatePassword(data);
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const deactivateAccountHandler = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            await authApi.deactivateAccount();
+            logout();
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -276,6 +304,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 addPaymentMethod: addPaymentMethodHandler,
                 updatePaymentMethod: updatePaymentMethodHandler,
                 deletePaymentMethod: deletePaymentMethodHandler,
+                updatePassword: updatePasswordHandler,
+                deactivateAccount: deactivateAccountHandler,
             }}
         >
             {children}

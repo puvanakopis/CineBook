@@ -4,10 +4,12 @@ import { IoWarningOutline } from "react-icons/io5";
 
 interface AccountManagementProps {
     onDeactivateAccount: () => void;
+    isLoading?: boolean;
 }
 
 export function AccountManagement({
     onDeactivateAccount,
+    isLoading = false,
 }: AccountManagementProps) {
 
     return (
@@ -56,9 +58,10 @@ export function AccountManagement({
                         <button
                             type="button"
                             onClick={onDeactivateAccount}
-                            className="px-6 py-3 rounded-xl border border-[#4a2f2f] bg-[#241818] text-red-300 hover:text-white hover:bg-red-500/20 hover:border-red-500/30 text-sm font-semibold tracking-wide transition-all duration-300"
+                            disabled={isLoading}
+                            className={`px-6 py-3 rounded-xl border border-[#4a2f2f] bg-[#241818] text-red-300 hover:text-white hover:bg-red-500/20 hover:border-red-500/30 text-sm font-semibold tracking-wide transition-all duration-300 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
                         >
-                            Deactivate Account
+                            {isLoading ? 'Deactivating...' : 'Deactivate Account'}
                         </button>
 
                     </div>

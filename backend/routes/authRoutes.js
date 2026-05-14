@@ -35,4 +35,8 @@ router.get('/payment-methods', protect, authController.getPaymentMethods);
 router.put('/payment-methods/:id', protect, authController.updatePaymentMethod);
 router.delete('/payment-methods/:id', protect, authController.deletePaymentMethod);
 
+// Security
+router.put('/update-password', protect, authController.updatePassword);
+router.post('/deactivate-account', protect, authController.deactivateAccount);
+
 module.exports = router;

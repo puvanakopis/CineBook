@@ -145,6 +145,10 @@ exports.login = async (req, res) => {
     const user = await getUserByEmail(email);
     if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
+    if (user.isActive === false) {
+        return res.status(401).json({ message: 'Account is deactivated' });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
@@ -392,6 +396,49 @@ exports.deletePaymentMethod = async (req, res) => {
 
         await user.save();
         res.status(200).json({ message: "Payment method deleted", paymentMethods: user.paymentMethods });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+exports.updatePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const Model = getModelByRole(req.user.role);
+        const user = await Model.findById(req.user._id || req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: "Account not found" });
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Incorrect current password" });
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+exports.deactivateAccount = async (req, res) => {
+    try {
+        const Model = getModelByRole(req.user.role);
+        const user = await Model.findByIdAndUpdate(
+            req.user._id || req.user.id,
+            { isActive: false },
+            { returnDocument: 'after' }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: "Account not found" });
+        }
+
+        res.status(200).json({ message: "Account deactivated successfully" });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }

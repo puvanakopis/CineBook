@@ -6,6 +6,7 @@ import { ProfileHero } from "./_components/ProfileHero";
 import { PersonalInfoForm } from "./_components/PersonalInfoForm";
 import { PreferencesSection } from "./_components/PreferencesSection";
 import { AuthContext } from "@/contexts/AuthContext";
+import { toast } from "react-hot-toast";
 
 export default function Profile() {
   const { userInfo, fetchUserInfo, updateUserInfo } = useContext(AuthContext);
@@ -15,7 +16,13 @@ export default function Profile() {
   }, [fetchUserInfo]);
 
   const handleUpdate = async (data: any) => {
-    await updateUserInfo(data);
+    try {
+      await updateUserInfo(data);
+      toast.success("Profile updated successfully");
+    } catch (err) {
+      toast.error("Failed to update profile");
+      console.error("Update profile error:", err);
+    }
   };
 
   return (

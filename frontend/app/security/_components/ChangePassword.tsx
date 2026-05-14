@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { IoLockClosedOutline } from "react-icons/io5";
+import { IoLockClosedOutline, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 interface ChangePasswordProps {
     onUpdatePassword: (data: {
@@ -9,10 +9,12 @@ interface ChangePasswordProps {
         newPassword: string;
         confirmPassword: string;
     }) => void;
+    isLoading?: boolean;
 }
 
 export function ChangePassword({
     onUpdatePassword,
+    isLoading = false,
 }: ChangePasswordProps) {
 
     const [formData, setFormData] = useState({
@@ -20,6 +22,19 @@ export function ChangePassword({
         newPassword: '',
         confirmPassword: '',
     });
+
+    const [showPasswords, setShowPasswords] = useState({
+        current: false,
+        new: false,
+        confirm: false,
+    });
+
+    const togglePasswordVisibility = (field: 'current' | 'new' | 'confirm') => {
+        setShowPasswords(prev => ({
+            ...prev,
+            [field]: !prev[field]
+        }));
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -70,14 +85,23 @@ export function ChangePassword({
                                 </h4>
                             </div>
 
-                            <input
-                                type="password"
-                                name="currentPassword"
-                                value={formData.currentPassword}
-                                onChange={handleChange}
-                                placeholder="Enter your current password"
-                                className="w-full rounded-xl bg-[#1a1414] border border-[#392828] text-white px-4 py-3 text-sm focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-text-secondary/40"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPasswords.current ? "text" : "password"}
+                                    name="currentPassword"
+                                    value={formData.currentPassword}
+                                    onChange={handleChange}
+                                    placeholder="Enter your current password"
+                                    className="w-full rounded-xl bg-[#1a1414] border border-[#392828] text-white px-4 py-3 text-sm focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-text-secondary/40 pr-12"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => togglePasswordVisibility('current')}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary hover:text-white transition-colors"
+                                >
+                                    {showPasswords.current ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
+                                </button>
+                            </div>
 
                         </div>
 
@@ -91,14 +115,23 @@ export function ChangePassword({
                                     </h4>
                                 </div>
 
-                                <input
-                                    type="password"
-                                    name="newPassword"
-                                    value={formData.newPassword}
-                                    onChange={handleChange}
-                                    placeholder="Enter new password"
-                                    className="w-full rounded-xl bg-[#1a1414] border border-[#392828] text-white px-4 py-3 text-sm focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-text-secondary/40"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPasswords.new ? "text" : "password"}
+                                        name="newPassword"
+                                        value={formData.newPassword}
+                                        onChange={handleChange}
+                                        placeholder="Enter new password"
+                                        className="w-full rounded-xl bg-[#1a1414] border border-[#392828] text-white px-4 py-3 text-sm focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-text-secondary/40 pr-12"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => togglePasswordVisibility('new')}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary hover:text-white transition-colors"
+                                    >
+                                        {showPasswords.new ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
+                                    </button>
+                                </div>
 
                             </div>
 
@@ -110,14 +143,23 @@ export function ChangePassword({
                                     </h4>
                                 </div>
 
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    placeholder="Confirm new password"
-                                    className="w-full rounded-xl bg-[#1a1414] border border-[#392828] text-white px-4 py-3 text-sm focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-text-secondary/40"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPasswords.confirm ? "text" : "password"}
+                                        name="confirmPassword"
+                                        value={formData.confirmPassword}
+                                        onChange={handleChange}
+                                        placeholder="Confirm new password"
+                                        className="w-full rounded-xl bg-[#1a1414] border border-[#392828] text-white px-4 py-3 text-sm focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-text-secondary/40 pr-12"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => togglePasswordVisibility('confirm')}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary hover:text-white transition-colors"
+                                    >
+                                        {showPasswords.confirm ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
+                                    </button>
+                                </div>
 
                             </div>
 
@@ -129,9 +171,10 @@ export function ChangePassword({
 
                         <button
                             type="submit"
-                            className="px-6 py-3 rounded-xl bg-primary hover:bg-red-600 text-white text-sm font-semibold tracking-wide shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5"
+                            disabled={isLoading}
+                            className={`px-6 py-3 rounded-xl bg-primary hover:bg-red-600 text-white text-sm font-semibold tracking-wide shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
                         >
-                            Update Password
+                            {isLoading ? 'Updating...' : 'Update Password'}
                         </button>
 
                     </div>

@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { IoCameraOutline, IoMailOutline, IoCalendarOutline } from "react-icons/io5";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "react-hot-toast";
 
 export function ProfileHero() {
     const { userInfo, uploadProfilePicture } = useAuth();
@@ -29,8 +30,16 @@ export function ProfileHero() {
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            const uploadPromise = uploadProfilePicture(file);
+            
+            toast.promise(uploadPromise, {
+                loading: 'Uploading profile picture...',
+                success: 'Profile picture updated!',
+                error: 'Failed to upload profile picture',
+            });
+
             try {
-                await uploadProfilePicture(file);
+                await uploadPromise;
             } catch (err) {
                 console.error("Failed to upload profile picture:", err);
             }
