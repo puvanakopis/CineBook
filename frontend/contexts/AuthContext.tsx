@@ -28,57 +28,12 @@ interface AuthProviderProps {
     children: ReactNode;
 }
 
-interface AuthContextType {
-    user: User | null;
-    isAuthenticated: boolean;
-    isLoading: boolean;
-    error: string | null;
-    requestSignupOtp: (data: SignupRequestOtpRequest) => Promise<void>;
-    verifyOtpAndSignup: (data: VerifyOtpAndSignupRequest) => Promise<void>;
-    login: (data: LoginRequest) => Promise<void>;
-    requestPasswordReset: (data: ForgotPasswordRequest) => Promise<void>;
-    verifyPasswordReset: (data: VerifyPasswordResetRequest) => Promise<void>;
-    logout: () => void;
-    clearError: () => void;
-    userInfo: {
-        firstName: string;
-        lastName: string;
-        email: string;
-        phone: string;
-        profilePicture?: string;
-        preferences: {
-            theme: string;
-            notifications: boolean;
-            favoriteGenres: string[];
-            preferredCinema: string;
-        };
-        createdAt: string;
-    } | null;
-    fetchUserInfo: () => Promise<void>;
-    updateUserInfo: (data: {
-        firstName: string;
-        lastName: string;
-        email: string;
-        phone: string;
-        preferences: {
-            theme: string;
-            notifications: boolean;
-            favoriteGenres: string[];
-            preferredCinema: string;
-        };
-    }) => Promise<void>;
-    uploadProfilePicture: (file: File) => Promise<void>;
-    addPaymentMethod: (data: any) => Promise<void>;
-    updatePaymentMethod: (id: string, data: any) => Promise<void>;
-    deletePaymentMethod: (id: string) => Promise<void>;
-}
-
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [userInfo, setUserInfo] = useState<AuthContextType["userInfo"]>(null);
+    const [userInfo, setUserInfo] = useState<User | null>(null);
 
     useEffect(() => {
         const initializeUser = async () => {
@@ -89,6 +44,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 if (isAuth) {
                     const userData = await authApi.getCurrentUser();
                     setUser(userData);
+                    setUserInfo(userData);
                 }
             } catch (err) {
                 console.error("Error fetching user data:", err);
@@ -143,6 +99,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
             if (response.token && response.user) {
                 setUser(response.user);
+                setUserInfo(response.user);
                 setIsAuthenticated(true);
             }
         } catch (err) {
@@ -160,6 +117,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setError(null);
             const response = await authApi.login(data);
             setUser(response.user);
+            setUserInfo(response.user);
             setIsAuthenticated(true);
         } catch (err) {
             handleError(err);
@@ -201,6 +159,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const logout = () => {
         authApi.logout();
         setUser(null);
+        setUserInfo(null);
         setIsAuthenticated(false);
     };
 
@@ -248,7 +207,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setError(null);
             const response = await authApi.addPaymentMethod(data);
             if (response.paymentMethods) {
-                setUser(prev => prev ? { ...prev, paymentMethods: response.paymentMethods } : null);
+                const updatedUser = user ? { ...user, paymentMethods: response.paymentMethods } : null;
+                setUser(updatedUser);
+                setUserInfo(updatedUser);
             }
         } catch (err) {
             handleError(err);
@@ -264,7 +225,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setError(null);
             const response = await authApi.updatePaymentMethod(id, data);
             if (response.paymentMethods) {
-                setUser(prev => prev ? { ...prev, paymentMethods: response.paymentMethods } : null);
+                const updatedUser = user ? { ...user, paymentMethods: response.paymentMethods } : null;
+                setUser(updatedUser);
+                setUserInfo(updatedUser);
             }
         } catch (err) {
             handleError(err);
@@ -280,7 +243,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setError(null);
             const response = await authApi.deletePaymentMethod(id);
             if (response.paymentMethods) {
-                setUser(prev => prev ? { ...prev, paymentMethods: response.paymentMethods } : null);
+                const updatedUser = user ? { ...user, paymentMethods: response.paymentMethods } : null;
+                setUser(updatedUser);
+                setUserInfo(updatedUser);
             }
         } catch (err) {
             handleError(err);

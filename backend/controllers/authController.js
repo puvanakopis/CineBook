@@ -123,7 +123,19 @@ exports.verifyOtpAndSignup = async (req, res) => {
     await newUser.save();
     await OTP.deleteOne({ email: email.toLowerCase() });
 
-    res.status(201).json({ message: 'Signup successful', user: { email: newUser.email, role: newUser.role, firstName: newUser.firstName, lastName: newUser.lastName, phone: newUser.phone, profilePicture: newUser.profilePicture, createdAt: newUser.createdAt } });
+    res.status(201).json({ 
+        message: 'Signup successful', 
+        user: { 
+            email: newUser.email, 
+            role: newUser.role, 
+            firstName: newUser.firstName, 
+            lastName: newUser.lastName, 
+            phone: newUser.phone, 
+            profilePicture: newUser.profilePicture, 
+            createdAt: newUser.createdAt,
+            paymentMethods: newUser.paymentMethods 
+        } 
+    });
 };
 
 exports.login = async (req, res) => {
@@ -137,7 +149,19 @@ exports.login = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-    res.status(200).json({ token, user: { email: user.email, role: user.role, firstName: user.firstName, lastName: user.lastName, phone: user.phone, profilePicture: user.profilePicture, createdAt: user.createdAt } });
+    res.status(200).json({ 
+        token, 
+        user: { 
+            email: user.email, 
+            role: user.role, 
+            firstName: user.firstName, 
+            lastName: user.lastName, 
+            phone: user.phone, 
+            profilePicture: user.profilePicture, 
+            createdAt: user.createdAt,
+            paymentMethods: user.paymentMethods 
+        } 
+    });
 };
 
 exports.requestPasswordReset = async (req, res) => {
@@ -203,6 +227,7 @@ exports.getCurrentUser = async (req, res) => {
                 profilePicture: user.profilePicture,
                 preferences: user.preferences,
                 createdAt: user.createdAt,
+                paymentMethods: user.paymentMethods || [],
             },
         });
     } catch (err) {
@@ -234,6 +259,7 @@ exports.updateUserInfo = async (req, res) => {
                 profilePicture: user.profilePicture,
                 preferences: user.preferences,
                 createdAt: user.createdAt,
+                paymentMethods: user.paymentMethods,
             },
         });
     } catch (error) {
@@ -271,6 +297,7 @@ exports.uploadProfilePicture = async (req, res) => {
                 profilePicture: user.profilePicture,
                 preferences: user.preferences,
                 createdAt: user.createdAt,
+                paymentMethods: user.paymentMethods,
             },
         });
     } catch (error) {
@@ -315,10 +342,10 @@ exports.addPaymentMethod = async (req, res) => {
 
 exports.getPaymentMethods = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
+        const user = req.user;
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        res.status(200).json({ paymentMethods: user.paymentMethods });
+        res.status(200).json({ paymentMethods: user.paymentMethods || [] });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
@@ -359,7 +386,6 @@ exports.deletePaymentMethod = async (req, res) => {
 
         user.paymentMethods = user.paymentMethods.filter(m => m._id.toString() !== id);
         
-        // If we deleted the default one, set the first remaining one as default
         if (user.paymentMethods.length > 0 && !user.paymentMethods.some(m => m.isDefault)) {
             user.paymentMethods[0].isDefault = true;
         }
@@ -369,4 +395,4 @@ exports.deletePaymentMethod = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-};
+};
