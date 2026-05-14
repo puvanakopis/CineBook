@@ -23,12 +23,19 @@ const bookingSchema = new mongoose.Schema({
     _id: {
         type: String
     },
-    movieId: { type: String, ref: 'Movie' },
+    movieId: {
+        type:
+            String,
+        ref: 'Movie'
+    },
     movieTitle: {
         type: String,
         required: true
     },
-    theaterId: { type: String, ref: 'Theater' },
+    theaterId: {
+        type: String,
+        ref: 'Theater'
+    },
     customerName: {
         type: String,
         required: true
@@ -50,10 +57,20 @@ const bookingSchema = new mongoose.Schema({
         required: true
     },
     payment: {
-        method: { type: String },
-        transactionId: { type: String },
-        amount: { type: Number },
-        status: { type: String, enum: ['Paid', 'Pending', 'Failed'], default: 'Pending' },
+        method: {
+            type: String
+        },
+        transactionId: {
+            type: String
+        },
+        amount: {
+            type: Number
+        },
+        status: {
+            type: String,
+            enum: ['Paid', 'Pending', 'Failed'],
+            default: 'Pending'
+        },
         provider: { type: String }
     },
     status: {
@@ -71,6 +88,15 @@ const bookingSchema = new mongoose.Schema({
         type: String
     },
     showTime: {
+        type: String
+    },
+    genres: {
+        type: [String]
+    },
+    duration: {
+        type: String
+    },
+    format: {
         type: String
     },
     user: { type: String, ref: 'User' }

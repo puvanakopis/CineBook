@@ -1,21 +1,5 @@
-'use client';
-
+import { Booking } from "@/interfaces/bookingInterface";
 import { BookingCard } from "./BookingCard";
-
-interface Booking {
-  id: string;
-  movieTitle: string;
-  genres: string[];
-  duration: string;
-  poster: string;
-  date: string;
-  time: string;
-  theater: string;
-  seats: string[];
-  status: 'confirmed' | 'pending' | 'cancelled';
-  format: string;
-  reference: string;
-}
 
 interface BookingListProps {
   bookings: Booking[];

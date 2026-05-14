@@ -16,7 +16,10 @@ exports.createBooking = async (req, res) => {
             theaterId,
             theaterName,
             screenId,
-            showTime
+            showTime,
+            genres,
+            duration,
+            format
         } = req.body;
 
         if (!seats || !Array.isArray(seats) || seats.length === 0) {
@@ -39,7 +42,10 @@ exports.createBooking = async (req, res) => {
             theaterId,
             theaterName,
             screenId,
-            showTime
+            showTime,
+            genres,
+            duration,
+            format
         });
 
         if (req.user && req.user._id) {
@@ -81,7 +87,15 @@ exports.getBookings = async (req, res) => {
 exports.getMyBookings = async (req, res) => {
     try {
         if (!req.user || !req.user._id) return res.status(401).json({ message: 'Not authenticated' });
-        const bookings = await Booking.find({ user: req.user._id }).sort({ createdAt: -1 });
+        
+        // Search by user ID OR customerEmail (to catch legacy bookings or ones created without session)
+        const bookings = await Booking.find({ 
+            $or: [
+                { user: req.user._id },
+                { customerEmail: req.user.email }
+            ]
+        }).sort({ createdAt: -1 });
+        
         res.json(bookings);
     } catch (err) {
         console.error(err);

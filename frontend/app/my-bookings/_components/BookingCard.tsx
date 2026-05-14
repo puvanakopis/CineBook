@@ -11,21 +11,8 @@ import {
     IoCloseCircle
 } from "react-icons/io5";
 import { MdOutlineEventSeat } from "react-icons/md";
-
-interface Booking {
-    id: string;
-    movieTitle: string;
-    genres: string[];
-    duration: string;
-    poster: string;
-    date: string;
-    time: string;
-    theater: string;
-    seats: Array<string | { id?: string; row?: string; number?: number }>;
-    status: 'confirmed' | 'pending' | 'cancelled';
-    format: string;
-    reference: string;
-}
+import { Booking } from "@/interfaces/bookingInterface";
+import { getImage } from "@/utils/imageUrl";
 
 interface BookingCardProps {
     booking: Booking;
@@ -36,21 +23,21 @@ interface BookingCardProps {
 }
 
 const statusConfig = {
-    confirmed: {
+    Confirmed: {
         icon: IoCheckmarkCircle,
         text: 'Confirmed',
         bg: 'bg-emerald-500/10',
         textColor: 'text-emerald-400',
         border: 'border-emerald-500/20'
     },
-    pending: {
+    Pending: {
         icon: IoTime,
         text: 'Payment Pending',
         bg: 'bg-amber-500/10',
         textColor: 'text-amber-400',
         border: 'border-amber-500/20'
     },
-    cancelled: {
+    Cancelled: {
         icon: IoCloseCircle,
         text: 'Cancelled',
         bg: 'bg-red-500/10',
@@ -67,15 +54,29 @@ export function BookingCard({
     onCompletePayment
 }: BookingCardProps) {
 
-    const status = statusConfig[booking.status];
+    const status = statusConfig[booking.status] || statusConfig.Pending;
     const StatusIcon = status.icon;
 
     const seatsLabel = Array.isArray(booking.seats)
         ? booking.seats
-            .map(s => typeof s === 'string' ? s : (s.id ?? (s.row && s.number ? `${s.row}${s.number}` : '')))
+            .map(s => typeof s === 'string' ? s : (s.id || (s.row && s.number ? `${s.row}${s.number}` : '')))
             .filter(Boolean)
             .join(', ')
-        : String(booking.seats || '');
+        : 'No seats';
+
+    const bookingDate = new Date(booking.dateTime).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+
+    const bookingTime = booking.showTime || new Date(booking.dateTime).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+
+    const bookingId = (booking._id || booking.id) as string;
 
     return (
         <div className="bg-[#1a1414] p-6 rounded-xl border border-[#392828] shadow-2xl">
@@ -85,15 +86,17 @@ export function BookingCard({
                 {/* Poster */}
                 <div className="relative w-full lg:w-52 h-56 rounded-lg overflow-hidden border border-[#392828]">
                     <Image
-                        src={booking.poster}
+                        src={(getImage(booking.poster || '') as string) || '/placeholder-poster.jpg'}
                         alt={booking.movieTitle}
                         fill
                         className="object-cover"
                     />
 
-                    <div className="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">
-                        {booking.format}
-                    </div>
+                    {booking.format && (
+                        <div className="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded">
+                            {booking.format}
+                        </div>
+                    )}
                 </div>
 
                 {/* Content */}
@@ -108,7 +111,7 @@ export function BookingCard({
                             </h3>
 
                             <p className="text-text-secondary text-sm mt-1">
-                                {booking.genres.join(', ')} • {booking.duration}
+                                {booking.genres?.join(', ') || 'N/A'} • {booking.duration || 'N/A'}
                             </p>
                         </div>
 
@@ -128,21 +131,21 @@ export function BookingCard({
                             <p className="text-xs text-text-secondary flex items-center gap-1">
                                 <IoCalendarOutline /> Date
                             </p>
-                            <p className="text-white font-semibold">{booking.date}</p>
+                            <p className="text-white font-semibold">{bookingDate}</p>
                         </div>
 
                         <div>
                             <p className="text-xs text-text-secondary flex items-center gap-1">
                                 <IoTimeOutline /> Time
                             </p>
-                            <p className="text-white font-semibold">{booking.time}</p>
+                            <p className="text-white font-semibold">{bookingTime}</p>
                         </div>
 
                         <div>
                             <p className="text-xs text-text-secondary flex items-center gap-1">
                                 <IoLocationOutline /> Theater
                             </p>
-                            <p className="text-white font-semibold">{booking.theater}</p>
+                            <p className="text-white font-semibold">{booking.theaterName}</p>
                         </div>
 
                         <div>
@@ -160,22 +163,22 @@ export function BookingCard({
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
 
                         <span className="text-xs font-mono text-text-secondary">
-                            REF: <span className="text-white">{booking.reference}</span>
+                            REF: <span className="text-white">{bookingId}</span>
                         </span>
 
                         <div className="flex flex-wrap gap-3">
 
-                            {booking.status !== 'cancelled' && (
+                            {booking.status !== 'Cancelled' && (
                                 <>
                                     <button
-                                        onClick={() => onModify(booking.id)}
+                                        onClick={() => onModify(bookingId)}
                                         className="text-sm text-text-secondary hover:text-white"
                                     >
                                         Modify
                                     </button>
 
                                     <button
-                                        onClick={() => onCancel(booking.id)}
+                                        onClick={() => onCancel(bookingId)}
                                         className="text-sm text-primary hover:text-red-400"
                                     >
                                         Cancel
@@ -183,9 +186,9 @@ export function BookingCard({
                                 </>
                             )}
 
-                            {booking.status === 'confirmed' && (
+                            {booking.status === 'Confirmed' && (
                                 <button
-                                    onClick={() => onViewTicket(booking.id)}
+                                    onClick={() => onViewTicket(bookingId)}
                                     className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold flex items-center gap-2"
                                 >
                                     <IoQrCodeOutline />
@@ -193,9 +196,9 @@ export function BookingCard({
                                 </button>
                             )}
 
-                            {booking.status === 'pending' && (
+                            {booking.status === 'Pending' && (
                                 <button
-                                    onClick={() => onCompletePayment(booking.id)}
+                                    onClick={() => onCompletePayment(bookingId)}
                                     className="px-4 py-2 border border-primary text-primary rounded-lg text-sm font-bold"
                                 >
                                     Pay Now
