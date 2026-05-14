@@ -13,9 +13,15 @@ exports.protect = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.user = decoded.role === 'admin'
+        const user = decoded.role === 'admin'
             ? await Admin.findById(decoded.id).select('-password')
             : await User.findById(decoded.id).select('-password');
+
+        if (!user || user.isActive === false) {
+            return res.status(401).json({ message: 'Account is deactivated or not found' });
+        }
+
+        req.user = user;
         next();
     } catch (err) {
         res.status(401).json({ message: 'Not authorized, invalid token' });

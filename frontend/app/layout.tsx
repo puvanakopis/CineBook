@@ -4,6 +4,7 @@ import RouteGuard from "@/route/RouteGuard";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { MovieProvider } from "@/contexts/MovieContext";
 import { TheaterProvider } from "@/contexts/TheaterContext";
+import { BookingProvider } from "@/contexts/BookingContext";
 import { Toaster } from "react-hot-toast";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -36,9 +37,11 @@ export default function RootLayout({
         <AuthProvider>
           <TheaterProvider>
             <MovieProvider>
-              <RouteGuard>
-                {children}
-              </RouteGuard>
+              <BookingProvider>
+                <RouteGuard>
+                  {children}
+                </RouteGuard>
+              </BookingProvider>
             </MovieProvider>
           </TheaterProvider>
         </AuthProvider>

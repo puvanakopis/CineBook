@@ -268,6 +268,9 @@ export default function TheaterDetail() {
                 <div className="flex flex-col lg:flex-row gap-8">
                     <div className="lg:w-2/3">
                         <TheaterShowtimes
+                            theaterId={theater.theater_id}
+                            theaterName={theater.name}
+                            theaterAddress={theater.address}
                             screens={theater.screens}
                             selectedDate={selectedDate}
                             allDates={allDates}

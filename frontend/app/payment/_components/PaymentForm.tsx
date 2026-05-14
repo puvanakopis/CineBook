@@ -1,8 +1,10 @@
 "use client";
 
-import { FaCreditCard, FaMoneyBillWave, FaUser, FaEnvelope, FaInfoCircle } from "react-icons/fa";
+import { FaCreditCard, FaMoneyBillWave, FaUser, FaEnvelope, FaInfoCircle, FaRegCreditCard } from "react-icons/fa";
+import { SiVisa, SiMastercard, SiAmericanexpress } from "react-icons/si";
 import { MdErrorOutline } from "react-icons/md";
 import Loading from "@/components/Loading";
+import { PaymentMethod } from "@/interfaces/authInterface";
 
 interface PaymentFormProps {
     formData: {
@@ -21,6 +23,12 @@ interface PaymentFormProps {
     onSubmit: (e: React.FormEvent) => void;
     paymentMethod: string;
     onMethodChange: (method: string) => void;
+    savedMethods?: PaymentMethod[];
+    onSelectSavedMethod?: (method: PaymentMethod) => void;
+    selectedSavedCardId?: string | null;
+    selectedCardBrand?: string | null;
+    cvvRef?: React.RefObject<HTMLInputElement | null>;
+    isMethodsLoading?: boolean;
 }
 
 export default function PaymentForm({
@@ -32,8 +40,22 @@ export default function PaymentForm({
     onInputChange,
     onSubmit,
     paymentMethod,
-    onMethodChange
+    onMethodChange,
+    savedMethods = [],
+    onSelectSavedMethod,
+    selectedSavedCardId,
+    selectedCardBrand,
+    cvvRef,
+    isMethodsLoading
 }: PaymentFormProps) {
+    const getCardBrandIcon = (brand: string) => {
+        switch (brand.toLowerCase()) {
+            case 'visa': return <SiVisa className="w-8 h-8 text-[#1A1F71]" />;
+            case 'mastercard': return <SiMastercard className="w-8 h-8 text-[#EB001B]" />;
+            case 'amex': return <SiAmericanexpress className="w-8 h-8 text-[#007BC1]" />;
+            default: return <FaRegCreditCard className="w-6 h-6 text-text-secondary" />;
+        }
+    };
     return (
         <div className="flex-1 w-full bg-surface-dark rounded-xl border border-[#392828] shadow-2xl overflow-hidden transition-all duration-300">
             {/* Payment Methods Header */}
@@ -122,13 +144,54 @@ export default function PaymentForm({
                         </div>
                     )}
 
-                {paymentMethod === 'card' && (
-                    <>
-                        <div className="relative flex items-center pt-4">
-                            <div className="flex-grow border-t border-[#392828]"></div>
-                            <span className="flex-shrink-0 mx-4 text-text-secondary text-sm">Card Details</span>
-                            <div className="flex-grow border-t border-[#392828]"></div>
-                        </div>
+                    {paymentMethod === 'card' && (
+                        <>
+                            {savedMethods.length > 0 && (
+                                <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                                    <div className="flex items-center justify-between">
+                                        <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider">Saved Payment Methods</label>
+                                        <span className="text-[10px] text-primary font-bold uppercase tracking-widest px-2 py-0.5 bg-primary/10 rounded-full">Secure</span>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {isMethodsLoading ? (
+                                            <div className="col-span-full py-8 flex flex-col items-center justify-center bg-black/20 rounded-xl border border-[#392828] border-dashed">
+                                                <Loading inline size="sm" />
+                                                <p className="text-[10px] text-text-secondary uppercase tracking-[0.2em] mt-3">Fetching saved cards...</p>
+                                            </div>
+                                        ) : (
+                                            savedMethods.map((method) => (
+                                                <button
+                                                    key={method._id}
+                                                    type="button"
+                                                    onClick={() => onSelectSavedMethod?.(method)}
+                                                    className={`p-4 rounded-xl border text-left transition-all duration-300 flex items-center gap-4 group ${selectedSavedCardId === method._id ? 'border-primary bg-primary/5 shadow-[0_0_20px_rgba(236,19,19,0.1)]' : 'border-[#392828] bg-black/20 hover:border-primary/40'}`}
+                                                >
+                                                    <div className={`p-2 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors ${selectedSavedCardId === method._id ? 'bg-white/10' : ''}`}>
+                                                        {getCardBrandIcon(method.brand)}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-white text-sm font-bold truncate tracking-tight">{method.cardholderName}</p>
+                                                        <p className="text-text-secondary text-xs font-medium mt-0.5 tracking-wider">•••• {method.lastFour}</p>
+                                                    </div>
+                                                    {selectedSavedCardId === method._id && (
+                                                        <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
+                                                        </div>
+                                                    )}
+                                                </button>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="relative flex items-center pt-4">
+                                <div className="flex-grow border-t border-[#392828]"></div>
+                                <span className="flex-shrink-0 mx-4 text-text-secondary text-sm">
+                                    {savedMethods.length > 0 ? "Or Enter New Details" : "Card Details"}
+                                </span>
+                                <div className="flex-grow border-t border-[#392828]"></div>
+                            </div>
 
                         <div>
                             <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Cardholder Name</label>
@@ -179,6 +242,7 @@ export default function PaymentForm({
                                 <input
                                     type="text"
                                     name="cvv"
+                                    ref={cvvRef}
                                     value={formData.cvv}
                                     onChange={onInputChange}
                                     placeholder="123"
@@ -206,7 +270,9 @@ export default function PaymentForm({
                             </>
                         ) : (
                             paymentMethod === 'card' 
-                                ? `Pay LKR ${totalAmount.toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                ? (selectedSavedCardId 
+                                    ? `Pay with ${selectedCardBrand || 'Saved'} Card •••• ${savedMethods.find(m => m._id === selectedSavedCardId)?.lastFour || ''}`
+                                    : `Pay LKR ${totalAmount.toLocaleString("en-LK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`)
                                 : `Confirm Reservation`
                         )}
                     </button>

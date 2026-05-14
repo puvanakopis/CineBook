@@ -21,7 +21,7 @@ export const bookings: Booking[] = [
     dateTime: 'Oct 24, 2024 - 19:00',
     seats: ['H5'],
     totalPrice: 12.00,
-    status: 'Pending',
+    status: 'Completed',
     poster: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAg6mTfy3Df2IeDZToEqUEsTy1gXxFRpKtjbvfDrZnqQ3gIa79AqnRvmxKMmSWiHvlDevjOxuG3pSdtPW8HsU-BRaEm_p-FObU2YXZJi28izpCB5xo-vjPHnCOHcq2YdDkRss4W7Q35RcWX_8Zckk1xJr7C9-NgQmLAx_Tb6GBlTWX-gjFtrXm6VYIsKxsVTDB64q0gG94G2-p-EMFJpLuNQ0rmb_1BMnXLFZWKJ5piuDvTKfSJ-Ui-9x2hVOKOReHbT_bTG-0inRAD',
     theaterName: 'City Center Plaza',
   },

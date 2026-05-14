@@ -23,12 +23,19 @@ const bookingSchema = new mongoose.Schema({
     _id: {
         type: String
     },
-    movieId: { type: String, ref: 'Movie' },
+    movieId: {
+        type:
+            String,
+        ref: 'Movie'
+    },
     movieTitle: {
         type: String,
         required: true
     },
-    theaterId: { type: String, ref: 'Theater' },
+    theaterId: {
+        type: String,
+        ref: 'Theater'
+    },
     customerName: {
         type: String,
         required: true
@@ -50,15 +57,25 @@ const bookingSchema = new mongoose.Schema({
         required: true
     },
     payment: {
-        method: { type: String },
-        transactionId: { type: String },
-        amount: { type: Number },
-        status: { type: String, enum: ['Paid', 'Pending', 'Failed'], default: 'Pending' },
+        method: {
+            type: String
+        },
+        transactionId: {
+            type: String
+        },
+        amount: {
+            type: Number
+        },
+        status: {
+            type: String,
+            enum: ['Paid', 'Pending', 'Failed'],
+            default: 'Pending'
+        },
         provider: { type: String }
     },
     status: {
         type: String,
-        enum: ['Confirmed', 'Pending', 'Cancelled'],
+        enum: ['Confirmed', 'Cancelled', 'Completed'],
         default: 'Confirmed'
     },
     poster: {
@@ -73,6 +90,15 @@ const bookingSchema = new mongoose.Schema({
     showTime: {
         type: String
     },
+    genres: {
+        type: [String]
+    },
+    duration: {
+        type: String
+    },
+    format: {
+        type: String
+    },
     user: { type: String, ref: 'User' }
 }, { timestamps: true });
 
@@ -81,7 +107,7 @@ bookingSchema.pre('save', async function () {
         const counter = await Counter.findByIdAndUpdate(
             'booking',
             { $inc: { seq: 1 } },
-            { new: true, upsert: true }
+            { returnDocument: 'after', upsert: true }
         );
         this._id = `booking_${String(counter.seq).padStart(2, '0')}`;
     }

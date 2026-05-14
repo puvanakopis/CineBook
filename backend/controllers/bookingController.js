@@ -16,7 +16,10 @@ exports.createBooking = async (req, res) => {
             theaterId,
             theaterName,
             screenId,
-            showTime
+            showTime,
+            genres,
+            duration,
+            format
         } = req.body;
 
         if (!seats || !Array.isArray(seats) || seats.length === 0) {
@@ -39,7 +42,10 @@ exports.createBooking = async (req, res) => {
             theaterId,
             theaterName,
             screenId,
-            showTime
+            showTime,
+            genres,
+            duration,
+            format
         });
 
         if (req.user && req.user._id) {
@@ -81,7 +87,15 @@ exports.getBookings = async (req, res) => {
 exports.getMyBookings = async (req, res) => {
     try {
         if (!req.user || !req.user._id) return res.status(401).json({ message: 'Not authenticated' });
-        const bookings = await Booking.find({ user: req.user._id }).sort({ createdAt: -1 });
+        
+        // Search by user ID OR customerEmail (to catch legacy bookings or ones created without session)
+        const bookings = await Booking.find({ 
+            $or: [
+                { user: req.user._id },
+                { customerEmail: req.user.email }
+            ]
+        }).sort({ createdAt: -1 });
+        
         res.json(bookings);
     } catch (err) {
         console.error(err);
@@ -104,9 +118,15 @@ exports.cancelBooking = async (req, res) => {
     try {
         const booking = await Booking.findById(req.params.id);
         if (!booking) return res.status(404).json({ message: 'Booking not found' });
+        
+        // Ownership check
+        if (booking.user && booking.user.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'Not authorized to cancel this booking' });
+        }
+
         booking.status = 'Cancelled';
         await booking.save();
-        res.json({ message: 'Booking cancelled', booking });
+        res.json({ message: 'Booking cancelled successfully', booking });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error cancelling booking' });

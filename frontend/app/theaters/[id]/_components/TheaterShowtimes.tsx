@@ -4,8 +4,12 @@ import { useRouter } from "next/navigation";
 import { Screen, MovieShowtime, TimeSlot } from "@/interfaces/theaterInterface";
 import Image from "next/image";
 import getImage from '@/utils/imageUrl';
+import { navigateToSelectSeats, BookingPayload } from "@/utils/bookingNavigation";
 
 interface TheaterShowtimesProps {
+    theaterId: string;
+    theaterName: string;
+    theaterAddress: string;
     screens: Screen[];
     selectedDate: string;
     allDates: string[];
@@ -21,6 +25,9 @@ interface TheaterShowtimesProps {
 }
 
 const TheaterShowtimes = ({
+    theaterId,
+    theaterName,
+    theaterAddress,
     selectedDate,
     allDates,
     onDateSelect,
@@ -56,7 +63,7 @@ const TheaterShowtimes = ({
 
     const handleShowtimeClick = (movie: MovieShowtime, st: { screen: Screen; showtime: TimeSlot; format: string }) => {
         if (!st.showtime.isSoldOut) {
-            const payload = {
+            const payload: BookingPayload = {
                 movie: {
                     id: movie.movie_id,
                     title: movie.title,
@@ -66,8 +73,14 @@ const TheaterShowtimes = ({
                     genres: movie.genres,
                 },
                 theater: {
+                    id: theaterId,
+                    name: theaterName,
+                    address: theaterAddress,
+                },
+                screen: {
                     id: st.screen.screen_id,
                     name: st.screen.name || "",
+                    type: st.format,
                 },
                 date: selectedDate,
                 time: st.showtime.time,
@@ -76,8 +89,7 @@ const TheaterShowtimes = ({
                 format: st.format,
             };
 
-            const searchString = encodeURIComponent(JSON.stringify(payload));
-            router.push(`/select-seats?data=${searchString}`);
+            navigateToSelectSeats(router, payload);
         }
     };
 

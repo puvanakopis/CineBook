@@ -1,62 +1,140 @@
 'use client';
 
 import { IoMailOutline, IoCallOutline, IoPersonOutline } from "react-icons/io5";
+import { useState, useEffect } from "react";
 
-export function PersonalInfoForm() {
+interface PersonalInfoFormData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+}
+
+interface PersonalInfoFormProps {
+    userData?: PersonalInfoFormData;
+    onUpdate?: (data: PersonalInfoFormData) => void;
+}
+
+export function PersonalInfoForm({ userData, onUpdate }: PersonalInfoFormProps) {
+    const [formData, setFormData] = useState<PersonalInfoFormData>({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+    });
+
+    useEffect(() => {
+        if (userData) {
+            setFormData(userData);
+        }
+    }, [userData]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (onUpdate) {
+            onUpdate(formData);
+        }
+    };
+
     return (
         <section>
-            <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-3">
-                    <IoPersonOutline className="text-2xl text-primary" />
-                    <h3 className="text-white text-xl font-bold">Personal Information</h3>
-                </div>
+            <div className="flex items-center gap-3 mb-8">
+                <IoPersonOutline className="text-primary text-xl" />
+                <h2 className="text-xl font-bold text-white tracking-wider">
+                    Personal Information
+                </h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#291e1e]/30 p-6 rounded-xl border border-[#392828]/50">
-                <label className="flex flex-col gap-2">
-                    <span className="text-text-secondary text-sm font-medium">First Name</span>
-                    <input
-                        className="w-full rounded-lg bg-surface-dark border border-[#392828] text-white p-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-text-secondary/50"
-                        type="text"
-                        defaultValue="Alex"
-                    />
-                </label>
 
-                <label className="flex flex-col gap-2">
-                    <span className="text-text-secondary text-sm font-medium">Last Name</span>
-                    <input
-                        className="w-full rounded-lg bg-surface-dark border border-[#392828] text-white p-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-text-secondary/50"
-                        type="text"
-                        defaultValue="Doe"
-                    />
-                </label>
+            <div className="bg-[#1a1414] p-8 rounded-xl border border-[#392828] shadow-2xl">
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* Name Section */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="p-5 rounded-xl bg-surface-dark border border-[#392828]">
+                            <h4 className="text-white font-semibold text-sm tracking-wide mb-4">
+                                First Name
+                            </h4>
+                            <input
+                                type="text"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                placeholder="Enter first name"
+                                className="w-full rounded-xl bg-[#1a1414] border border-[#392828] text-white px-4 py-3 text-sm focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-text-secondary/40"
+                            />
+                        </div>
 
-                <label className="flex flex-col gap-2">
-                    <span className="text-text-secondary text-sm font-medium">Email Address</span>
-                    <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2">
-                            <IoMailOutline className="text-lg text-text-secondary" />
-                        </span>
-                        <input
-                            className="w-full rounded-lg bg-surface-dark border border-[#392828] text-white pl-10 p-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-text-secondary/50"
-                            type="email"
-                            defaultValue="alex.doe@example.com"
-                        />
+                        <div className="p-5 rounded-xl bg-surface-dark border border-[#392828]">
+                            <h4 className="text-white font-semibold text-sm tracking-wide mb-4">
+                                Last Name
+                            </h4>
+                            <input
+                                type="text"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                placeholder="Enter last name"
+                                className="w-full rounded-xl bg-[#1a1414] border border-[#392828] text-white px-4 py-3 text-sm focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-text-secondary/40"
+                            />
+                        </div>
                     </div>
-                </label>
 
-                <label className="flex flex-col gap-2">
-                    <span className="text-text-secondary text-sm font-medium">Phone Number</span>
-                    <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2">
-                            <IoCallOutline className="text-lg text-text-secondary" />
-                        </span>
-                        <input
-                            className="w-full rounded-lg bg-surface-dark border border-[#392828] text-white pl-10 p-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-text-secondary/50"
-                            type="tel"
-                            defaultValue="+1 (555) 000-0000"
-                        />
+                    {/* Contact Section */}
+                    <div className="space-y-4">
+                        <div className="p-5 rounded-xl bg-surface-dark border border-[#392828]">
+                            <h4 className="text-white font-semibold text-sm tracking-wide mb-4">
+                                Email Address
+                            </h4>
+                            <div className="relative">
+                                <IoMailOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-lg" />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="Enter email address"
+                                    disabled
+                                    className="w-full rounded-xl bg-[#1a1414]/50 border border-[#392828] text-white/50 pl-11 pr-4 py-3 text-sm focus:outline-none cursor-not-allowed placeholder:text-text-secondary/20"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="p-5 rounded-xl bg-surface-dark border border-[#392828]">
+                            <h4 className="text-white font-semibold text-sm tracking-wide mb-4">
+                                Phone Number
+                            </h4>
+                            <div className="relative">
+                                <IoCallOutline className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary text-lg" />
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    placeholder="Enter phone number"
+                                    className="w-full rounded-xl bg-[#1a1414] border border-[#392828] text-white pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-primary transition-all duration-300 placeholder:text-text-secondary/40"
+                                />
+                            </div>
+                        </div>
                     </div>
-                </label>
+
+                    {/* Action Button */}
+                    <div className="pt-2 flex justify-end">
+                        <button
+                            type="submit"
+                            className="px-6 py-3 rounded-xl bg-primary hover:bg-red-600 text-white text-sm font-semibold tracking-wide shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5"
+                        >
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
             </div>
         </section>
     );

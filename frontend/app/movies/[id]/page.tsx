@@ -212,6 +212,7 @@ export default function MovieDetail() {
         onDateSelect={setSelectedDate}
         formatDateDisplay={formatDateDisplay}
         movie={selectedMovie}
+        averageRating={averageRating}
       />
       <CastCrew cast={mappedCast} />
       <Reviews

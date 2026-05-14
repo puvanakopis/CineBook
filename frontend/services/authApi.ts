@@ -11,6 +11,8 @@ import {
     ForgotPasswordResponse,
     VerifyPasswordResetRequest,
     VerifyPasswordResetResponse,
+    UpdatePasswordRequest,
+    DeactivateAccountResponse,
 } from "@/interfaces/authInterface";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -109,4 +111,51 @@ export const authApi = {
         const res = await api.get("/api/auth/me");
         return res.data.user;
     },
+
+    fetchUserInfo: async (): Promise<any> => {
+        const response = await api.get("/api/auth/me");
+        return response.data.user;
+    },
+
+    updateUserInfo: async (data: any): Promise<any> => {
+        const response = await api.put("/api/auth/me", data);
+        return response.data.user;
+    },
+    uploadProfilePicture: async (file: File): Promise<any> => {
+        const formData = new FormData();
+        formData.append("profilePicture", file);
+        const response = await api.post("/api/auth/upload-dp", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data;
+    },
+    addPaymentMethod: async (data: any): Promise<any> => {
+        const response = await api.post("/api/auth/payment-methods", data);
+        return response.data;
+    },
+    getPaymentMethods: async (): Promise<any> => {
+        const response = await api.get("/api/auth/payment-methods");
+        return response.data;
+    },
+    updatePaymentMethod: async (id: string, data: any): Promise<any> => {
+        const response = await api.put(`/api/auth/payment-methods/${id}`, data);
+        return response.data;
+    },
+    deletePaymentMethod: async (id: string): Promise<any> => {
+        const response = await api.delete(`/api/auth/payment-methods/${id}`);
+        return response.data;
+    },
+    updatePassword: async (data: UpdatePasswordRequest): Promise<{ message: string }> => {
+        const response = await api.put<{ message: string }>("/api/auth/update-password", data);
+        return response.data;
+    },
+    deactivateAccount: async (): Promise<DeactivateAccountResponse> => {
+        const response = await api.post<DeactivateAccountResponse>("/api/auth/deactivate-account");
+        return response.data;
+    },
 };
+
+export const fetchUserInfo = authApi.fetchUserInfo;
+export const updateUserInfo = authApi.updateUserInfo;

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import { MdOutlineMovieFilter } from "react-icons/md";
+import { MdOutlineMovieFilter, MdKeyboardArrowDown, MdPerson, MdEventNote, MdSettings, MdLogout } from "react-icons/md";
 import { IoMdSearch } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,20 @@ const Navbar = () => {
     const [open, setOpen] = useState(false);
     const authRef = useRef<HTMLDivElement | null>(null);
 
-    const initials = user ? `${user.firstName?.[0] ?? ""}`.toUpperCase() : "";
+    const [imgError, setImgError] = useState(false);
+
+    const initials = user ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase() : "";
+    const firstName = user ? `${user.firstName}` : "User";
+
+    const profilePic = user?.profilePicture
+        ? (user.profilePicture.startsWith('http')
+            ? user.profilePicture
+            : `${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000').replace(/\/$/, '')}/${user.profilePicture.replace(/^\//, '')}`)
+        : null;
+
+    useEffect(() => {
+        setImgError(false); 
+    }, [user?.profilePicture]);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -40,6 +53,12 @@ const Navbar = () => {
         { href: "/theaters", label: "Theaters" },
         { href: "/about", label: "About" },
         { href: "/contact", label: "Contact" },
+    ];
+
+    const dropdownItems = [
+        { href: "/profile", label: "Profile", icon: <MdPerson className="text-xl" /> },
+        { href: "/my-bookings", label: "My Bookings", icon: <MdEventNote className="text-xl" /> },
+        { href: "/settings", label: "Settings", icon: <MdSettings className="text-xl" /> },
     ];
 
     return (
@@ -106,21 +125,80 @@ const Navbar = () => {
                     <div className="relative" ref={authRef}>
                         <button
                             onClick={() => setOpen((v) => !v)}
-                            className="flex items-center gap-3 rounded-lg h-10 px-3 transition-colors text-white"
+                            className="flex items-center gap-2 rounded-xl h-12 px-2 hover:bg-[#2a2323] transition-all duration-300 group"
                         >
-                            <div className="h-10 w-10 rounded-full bg-[#2a2323] flex items-center justify-center text-white font-bold uppercase overflow-hidden">
-                                {initials || "U"}
+                            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-[#ec1313] to-[#8a0b0b] flex items-center justify-center text-white font-bold uppercase overflow-hidden shadow-lg group-hover:scale-105 transition-transform border border-white/10">
+                                {profilePic && !imgError ? (
+                                    <img
+                                        src={profilePic}
+                                        alt={firstName}
+                                        className="h-full w-full object-cover"
+                                        onError={() => setImgError(true)}
+                                    />
+                                ) : (
+                                    <span>{initials || "U"}</span>
+                                )}
                             </div>
+                            <MdKeyboardArrowDown className={`text-xl text-text-secondary group-hover:text-white transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
                         </button>
 
-                        {open && (
-                            <div className="absolute right-0 mt-2 w-48 bg-[#181111] border border-[#392828] rounded-md shadow-lg z-50">
-                                <Link href="/profile" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Profile</Link>
-                                <Link href="/my-bookings" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">My Bookings</Link>
-                                <Link href="/settings" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Settings</Link>
-                                <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-white hover:bg-[#241818]">Logout</button>
+                        {/* Redesigned Dropdown */}
+                        <div className={`absolute right-0 mt-3 w-72 origin-top-right bg-[#1c1414] border border-[#392828] rounded-2xl shadow-2xl z-50 overflow-hidden transition-all duration-300 transform ${open ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}>
+                            {/* User Info Header */}
+                            <div className="p-5 bg-gradient-to-b from-[#2a1e1e] to-transparent border-b border-[#392828]">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-12 w-12 rounded-xl bg-[#ec1313] flex items-center justify-center text-white font-bold text-lg border border-white/10 overflow-hidden">
+                                        {profilePic && !imgError ? (
+                                            <img
+                                                src={profilePic}
+                                                alt={firstName}
+                                                className="h-full w-full object-cover"
+                                                onError={() => setImgError(true)}
+                                            />
+                                        ) : (
+                                            initials || "U"
+                                        )}
+                                    </div>
+                                    <div className="flex flex-col overflow-hidden">
+                                        <span className="text-white font-bold truncate text-base">{firstName}</span>
+                                        <span className="text-text-secondary text-xs truncate">{user?.email}</span>
+                                    </div>
+                                </div>
                             </div>
-                        )}
+
+                            {/* Menu Items */}
+                            <div className="py-2">
+                                {dropdownItems.map((item) => (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        onClick={() => setOpen(false)}
+                                        className="flex items-center gap-3 px-5 py-3 text-sm text-text-secondary hover:text-white hover:bg-[#2a1e1e] transition-all duration-200 group"
+                                    >
+                                        <span className="p-2 rounded-lg bg-[#2a2323] group-hover:bg-[#ec1313] group-hover:text-white transition-colors">
+                                            {item.icon}
+                                        </span>
+                                        <span className="font-medium">{item.label}</span>
+                                    </Link>
+                                ))}
+                            </div>
+
+                            {/* Divider */}
+                            <div className="h-px bg-[#392828] mx-4" />
+
+                            {/* Logout Section */}
+                            <div className="p-2">
+                                <button
+                                    onClick={handleLogout}
+                                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:text-white hover:bg-red-500/10 rounded-xl transition-all duration-200 group"
+                                >
+                                    <span className="p-2 rounded-lg bg-red-500/10 group-hover:bg-red-500 transition-colors">
+                                        <MdLogout className="text-xl" />
+                                    </span>
+                                    <span className="font-bold uppercase tracking-wider text-xs">Logout</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>

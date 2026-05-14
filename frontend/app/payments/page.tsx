@@ -1,83 +1,108 @@
 'use client';
 
+import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { PaymentsHeader } from "./_components/PaymentsHeader";
 import { SavedCards } from "./_components/SavedCards";
 import { AddCardForm, type CardFormData } from "./_components/AddCardForm";
-import { DigitalWallets } from "./_components/DigitalWallets";
-
-interface Card {
-    id: string;
-    cardNumber: string;
-    expiryDate: string;
-    cardholderName: string;
-    brand: 'visa' | 'mastercard' | 'amex';
-    lastFour: string;
-}
-
-const savedCardsData: Card[] = [
-    {
-        id: '1',
-        cardNumber: '•••• •••• •••• 4242',
-        expiryDate: '12/26',
-        cardholderName: 'Arulnithi S',
-        brand: 'visa',
-        lastFour: '4242',
-    },
-    {
-        id: '2',
-        cardNumber: '•••• •••• •••• 8801',
-        expiryDate: '09/25',
-        cardholderName: 'Vijay Ram',
-        brand: 'mastercard',
-        lastFour: '8801',
-    },
-];
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "react-hot-toast";
 
 export default function Payments() {
+    const { user, addPaymentMethod, updatePaymentMethod, deletePaymentMethod } = useAuth();
+    const [editingCardId, setEditingCardId] = useState<string | null>(null);
+
     const handleEditCard = (cardId: string) => {
-        console.log('Edit card:', cardId);
-        // Implement edit logic
+        setEditingCardId(cardId);
+        // Scroll to form
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     };
 
-    const handleDeleteCard = (cardId: string) => {
-        console.log('Delete card:', cardId);
-        // Implement delete logic
+    const handleDeleteCard = async (cardId: string) => {
+        try {
+            await deletePaymentMethod(cardId);
+            toast.success("Card deleted successfully");
+            if (editingCardId === cardId) setEditingCardId(null);
+        } catch (error) {
+            toast.error("Failed to delete card");
+        }
     };
 
-    const handleAddCard = (cardData: CardFormData) => {
-        console.log('Add card:', cardData);
-        // Implement add card logic
+    const handleAddCard = async (cardData: CardFormData) => {
+        try {
+            if (editingCardId) {
+                await updatePaymentMethod(editingCardId, {
+                    cardholderName: cardData.cardholderName,
+                    expiryDate: cardData.expiryDate,
+                });
+                toast.success("Card updated successfully");
+                setEditingCardId(null);
+            } else {
+                let brand = 'visa';
+                if (cardData.cardNumber.startsWith('4')) brand = 'visa';
+                else if (cardData.cardNumber.startsWith('5')) brand = 'mastercard';
+                else if (cardData.cardNumber.startsWith('3')) brand = 'amex';
+
+                const payload = {
+                    cardholderName: cardData.cardholderName,
+                    cardNumber: cardData.cardNumber,
+                    expiryDate: cardData.expiryDate,
+                    brand: brand,
+                    lastFour: cardData.cardNumber.slice(-4)
+                };
+
+                await addPaymentMethod(payload);
+                toast.success("Card added successfully");
+            }
+        } catch (error) {
+            toast.error(editingCardId ? "Failed to update card" : "Failed to add card");
+        }
     };
 
-    const handleWalletConnect = (wallet: string) => {
-        console.log('Connect wallet:', wallet);
-        // Implement wallet connection logic
-    };
+    const editingCard = editingCardId 
+        ? user?.paymentMethods?.find(m => m._id === editingCardId) 
+        : null;
+
+    const initialFormData: CardFormData | null = editingCard ? {
+        cardholderName: editingCard.cardholderName,
+        cardNumber: `•••• •••• •••• ${editingCard.lastFour}`, // Visual only, backend won't update card number usually
+        expiryDate: editingCard.expiryDate,
+        cvv: '•••',
+        saveCard: true,
+    } : null;
+
+    const cards = (user?.paymentMethods || []).map(m => ({
+        id: m._id,
+        cardNumber: `•••• •••• •••• ${m.lastFour}`,
+        expiryDate: m.expiryDate,
+        cardholderName: m.cardholderName,
+        brand: m.brand as 'visa' | 'mastercard' | 'amex',
+        lastFour: m.lastFour
+    }));
 
     return (
-        <div className="flex flex-1 w-full mx-auto">
+        <div className="flex w-full min-h-screen bg-[#0b0909]">
             <Sidebar />
-            <main className="flex-1 p-6 md:p-10 lg:px-16 overflow-y-auto">
-                <div className="max-w-6xl mx-auto space-y-10">
+
+            <main className="flex-1 overflow-x-hidden">
+                <div className="max-w-[1200px] mx-auto px-4 md:px-10 py-16 space-y-20">
+
                     <PaymentsHeader />
 
                     <div className="space-y-12">
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                            <div className="lg:col-span-7 space-y-8">
-                                <SavedCards
-                                    cards={savedCardsData}
-                                    onEditCard={handleEditCard}
-                                    onDeleteCard={handleDeleteCard}
-                                />
-                                <DigitalWallets onConnectWallet={handleWalletConnect} />
-                            </div>
+                        <SavedCards
+                            cards={cards}
+                            onEditCard={handleEditCard}
+                            onDeleteCard={handleDeleteCard}
+                        />
 
-                            <div className="lg:col-span-5">
-                                <AddCardForm onAddCard={handleAddCard} />
-                            </div>
-                        </div>
+                        <AddCardForm 
+                            onAddCard={handleAddCard} 
+                            initialData={initialFormData}
+                            onCancel={() => setEditingCardId(null)}
+                        />
                     </div>
+
                 </div>
             </main>
         </div>

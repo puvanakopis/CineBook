@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { AxiosError } from "axios";
 import { authApi } from "@/services/authApi";
+
 import {
     AuthContextType,
     User,
@@ -10,10 +11,11 @@ import {
     VerifyOtpAndSignupRequest,
     LoginRequest,
     ForgotPasswordRequest,
-    VerifyPasswordResetRequest
+    VerifyPasswordResetRequest,
+    UpdatePasswordRequest,
 } from "@/interfaces/authInterface";
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
@@ -32,6 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [userInfo, setUserInfo] = useState<User | null>(null);
 
     useEffect(() => {
         const initializeUser = async () => {
@@ -42,6 +45,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 if (isAuth) {
                     const userData = await authApi.getCurrentUser();
                     setUser(userData);
+                    setUserInfo(userData);
                 }
             } catch (err) {
                 console.error("Error fetching user data:", err);
@@ -96,6 +100,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
             if (response.token && response.user) {
                 setUser(response.user);
+                setUserInfo(response.user);
                 setIsAuthenticated(true);
             }
         } catch (err) {
@@ -113,6 +118,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setError(null);
             const response = await authApi.login(data);
             setUser(response.user);
+            setUserInfo(response.user);
             setIsAuthenticated(true);
         } catch (err) {
             handleError(err);
@@ -154,7 +160,127 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const logout = () => {
         authApi.logout();
         setUser(null);
+        setUserInfo(null);
         setIsAuthenticated(false);
+    };
+
+    const fetchUserInfoHandler = React.useCallback(async () => {
+        try {
+            const data = await authApi.fetchUserInfo();
+            setUserInfo(data);
+            setUser(data);
+        } catch (err) {
+            console.error("Error fetching user info:", err);
+        }
+    }, []);
+
+    const updateUserInfoHandler = React.useCallback(async (data: any) => {
+        try {
+            const updatedData = await authApi.updateUserInfo(data);
+            setUserInfo(updatedData);
+            setUser(updatedData);
+        } catch (err) {
+            console.error("Error updating user info:", err);
+            handleError(err);
+        }
+    }, []);
+
+    const uploadProfilePictureHandler = async (file: File) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await authApi.uploadProfilePicture(file);
+            if (response.user) {
+                setUser(response.user);
+                setUserInfo(response.user);
+            }
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const addPaymentMethodHandler = async (data: any) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await authApi.addPaymentMethod(data);
+            if (response.paymentMethods) {
+                const updatedUser = user ? { ...user, paymentMethods: response.paymentMethods } : null;
+                setUser(updatedUser);
+                setUserInfo(updatedUser);
+            }
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const updatePaymentMethodHandler = async (id: string, data: any) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await authApi.updatePaymentMethod(id, data);
+            if (response.paymentMethods) {
+                const updatedUser = user ? { ...user, paymentMethods: response.paymentMethods } : null;
+                setUser(updatedUser);
+                setUserInfo(updatedUser);
+            }
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const deletePaymentMethodHandler = async (id: string) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const response = await authApi.deletePaymentMethod(id);
+            if (response.paymentMethods) {
+                const updatedUser = user ? { ...user, paymentMethods: response.paymentMethods } : null;
+                setUser(updatedUser);
+                setUserInfo(updatedUser);
+            }
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const updatePasswordHandler = async (data: UpdatePasswordRequest) => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            await authApi.updatePassword(data);
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const deactivateAccountHandler = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            await authApi.deactivateAccount();
+            logout();
+        } catch (err) {
+            handleError(err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -171,6 +297,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 verifyPasswordReset,
                 logout,
                 clearError,
+                userInfo,
+                fetchUserInfo: fetchUserInfoHandler,
+                updateUserInfo: updateUserInfoHandler,
+                uploadProfilePicture: uploadProfilePictureHandler,
+                addPaymentMethod: addPaymentMethodHandler,
+                updatePaymentMethod: updatePaymentMethodHandler,
+                deletePaymentMethod: deletePaymentMethodHandler,
+                updatePassword: updatePasswordHandler,
+                deactivateAccount: deactivateAccountHandler,
             }}
         >
             {children}

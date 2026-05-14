@@ -6,13 +6,17 @@ export interface Booking {
     customerName: string;
     customerEmail: string;
     dateTime: string;
-    seats: Array<Seat | string>;
+    seats: Seat[];
     totalPrice: number;
-    status: 'Confirmed' | 'Pending' | 'Cancelled';
+    status: 'Confirmed' | 'Cancelled' | 'Completed';
+    payment?: PaymentInfo;
     poster: string;
     theaterName: string;
     screenId?: string;
     showTime?: string;
+    genres?: string[];
+    duration?: string;
+    format?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -47,6 +51,9 @@ export interface CreateBookingRequest {
     customerEmail: string;
     poster?: string;
     payment?: PaymentInfo;
+    genres?: string[];
+    duration?: string;
+    format?: string;
 }
 
 export type CreateBookingPayload = CreateBookingRequest;

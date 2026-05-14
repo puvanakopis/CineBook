@@ -81,7 +81,9 @@ export default function SelectSeats() {
                 let currentPrice = defaultStandardPrice;
                 let bookedSeatIds: string[] = [];
 
-                if (payload.theater?.id) {
+                if (payload.price !== undefined) {
+                    currentPrice = payload.price;
+                } else if (payload.theater?.id) {
                     try {
                         const th = await theaterApi.getTheaterById(payload.theater.id);
                         let foundPrice: number | null = null;
