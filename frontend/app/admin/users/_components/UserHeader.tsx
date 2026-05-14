@@ -2,7 +2,11 @@
 
 import { MdPersonAdd } from 'react-icons/md';
 
-export function UserHeader() {
+interface UserHeaderProps {
+    onAddUser: () => void;
+}
+
+export function UserHeader({ onAddUser }: UserHeaderProps) {
     return (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -15,7 +19,10 @@ export function UserHeader() {
             </div>
 
             <div className="flex items-center gap-3">
-                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-dark shadow-lg shadow-primary/20 transition-all">
+                <button 
+                    onClick={onAddUser}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-dark shadow-lg shadow-primary/20 transition-all"
+                >
                     <MdPersonAdd className="text-lg" />
                     Add User
                 </button>

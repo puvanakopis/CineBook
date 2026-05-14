@@ -5,11 +5,10 @@ import { MdPeopleOutline, MdPersonOutline, MdPersonAddAlt1, MdPersonOff } from '
 interface UserStatsGridProps {
   total: number;
   active: number;
-  managers: number;
   suspended: number;
 }
 
-export function UserStatsGrid({ total, active, managers, suspended }: UserStatsGridProps) {
+export function UserStatsGrid({ total, active, suspended }: UserStatsGridProps) {
   const stats = [
     {
       label: 'Total Users',
@@ -22,12 +21,6 @@ export function UserStatsGrid({ total, active, managers, suspended }: UserStatsG
       value: active.toLocaleString(),
       icon: MdPersonOutline,
       bgColor: 'bg-emerald-500/10 text-emerald-600',
-    },
-    {
-      label: 'Managers',
-      value: managers.toLocaleString(),
-      icon: MdPersonAddAlt1,
-      bgColor: 'bg-amber-500/10 text-amber-600',
     },
     {
       label: 'Suspended',

@@ -40,7 +40,6 @@ const AdminNavbar = () => {
         { href: "/admin/theaters", label: "Theaters" },
         { href: "/admin/bookings", label: "Bookings" },
         { href: "/admin/users", label: "Users" },
-        { href: "/admin/reports", label: "Reports" },
     ];
 
     return (
@@ -119,7 +118,6 @@ const AdminNavbar = () => {
                                 <Link href="/admin/movies" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Movies</Link>
                                 <Link href="/admin/bookings" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Bookings</Link>
                                 <Link href="/admin/users" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Users</Link>
-                                <Link href="/admin/reports" className="block px-4 py-2 text-sm text-white hover:bg-[#241818]">Reports</Link>
                                 <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-white hover:bg-[#241818]">Logout</button>
                             </div>
                         )}

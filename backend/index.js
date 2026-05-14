@@ -10,6 +10,7 @@ const movieRoutes = require('./routes/movieRoutes');
 const theaterRoutes = require('./routes/theaterRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const passport = require('./config/passport');
 
 connectDB();
@@ -32,6 +33,7 @@ app.use('/api/movies', movieRoutes);
 app.use('/api/theaters', theaterRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.get('/', (req, res) => res.send('Hello from CineBook!'));
 

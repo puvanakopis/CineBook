@@ -19,7 +19,6 @@ const navItems = [
     { name: 'Theaters', path: '/admin/theaters', icon: MdTheaters, badge: null },
     { name: 'Movies', path: '/admin/movies', icon: MdMovie, badge: null },
     { name: 'Bookings', path: '/admin/bookings', icon: MdConfirmationNumber, badge: '12' },
-    { name: 'Reports', path: '/admin/reports', icon: MdBarChart, badge: null },
 ];
 
 const settingsItems = [
