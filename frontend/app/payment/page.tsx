@@ -1,11 +1,13 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import PaymentHeader from "./_components/PaymentHeader";
 import PaymentForm from "./_components/PaymentForm";
 import OrderSummary from "./_components/OrderSummary";
 import Loading from "@/components/Loading";
+import { useAuth } from "@/contexts/AuthContext";
+import { PaymentMethod } from "@/interfaces/authInterface";
 
 interface Seat {
     id: string;
@@ -26,6 +28,7 @@ interface OrderData {
 function PaymentContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { user, isAuthenticated, fetchUserInfo, isLoading } = useAuth();
     const dataString = searchParams.get('data');
 
     const [orderData, setOrderData] = useState<OrderData | null>(null);
@@ -33,12 +36,23 @@ function PaymentContent() {
     const [paymentStatus, setPaymentStatus] = useState<"idle" | "success" | "error">("idle");
     const [paymentMethod, setPaymentMethod] = useState<string>('card');
     const [formData, setFormData] = useState({
+        customerName: "",
+        customerEmail: "",
         cardName: "",
         cardNumber: "",
         expiry: "",
         cvv: ""
     });
+    const [selectedSavedCardId, setSelectedSavedCardId] = useState<string | null>(null);
+    const [selectedCardBrand, setSelectedCardBrand] = useState<string | null>(null);
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const cvvRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchUserInfo();
+        }
+    }, [isAuthenticated, fetchUserInfo]);
 
     useEffect(() => {
         if (dataString) {
@@ -82,6 +96,34 @@ function PaymentContent() {
         if (errors[e.target.name]) {
             setErrors({ ...errors, [e.target.name]: "" });
         }
+        if (['cardNumber', 'expiry', 'cardName'].includes(e.target.name)) {
+            setSelectedSavedCardId(null);
+        }
+    };
+
+    const handleSelectSavedMethod = (method: PaymentMethod) => {
+        setFormData({
+            ...formData,
+            cardName: method.cardholderName,
+            cardNumber: method.cardNumber,
+            expiry: method.expiryDate,
+            cvv: "" // CVV is not stored
+        });
+        setSelectedSavedCardId(method._id);
+        setSelectedCardBrand(method.brand);
+        
+        // Clear card errors when selecting a saved card
+        const newErrors = { ...errors };
+        delete newErrors.cardName;
+        delete newErrors.cardNumber;
+        delete newErrors.expiry;
+        delete newErrors.cvv;
+        setErrors(newErrors);
+
+        // Focus CVV field after a short delay for smooth transition
+        setTimeout(() => {
+            cvvRef.current?.focus();
+        }, 100);
     };
 
     const validateForm = () => {
@@ -91,7 +133,9 @@ function PaymentContent() {
         
         if (paymentMethod === 'card') {
             if (!formData.cardName?.toString().trim()) newErrors.cardName = "Cardholder name is required";
-            if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s+/g, ''))) newErrors.cardNumber = "Invalid card number (16 digits required)";
+            if (!selectedSavedCardId && !/^\d{16}$/.test(formData.cardNumber.replace(/\s+/g, ''))) {
+                newErrors.cardNumber = "Invalid card number (16 digits required)";
+            }
             if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry)) newErrors.expiry = "Use MM/YY format";
             if (!/^\d{3,4}$/.test(formData.cvv)) newErrors.cvv = "Invalid CVV (3-4 digits)";
         }
@@ -116,6 +160,8 @@ function PaymentContent() {
                     provider: 'MockGateway',
                     cardName: formData.cardName,
                     cardNumber: formData.cardNumber.replace(/\s+/g, ''),
+                    cvv: formData.cvv,
+                    paymentMethodId: selectedSavedCardId
                   }
                 : {
                     method: 'cash',
@@ -193,6 +239,12 @@ function PaymentContent() {
                     onSubmit={handleSubmit}
                     paymentMethod={paymentMethod}
                     onMethodChange={setPaymentMethod}
+                    savedMethods={user?.paymentMethods || []}
+                    onSelectSavedMethod={handleSelectSavedMethod}
+                    selectedSavedCardId={selectedSavedCardId}
+                    selectedCardBrand={selectedCardBrand}
+                    cvvRef={cvvRef}
+                    isMethodsLoading={isLoading}
                 />
 
                 <div className="w-full lg:w-[380px] flex-shrink-0">

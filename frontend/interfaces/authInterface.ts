@@ -110,6 +110,8 @@ export interface AuthContextType extends AuthState {
     verifyPasswordReset: (data: VerifyPasswordResetRequest) => Promise<void>;
     logout: () => void;
     clearError: () => void;
+    userInfo: User | null;
+    fetchUserInfo: () => Promise<void>;
     uploadProfilePicture: (file: File) => Promise<void>;
     addPaymentMethod: (data: Partial<PaymentMethod>) => Promise<void>;
     updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => Promise<void>;
