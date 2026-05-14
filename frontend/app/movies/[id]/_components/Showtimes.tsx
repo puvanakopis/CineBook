@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { MdOutlineCancel, MdOutlineFastfood, MdOutlineTheaterComedy } from "react-icons/md";
 import { FaRegCheckCircle, FaParking, FaWheelchair } from "react-icons/fa";
 import { Theater } from "@/interfaces/movieInterface";
+import { navigateToSelectSeats, BookingPayload } from "@/utils/bookingNavigation";
 
 interface ShowtimesProps {
     theaters: Theater[];
@@ -12,35 +13,45 @@ interface ShowtimesProps {
     onDateSelect: (date: string) => void;
     formatDateDisplay: (dateString: string) => { day: string; month: string; weekday: string };
     movie?: any;
+    averageRating?: number;
 }
 
-const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateDisplay, movie }: ShowtimesProps) => {
+const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateDisplay, movie, averageRating }: ShowtimesProps) => {
     const router = useRouter();
 
     const handleShowtimeClick = (theater: Theater, show: any) => {
         if (show.status !== 'sold-out') {
             const screen = (theater.screens || []).find(s => s.shows.some(sh => sh.date === show.date && sh.time === show.time));
-            const payload = {
+            
+            if (!screen) return;
+
+            const payload: BookingPayload = {
                 movie: {
                     id: movie?._id || movie?.id || null,
                     title: movie?.title || "",
                     poster: movie?.poster || "",
+                    genres: movie?.genres || [],
+                    duration: movie?.duration || "",
+                    rating: averageRating || movie?.rating || 0,
                 },
                 theater: {
                     id: theater.theater_id,
                     name: theater.name,
                     address: theater.address,
                 },
-                screen: screen ? { id: screen.screen_id, name: screen.name, type: screen.type } : undefined,
+                screen: {
+                    id: screen.screen_id,
+                    name: screen.name,
+                    type: screen.type
+                },
                 date: selectedDate,
                 time: show.time,
                 price: show.price,
-                currency: show.currency,
-                format: "Standard",
+                currency: show.currency || "LKR",
+                format: screen.type || "Standard",
             };
 
-            const searchString = encodeURIComponent(JSON.stringify(payload));
-            router.push(`/select-seats?data=${searchString}`);
+            navigateToSelectSeats(router, payload);
         }
     };
 

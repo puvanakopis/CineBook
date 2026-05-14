@@ -75,7 +75,10 @@ exports.processPayment = async (req, res) => {
             theaterId,
             theaterName,
             screenId,
-            showTime
+            showTime,
+            genres: meta?.movie?.genres || meta?.genres || [],
+            duration: meta?.movie?.duration || meta?.duration || null,
+            format: meta?.format || meta?.screen?.type || null
         };
 
         const booking = new Booking(bookingPayload);
