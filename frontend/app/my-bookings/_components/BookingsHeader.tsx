@@ -5,20 +5,16 @@ interface BookingsHeaderProps {
   setActiveTab: (tab: 'upcoming' | 'past' | 'cancelled') => void;
 }
 
-export function BookingsHeader({}: BookingsHeaderProps) {
+export function BookingsHeader({ }: BookingsHeaderProps) {
   return (
-    <section className="pb-8 border-b border-[#392828]">
+    <section className="mb-16">
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-          <div>
-            <h1 className="text-white text-3xl md:text-4xl font-bold tracking-tight mb-2">
-              My Bookings
-            </h1>
-            <p className="text-text-secondary text-base">
-              Manage your upcoming movie plans, view tickets, and modify reservations.
-            </p>
-          </div>
-        </div>
+        <h1 className="text-2xl md:text-4xl font-extrabold text-white border-l-4 border-primary pl-6 tracking-wide">
+          My Bookings
+        </h1>
+        <p className="text-text-secondary text-base md:text-lg max-w-3xl leading-relaxed">
+          Manage your upcoming movie plans, view tickets, and modify reservations.
+        </p>
       </div>
     </section>
   );

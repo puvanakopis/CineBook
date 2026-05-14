@@ -32,8 +32,10 @@ export function BookingList({
   onViewTicket,
   onCompletePayment
 }: BookingListProps) {
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="space-y-6">
+
       {bookings.map((booking) => (
         <BookingCard
           key={booking.id}
@@ -44,6 +46,7 @@ export function BookingList({
           onCompletePayment={onCompletePayment}
         />
       ))}
+
     </div>
   );
 }

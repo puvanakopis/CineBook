@@ -4,7 +4,6 @@ import { Sidebar } from "@/components/Sidebar";
 import { PaymentsHeader } from "./_components/PaymentsHeader";
 import { SavedCards } from "./_components/SavedCards";
 import { AddCardForm, type CardFormData } from "./_components/AddCardForm";
-import { DigitalWallets } from "./_components/DigitalWallets";
 
 interface Card {
     id: string;
@@ -37,47 +36,35 @@ const savedCardsData: Card[] = [
 export default function Payments() {
     const handleEditCard = (cardId: string) => {
         console.log('Edit card:', cardId);
-        // Implement edit logic
     };
 
     const handleDeleteCard = (cardId: string) => {
         console.log('Delete card:', cardId);
-        // Implement delete logic
     };
 
     const handleAddCard = (cardData: CardFormData) => {
         console.log('Add card:', cardData);
-        // Implement add card logic
-    };
-
-    const handleWalletConnect = (wallet: string) => {
-        console.log('Connect wallet:', wallet);
-        // Implement wallet connection logic
     };
 
     return (
-        <div className="flex flex-1 w-full mx-auto">
+        <div className="flex w-full min-h-screen bg-[#0b0909]">
             <Sidebar />
-            <main className="flex-1 p-6 md:p-10 lg:px-16 overflow-y-auto">
-                <div className="max-w-6xl mx-auto space-y-10">
+
+            <main className="flex-1 overflow-x-hidden">
+                <div className="max-w-[1200px] mx-auto px-4 md:px-10 py-16 space-y-20">
+
                     <PaymentsHeader />
 
                     <div className="space-y-12">
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                            <div className="lg:col-span-7 space-y-8">
-                                <SavedCards
-                                    cards={savedCardsData}
-                                    onEditCard={handleEditCard}
-                                    onDeleteCard={handleDeleteCard}
-                                />
-                                <DigitalWallets onConnectWallet={handleWalletConnect} />
-                            </div>
+                        <SavedCards
+                            cards={savedCardsData}
+                            onEditCard={handleEditCard}
+                            onDeleteCard={handleDeleteCard}
+                        />
 
-                            <div className="lg:col-span-5">
-                                <AddCardForm onAddCard={handleAddCard} />
-                            </div>
-                        </div>
+                        <AddCardForm onAddCard={handleAddCard} />
                     </div>
+
                 </div>
             </main>
         </div>

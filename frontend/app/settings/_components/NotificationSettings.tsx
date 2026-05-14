@@ -13,18 +13,6 @@ interface NotificationSettingsProps {
     onPushAlertsChange: (value: boolean) => void;
 }
 
-function ToggleSwitch({ enabled, onChange }: { enabled: boolean; onChange: (val: boolean) => void }) {
-    return (
-        <button
-            onClick={() => onChange(!enabled)}
-            className={`w-12 h-6 rounded-full p-1 flex items-center transition-all ${enabled ? 'bg-primary justify-end' : 'bg-[#1e1616] justify-start border border-[#392828]'
-                }`}
-        >
-            <div className={`w-4 h-4 rounded-full transition-all ${enabled ? 'bg-white' : 'bg-white/20'}`} />
-        </button>
-    );
-}
-
 export function NotificationSettings({
     emailReleases,
     onEmailReleasesChange,
@@ -37,53 +25,152 @@ export function NotificationSettings({
 }: NotificationSettingsProps) {
     return (
         <section>
-            <div className="flex items-center gap-3 mb-6">
-                <MdNotificationsActive className="text-primary text-2xl" />
-                <h3 className="text-white text-xl font-bold">Notification Settings</h3>
+            <div className="flex items-center gap-3 mb-8">
+                <MdNotificationsActive className="text-primary text-xl" />
+
+                <h2 className="text-xl font-bold text-white tracking-wider">
+                    Notification Settings
+                </h2>
             </div>
 
-            <div className="bg-[#291e1e]/30 p-6 rounded-xl border border-[#392828]/50">
-                <div className="space-y-10">
-                    <div>
-                        <h4 className="text-sm font-bold tracking-wider text-white/80 mb-4">Email Notifications</h4>
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm font-bold">Movie releases</div>
-                                    <div className="text-xs text-white/50">Get notified when new blockbusters hit the screen</div>
-                                </div>
-                                <ToggleSwitch enabled={emailReleases} onChange={onEmailReleasesChange} />
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm font-bold">Promotional offers</div>
-                                    <div className="text-xs text-white/50">Exclusive discounts and premiere access codes</div>
-                                </div>
-                                <ToggleSwitch enabled={emailPromos} onChange={onEmailPromosChange} />
-                            </div>
-                        </div>
+            <div className="bg-[#1a1414] p-8 rounded-xl border border-[#392828] shadow-2xl space-y-10">
+
+                <div>
+                    <div className="flex items-center gap-3 mb-5">
+                        <h3 className="text-white text-lg font-semibold tracking-wide">
+                            Email Notifications
+                        </h3>
                     </div>
 
-                    <div>
-                        <h4 className="text-sm font-bold tracking-wider text-white/80 mb-4">Push Notifications</h4>
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm font-bold">Booking reminders</div>
-                                    <div className="text-xs text-white/50">Never miss your showtime. Reminders 1 hour before</div>
-                                </div>
-                                <ToggleSwitch enabled={pushReminders} onChange={onPushRemindersChange} />
+                    <div className="space-y-4">
+
+                        <div className="flex items-start justify-between gap-6 p-5 rounded-xl bg-surface-dark border border-[#392828]">
+
+                            <div className="space-y-1">
+                                <h4 className="text-white font-semibold text-sm tracking-wide">
+                                    Movie Releases
+                                </h4>
+
+                                <p className="text-text-secondary text-sm leading-relaxed max-w-md">
+                                    Get notified when newly released blockbuster movies become available.
+                                </p>
                             </div>
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm font-bold">Ticket alerts</div>
-                                    <div className="text-xs text-white/50">Instant updates on ticket availability and seat upgrades</div>
-                                </div>
-                                <ToggleSwitch enabled={pushAlerts} onChange={onPushAlertsChange} />
-                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => onEmailReleasesChange(!emailReleases)}
+                                className={`w-12 h-6 rounded-full p-1 flex items-center transition-all duration-300 ${emailReleases
+                                        ? 'bg-primary justify-end'
+                                        : 'bg-surface-dark border border-[#392828] justify-start'
+                                    }`}
+                            >
+                                <div
+                                    className={`w-4 h-4 rounded-full transition-all duration-300 ${emailReleases ? 'bg-white' : 'bg-white/30'
+                                        }`}
+                                />
+                            </button>
+
                         </div>
+
+                        <div className="flex items-start justify-between gap-6 p-5 rounded-xl bg-surface-dark border border-[#392828]">
+
+                            <div className="space-y-1">
+                                <h4 className="text-white font-semibold text-sm tracking-wide">
+                                    Promotional Offers
+                                </h4>
+
+                                <p className="text-text-secondary text-sm leading-relaxed max-w-md">
+                                    Receive exclusive discounts, special promotions, and early access offers.
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => onEmailPromosChange(!emailPromos)}
+                                className={`w-12 h-6 rounded-full p-1 flex items-center transition-all duration-300 ${emailPromos
+                                        ? 'bg-primary justify-end'
+                                        : 'bg-surface-dark border border-[#392828] justify-start'
+                                    }`}
+                            >
+                                <div
+                                    className={`w-4 h-4 rounded-full transition-all duration-300 ${emailPromos ? 'bg-white' : 'bg-white/30'
+                                        }`}
+                                />
+                            </button>
+
+                        </div>
+
                     </div>
                 </div>
+
+                <div>
+                    <div className="flex items-center gap-3 mb-5">
+                        <h3 className="text-white text-lg font-semibold tracking-wide">
+                            Push Notifications
+                        </h3>
+                    </div>
+
+                    <div className="space-y-4">
+
+                        <div className="flex items-start justify-between gap-6 p-5 rounded-xl bg-surface-dark border border-[#392828]">
+
+                            <div className="space-y-1">
+                                <h4 className="text-white font-semibold text-sm tracking-wide">
+                                    Booking Reminders
+                                </h4>
+
+                                <p className="text-text-secondary text-sm leading-relaxed max-w-md">
+                                    Receive reminders before your scheduled movie showtime starts.
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => onPushRemindersChange(!pushReminders)}
+                                className={`w-12 h-6 rounded-full p-1 flex items-center transition-all duration-300 ${pushReminders
+                                        ? 'bg-primary justify-end'
+                                        : 'bg-surface-dark border border-[#392828] justify-start'
+                                    }`}
+                            >
+                                <div
+                                    className={`w-4 h-4 rounded-full transition-all duration-300 ${pushReminders ? 'bg-white' : 'bg-white/30'
+                                        }`}
+                                />
+                            </button>
+
+                        </div>
+
+                        <div className="flex items-start justify-between gap-6 p-5 rounded-xl bg-surface-dark border border-[#392828]">
+
+                            <div className="space-y-1">
+                                <h4 className="text-white font-semibold text-sm tracking-wide">
+                                    Ticket Alerts
+                                </h4>
+
+                                <p className="text-text-secondary text-sm leading-relaxed max-w-md">
+                                    Stay updated about seat availability, booking confirmations, and upgrades.
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => onPushAlertsChange(!pushAlerts)}
+                                className={`w-12 h-6 rounded-full p-1 flex items-center transition-all duration-300 ${pushAlerts
+                                        ? 'bg-primary justify-end'
+                                        : 'bg-surface-dark border border-[#392828] justify-start'
+                                    }`}
+                            >
+                                <div
+                                    className={`w-4 h-4 rounded-full transition-all duration-300 ${pushAlerts ? 'bg-white' : 'bg-white/30'
+                                        }`}
+                                />
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
         </section>
     );

@@ -26,25 +26,36 @@ export function PreferencesSection() {
 
     return (
         <section>
-            <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-3">
-                    <IoSettingsOutline className="text-2xl text-primary" />
-                    <h3 className="text-white text-xl font-bold">Preferences</h3>
-                </div>
+
+            {/* Header (matching ChangePassword style) */}
+            <div className="flex items-center gap-3 mb-8">
+                <IoSettingsOutline className="text-primary text-xl" />
+
+                <h2 className="text-xl font-bold text-white tracking-wider">
+                    Preferences
+                </h2>
             </div>
-            <div className="bg-[#291e1e]/30 p-6 rounded-xl border border-[#392828]/50 space-y-8">
-                <div>
-                    <p className="text-text-secondary text-sm font-medium mb-4">Favorite Genres</p>
+
+            {/* Main Card */}
+            <div className="bg-[#1a1414] p-8 rounded-xl border border-[#392828] shadow-2xl space-y-8">
+
+                {/* Genres */}
+                <div className="p-5 rounded-xl bg-surface-dark border border-[#392828]">
+                    <h4 className="text-white font-semibold text-sm tracking-wide mb-4">
+                        Favorite Genres
+                    </h4>
+
                     <div className="flex flex-wrap gap-3">
                         {genres.map((genre) => {
                             const isSelected = selectedGenres.includes(genre);
+
                             return (
                                 <button
                                     key={genre}
                                     onClick={() => toggleGenre(genre)}
-                                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${isSelected
-                                        ? "bg-primary text-white border border-primary shadow-[0_0_10px_rgba(236,19,19,0.3)]"
-                                        : "bg-surface-dark text-text-secondary border border-[#392828] hover:border-text-secondary hover:text-white"
+                                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${isSelected
+                                            ? "bg-primary text-white border border-primary shadow-[0_0_10px_rgba(236,19,19,0.3)]"
+                                            : "bg-[#1a1414] text-text-secondary border border-[#392828] hover:border-primary hover:text-white"
                                         }`}
                                 >
                                     {genre}
@@ -54,48 +65,67 @@ export function PreferencesSection() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <p className="text-text-secondary text-sm font-medium mb-3">Preferred Cinema</p>
+                {/* Grid Section */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    {/* Cinema */}
+                    <div className="p-5 rounded-xl bg-surface-dark border border-[#392828]">
+                        <h4 className="text-white font-semibold text-sm tracking-wide mb-4">
+                            Preferred Cinema
+                        </h4>
+
                         <div className="relative">
-                            <select className="w-full rounded-lg bg-surface-dark border border-[#392828] text-white p-3 appearance-none focus:outline-none focus:border-primary transition-all cursor-pointer">
+                            <select className="w-full rounded-xl bg-[#1a1414] border border-[#392828] text-white px-4 py-3 text-sm appearance-none focus:outline-none focus:border-primary transition-all cursor-pointer">
                                 <option>CineMax Downtown</option>
                                 <option>CineMax Westside</option>
                                 <option>CineMax North Hills</option>
                             </select>
-                            <IoChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-text-secondary pointer-events-none" />
+
+                            <IoChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
                         </div>
                     </div>
 
-                    <div>
-                        <p className="text-text-secondary text-sm font-medium mb-3">Notification Settings</p>
-                        <div className="flex flex-col gap-3">
+                    {/* Notifications */}
+                    <div className="p-5 rounded-xl bg-surface-dark border border-[#392828]">
+                        <h4 className="text-white font-semibold text-sm tracking-wide mb-4">
+                            Notification Settings
+                        </h4>
+
+                        <div className="flex flex-col gap-4">
+
                             <label className="flex items-center justify-between cursor-pointer group">
-                                <span className="text-white text-sm group-hover:text-primary transition-colors">New Movie Releases</span>
-                                <div className="relative inline-flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        className="sr-only peer"
-                                        checked={notifications.releases}
-                                        onChange={() => toggleNotification("releases")}
-                                    />
-                                    <div className="w-11 h-6 bg-[#291e1e] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                </div>
+                                <span className="text-white text-sm group-hover:text-primary transition-colors">
+                                    New Movie Releases
+                                </span>
+
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={notifications.releases}
+                                    onChange={() => toggleNotification("releases")}
+                                />
+
+                                <div className="w-11 h-6 bg-[#291e1e] peer-focus:outline-none rounded-full peer relative peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-5 after:w-5 after:rounded-full after:transition-all peer-checked:bg-primary" />
                             </label>
+
                             <label className="flex items-center justify-between cursor-pointer group">
-                                <span className="text-white text-sm group-hover:text-primary transition-colors">Ticket Sale Alerts</span>
-                                <div className="relative inline-flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        className="sr-only peer"
-                                        checked={notifications.sales}
-                                        onChange={() => toggleNotification("sales")}
-                                    />
-                                    <div className="w-11 h-6 bg-[#291e1e] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                </div>
+                                <span className="text-white text-sm group-hover:text-primary transition-colors">
+                                    Ticket Sale Alerts
+                                </span>
+
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={notifications.sales}
+                                    onChange={() => toggleNotification("sales")}
+                                />
+
+                                <div className="w-11 h-6 bg-[#291e1e] peer-focus:outline-none rounded-full peer relative peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-5 after:w-5 after:rounded-full after:transition-all peer-checked:bg-primary" />
                             </label>
+
                         </div>
                     </div>
+
                 </div>
             </div>
         </section>

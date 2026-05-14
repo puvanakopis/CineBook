@@ -1,21 +1,29 @@
 'use client';
 
 import Link from "next/link";
+import { IoTicketOutline } from "react-icons/io5";
 
 export function BookingEmptyState() {
     return (
-        <div className="text-center py-20 bg-[#291e1e]/30 rounded-xl border border-[#392828]/50">
-            <div className="flex justify-center mb-4">
-                <span className="material-symbols-outlined text-6xl text-text-secondary">confirmation_number</span>
-            </div>
-            <p className="text-text-secondary text-lg mb-2">No bookings found</p>
-            <p className="text-text-secondary/70 text-sm mb-6">You do not have any bookings matching your criteria.</p>
+        <div className="bg-[#1a1414] p-12 rounded-xl border border-[#392828] text-center">
+
+            <IoTicketOutline className="text-5xl text-text-secondary/30 mx-auto mb-4" />
+
+            <h3 className="text-white font-bold text-lg mb-2">
+                No bookings found
+            </h3>
+
+            <p className="text-text-secondary text-sm mb-6">
+                You don’t have any bookings in this category yet.
+            </p>
+
             <Link
                 href="/movies"
-                className="inline-block bg-primary hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-lg transition-all shadow-lg shadow-primary/20 hover:-translate-y-0.5"
+                className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-bold text-sm hover:bg-red-600 transition-all"
             >
                 Browse Movies
             </Link>
+
         </div>
     );
 }

@@ -8,50 +8,84 @@ interface TwoFactorAuthProps {
     onToggle2FA: (enabled: boolean) => void;
 }
 
-export function TwoFactorAuth({ onToggle2FA }: TwoFactorAuthProps) {
+export function TwoFactorAuth({
+    onToggle2FA,
+}: TwoFactorAuthProps) {
+
     const [isEnabled, setIsEnabled] = useState(false);
 
     const handleToggle = () => {
         const newState = !isEnabled;
+
         setIsEnabled(newState);
         onToggle2FA(newState);
     };
 
     return (
         <section>
-            <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-3">
-                    <IoShieldCheckmarkOutline className="text-primary text-2xl" />
-                    <h3 className="text-white text-xl font-bold">Two-Factor Authentication</h3>
-                </div>
+
+            <div className="flex items-center gap-3 mb-8">
+                <IoShieldCheckmarkOutline className="text-primary text-xl" />
+
+                <h2 className="text-xl font-bold text-white tracking-wider">
+                    Security Settings
+                </h2>
             </div>
-            <div className="bg-[#291e1e]/30 p-6 rounded-xl border border-[#392828]/50">
-                <div className="flex flex-col md:flex-row justify-between items-start gap-6">
-                    <div className="flex-1">
-                        <p className="text-text-secondary text-sm leading-relaxed mb-4">
-                            Add an extra layer of security to your account. When enabled, you&apos;ll need to provide a unique code from your authenticator app or SMS to sign in.
-                        </p>
-                        <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-2 text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-full">
-                                <MdOutlineInfo className="text-sm" />
-                                <span className="uppercase tracking-wider">Highly Recommended</span>
-                            </div>
+
+            <div className="bg-[#1a1414] p-8 rounded-xl border border-[#392828] shadow-2xl">
+
+                <div className="flex flex-col lg:flex-row items-start justify-between gap-6 p-5 rounded-xl bg-surface-dark border border-[#392828]">
+
+                    <div className="flex-1 space-y-5">
+
+                        <div className="space-y-2">
+
+                            <h4 className="text-white font-semibold text-sm tracking-wide">
+                                Two-Factor Authentication
+                            </h4>
+
+                            <p className="text-text-secondary text-sm leading-relaxed max-w-2xl">
+                                Add an extra layer of protection to your account. When enabled,
+                                you&apos;ll be required to verify your identity using a one-time
+                                security code during sign in.
+                            </p>
+
                         </div>
+
+                        <div className="inline-flex items-center gap-2 text-xs font-semibold text-primary bg-primary/10 px-4 py-2 rounded-full border border-primary/20">
+
+                            <MdOutlineInfo className="text-sm" />
+
+                            <span className="tracking-wide uppercase">
+                                Highly Recommended
+                            </span>
+
+                        </div>
+
                     </div>
 
-                    <div className="flex items-center">
-                        <label className="inline-flex items-center cursor-pointer">
-                            <input
-                                type="checkbox"
-                                className="sr-only peer"
-                                checked={isEnabled}
-                                onChange={handleToggle}
-                            />
-                            <div className="relative w-11 h-6 bg-[#291e1e] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                        </label>
-                    </div>
+                    <button
+                        type="button"
+                        onClick={handleToggle}
+                        className={`w-12 h-6 rounded-full p-1 flex items-center transition-all duration-300 mt-1 ${isEnabled
+                            ? 'bg-primary justify-end'
+                            : 'bg-[#1a1414] border border-[#392828] justify-start'
+                            }`}
+                    >
+
+                        <div
+                            className={`w-4 h-4 rounded-full transition-all duration-300 ${isEnabled
+                                ? 'bg-white'
+                                : 'bg-white/30'
+                                }`}
+                        />
+
+                    </button>
+
                 </div>
+
             </div>
+
         </section>
     );
 }

@@ -82,6 +82,7 @@ const bookingsData: Booking[] = [
   },
 ];
 
+
 export default function Bookings() {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past' | 'cancelled'>('upcoming');
   const [searchQuery, setSearchQuery] = useState('');
@@ -131,10 +132,10 @@ export default function Bookings() {
   };
 
   return (
-    <div className="flex flex-1 w-full mx-auto">
+    <div className="flex w-full min-h-screen bg-[#0b0909]">
       <Sidebar />
-      <main className="flex-1 p-6 md:p-10 lg:px-16 overflow-y-auto">
-        <div className="max-w-6xl mx-auto space-y-10">
+      <main className="flex-1 overflow-x-hidden">
+        <div className="max-w-[1200px] mx-auto px-4 md:px-10 py-16 space-y-20">
           <BookingsHeader
             activeTab={activeTab}
             setActiveTab={setActiveTab}
