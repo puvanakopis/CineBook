@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import {
     IoPersonOutline,
@@ -27,7 +27,13 @@ const navItems = [
 
 export function Sidebar() {
     const pathname = usePathname();
-    const { userInfo } = useAuth();
+    const router = useRouter();
+    const { userInfo, logout } = useAuth();
+
+    const handleLogout = () => {
+        logout();
+        router.push("/");
+    };
 
     const isActive = (href: string) => {
         if (href === "/profile") return pathname === href;
@@ -106,13 +112,13 @@ export function Sidebar() {
             </div>
 
             <div className="mt-auto pt-6 border-t border-[#392828]/50">
-                <Link
-                    href="/logout"
-                    className="flex items-center gap-3 px-4 py-3 rounded-md text-red-400 hover:text-red-500 hover:bg-red-500/5 transition-all group"
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-4 py-3 rounded-md text-red-400 hover:text-red-500 hover:bg-red-500/5 transition-all group w-full text-left"
                 >
                     <IoLogOutOutline className="text-lg group-hover:scale-110 transition-transform" />
                     <p className="text-[11px] font-bold uppercase tracking-wider">Log Out</p>
-                </Link>
+                </button>
             </div>
         </aside>
     );
