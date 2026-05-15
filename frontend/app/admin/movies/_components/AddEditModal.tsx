@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import { useMovie } from '@/contexts/MovieContext';
-import { Movie, CreateMovieRequest } from '@/interfaces/movieInterface';
+import { Movie, CreateMovieRequest, Cast } from '@/interfaces/movieInterface';
 import { MdClose } from 'react-icons/md';
 import getImage from '@/utils/imageUrl';
 
@@ -46,8 +46,8 @@ export function AddEditModal({ isOpen, onClose, movie }: AddEditModalProps) {
     isUpcoming: false,
   });
   const [posterFile, setPosterFile] = useState<File | null>(null);
-  const [posterPreview, setPosterPreview] = useState<string>('');
-  const [castMembers, setCastMembers] = useState<Array<{ name: string; role: string; profilePicture: string }>>([]);
+  const [posterPreview, setPosterPreview] = useState<string | StaticImageData>("");
+  const [castMembers, setCastMembers] = useState<Cast[]>([]);
   const resolvedPosterPreview = posterPreview ? getImage(posterPreview, "movies") : '';
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export function AddEditModal({ isOpen, onClose, movie }: AddEditModalProps) {
         genres: movie.genres,
         duration: movie.duration,
         releaseDate: movie.releaseDate,
-        languages: movie.languages,
+        languages: Array.isArray(movie.languages) ? movie.languages : (movie.languages ? [movie.languages] : []),
         formats: movie.formats,
         synopsis: movie.synopsis,
         poster: movie.poster,
@@ -113,12 +113,15 @@ export function AddEditModal({ isOpen, onClose, movie }: AddEditModalProps) {
   };
 
   const handleLanguageToggle = (language: string) => {
-    setFormData(prev => ({
-      ...prev,
-      languages: prev.languages.includes(language)
-        ? prev.languages.filter(l => l !== language)
-        : [...prev.languages, language]
-    }));
+    setFormData(prev => {
+      const currentLanguages = Array.isArray(prev.languages) ? prev.languages : (prev.languages ? [prev.languages] : []);
+      return {
+        ...prev,
+        languages: currentLanguages.includes(language)
+          ? currentLanguages.filter(l => l !== language)
+          : [...currentLanguages, language]
+      };
+    });
   };
 
   const handleAddCast = () => {
@@ -170,7 +173,7 @@ export function AddEditModal({ isOpen, onClose, movie }: AddEditModalProps) {
         submitData.poster = posterFile;
       }
 
-      if (movie) {
+      if (movie && movie._id) {
         await updateMovie(movie._id, submitData);
       } else {
         await createMovie(submitData);
@@ -403,7 +406,7 @@ export function AddEditModal({ isOpen, onClose, movie }: AddEditModalProps) {
                     <input
                       type="text"
                       placeholder="Profile Picture URL"
-                      value={cast.profilePicture}
+                      value={cast.profilePicture || ''}
                       onChange={(e) => handleCastChange(index, 'profilePicture', e.target.value)}
                       className="flex-1 rounded-lg border border-gray-300 dark:border-[#392828] bg-white dark:bg-[#120a0a] px-3 py-1.5 text-sm"
                     />

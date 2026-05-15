@@ -166,22 +166,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const fetchUserInfoHandler = React.useCallback(async () => {
         try {
+            setIsLoading(true);
             const data = await authApi.fetchUserInfo();
             setUserInfo(data);
             setUser(data);
         } catch (err) {
             console.error("Error fetching user info:", err);
+        } finally {
+            setIsLoading(false);
         }
     }, []);
 
     const updateUserInfoHandler = React.useCallback(async (data: any) => {
         try {
+            setIsLoading(true);
             const updatedData = await authApi.updateUserInfo(data);
             setUserInfo(updatedData);
             setUser(updatedData);
         } catch (err) {
             console.error("Error updating user info:", err);
             handleError(err);
+        } finally {
+            setIsLoading(false);
         }
     }, []);
 

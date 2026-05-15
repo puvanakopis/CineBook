@@ -25,7 +25,7 @@ export function BookingStatsGrid({ total, revenue, completed, cancelled }: Booki
     },
     {
       label: 'Total Revenue',
-      value: `$${revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      value: `LKR ${revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       icon: MdAttachMoney,
       color: 'green',
       bgColor: 'bg-green-500/10 text-green-600',

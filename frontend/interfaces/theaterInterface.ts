@@ -106,7 +106,7 @@ export interface CreateTheaterRequest {
     address: string;
     city: string;
     amenities?: string[];
-    image: File | string;
+    image: File | string | StaticImageData;
     description: string;
     phone: string;
     email: string;

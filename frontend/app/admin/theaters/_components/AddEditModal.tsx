@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import { MdClose } from 'react-icons/md';
 import { useTheater } from '@/contexts/TheaterContext';
 import { Theater, CreateTheaterRequest, UpdateTheaterRequest, CreateTheaterPayload, UpdateTheaterPayload } from '@/interfaces/theaterInterface';
@@ -20,7 +20,7 @@ const amenityOptions = ['Parking', 'Wheelchair', 'Food & Beverage', 'Dolby', 'IM
 export function AddEditModal({ isOpen, onClose, theater, movies }: AddEditModalProps) {
   const { createTheater, updateTheater } = useTheater();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imagePreview, setImagePreview] = useState('');
+  const [imagePreview, setImagePreview] = useState<string | StaticImageData>('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [formData, setFormData] = useState<CreateTheaterRequest>({
     name: '',
@@ -75,7 +75,7 @@ export function AddEditModal({ isOpen, onClose, theater, movies }: AddEditModalP
         features: theater.features || {},
         screens: normalizedScreens,
         reviews: theater.reviews || [],
-        movies: theater.movies?.map((movie) => movie._id) || [],
+        movies: theater.movies?.map((movie) => movie._id).filter((id): id is string => !!id) || [],
       });
       setImagePreview(theater.image);
     } else {
@@ -183,7 +183,7 @@ export function AddEditModal({ isOpen, onClose, theater, movies }: AddEditModalP
   };
 
 
-  const handleImageChange = (value: string) => {
+  const handleImageChange = (value: string | StaticImageData) => {
     setFormData((prev) => ({ ...prev, image: value }));
     setImagePreview(value);
   };
@@ -230,7 +230,7 @@ export function AddEditModal({ isOpen, onClose, theater, movies }: AddEditModalP
         payload = fd;
       }
 
-      if (theater) {
+      if (theater && theater._id) {
         await updateTheater(theater._id, payload as UpdateTheaterPayload);
       } else {
         await createTheater(payload as CreateTheaterPayload);
@@ -430,7 +430,7 @@ export function AddEditModal({ isOpen, onClose, theater, movies }: AddEditModalP
                       <div key={sj} className="grid grid-cols-1 md:grid-cols-6 gap-2 items-center p-2 bg-white dark:bg-[#0f0b0b] rounded-md">
                         <select
                           className="col-span-2 rounded-lg border border-gray-300 dark:border-[#392828] px-3 py-2 bg-white dark:bg-[#120a0a] text-sm"
-                          value={show.movie}
+                          value={typeof show.movie === 'string' ? show.movie : (show.movie as any)?._id || ''}
                           onChange={(e) => updateShow(si, sj, 'movie', e.target.value)}
                         >
                           <option value="">Select movie</option>

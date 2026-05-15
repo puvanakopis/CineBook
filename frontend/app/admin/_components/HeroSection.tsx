@@ -1,9 +1,5 @@
 'use client';
 
-import { MdAdd } from 'react-icons/md';
-import { FaRegCalendarAlt } from "react-icons/fa";
-
-
 export function HeroSection() {
     return (
         <div className="relative overflow-hidden min-h-[180px]">
@@ -12,12 +8,6 @@ export function HeroSection() {
                 <p className="text-gray-300 max-w-lg mb-6">
                     Here&apos;s what&apos;s happening in your theaters today. You have 4 upcoming shows in the next hour.
                 </p>
-                <div className="flex gap-3">
-                    <button className="bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-lg text-sm font-medium backdrop-blur-sm transition-colors flex items-center gap-2">
-                        <FaRegCalendarAlt className="text-[20px]" />
-                        Schedule Show
-                    </button>
-                </div>
             </div>
         </div>
     );

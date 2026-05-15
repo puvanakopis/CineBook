@@ -18,7 +18,6 @@ const ALLOWED_PATHS = {
         "/admin/bookings",
         "/admin/movies",
         "/admin/theaters",
-        "/admin/reports",
         "/admin/users",
     ],
     user: [
@@ -122,4 +121,4 @@ export default function RouteGuard({ children }: RouteGuardProps) {
             {showCineBot && <CineBotChat />}
         </>
     );
-}
+}

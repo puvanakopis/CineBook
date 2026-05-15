@@ -11,13 +11,6 @@ export function BookingHeader() {
           Monitor and manage all customer bookings in real-time.
         </p>
       </div>
-
-      <div className="flex items-center gap-3">
-        <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary-dark shadow-lg shadow-primary/20 transition-all">
-          <MdAdd className="text-lg" />
-          New Booking
-        </button>
-      </div>
     </div>
   );
 }

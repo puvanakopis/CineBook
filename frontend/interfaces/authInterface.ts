@@ -112,6 +112,7 @@ export interface AuthContextType extends AuthState {
     clearError: () => void;
     userInfo: User | null;
     fetchUserInfo: () => Promise<void>;
+    updateUserInfo: (data: Partial<User>) => Promise<void>;
     uploadProfilePicture: (file: File) => Promise<void>;
     addPaymentMethod: (data: Partial<PaymentMethod>) => Promise<void>;
     updatePaymentMethod: (id: string, data: Partial<PaymentMethod>) => Promise<void>;

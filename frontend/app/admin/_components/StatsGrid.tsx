@@ -1,50 +1,59 @@
 'use client';
 
-import { MdPayments, MdConfirmationNumber, MdMovieFilter, MdEventSeat } from 'react-icons/md';
+import { MdPayments, MdConfirmationNumber, MdMovieFilter, MdPeople } from 'react-icons/md';
 
-const stats = [
-  {
-    label: 'Total Revenue',
-    value: '$12,450',
-    change: '+12%',
-    changeType: 'positive',
-    icon: MdPayments,
-    iconColor: 'text-green-500',
-    bgColor: 'bg-green-500/10',
-  },
-  {
-    label: 'Tickets Sold Today',
-    value: '842',
-    change: '+5%',
-    changeType: 'positive',
-    icon: MdConfirmationNumber,
-    iconColor: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
-  },
-  {
-    label: 'Active Movies',
-    value: '14',
-    change: '0%',
-    changeType: 'neutral',
-    icon: MdMovieFilter,
-    iconColor: 'text-purple-500',
-    bgColor: 'bg-purple-500/10',
-  },
-  {
-    label: 'Occupancy Rate',
-    value: '76%',
-    change: '+2.4%',
-    changeType: 'positive',
-    icon: MdEventSeat,
-    iconColor: 'text-orange-500',
-    bgColor: 'bg-orange-500/10',
-  },
-];
+interface StatsGridProps {
+  stats: {
+    totalRevenue: number;
+    totalBookings: number;
+    totalUsers: number;
+    activeMovies: number;
+  };
+}
 
-export function StatsGrid() {
+export function StatsGrid({ stats }: StatsGridProps) {
+  const displayStats = [
+    {
+      label: 'Total Revenue',
+      value: `LKR ${stats.totalRevenue.toLocaleString()}`,
+      change: '+12%', // Static for now as we don't have historical data yet
+      changeType: 'positive',
+      icon: MdPayments,
+      iconColor: 'text-green-500',
+      bgColor: 'bg-green-500/10',
+    },
+    {
+      label: 'Total Bookings',
+      value: stats.totalBookings.toLocaleString(),
+      change: '+5%',
+      changeType: 'positive',
+      icon: MdConfirmationNumber,
+      iconColor: 'text-blue-500',
+      bgColor: 'bg-blue-500/10',
+    },
+    {
+      label: 'Total Users',
+      value: stats.totalUsers.toLocaleString(),
+      change: '+3%',
+      changeType: 'positive',
+      icon: MdPeople,
+      iconColor: 'text-orange-500',
+      bgColor: 'bg-orange-500/10',
+    },
+    {
+      label: 'Active Movies',
+      value: stats.activeMovies.toString(),
+      change: '0%',
+      changeType: 'neutral',
+      icon: MdMovieFilter,
+      iconColor: 'text-purple-500',
+      bgColor: 'bg-purple-500/10',
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((stat, index) => {
+      {displayStats.map((stat, index) => {
         const Icon = stat.icon;
         return (
           <div
@@ -72,4 +81,4 @@ export function StatsGrid() {
       })}
     </div>
   );
-}
+}

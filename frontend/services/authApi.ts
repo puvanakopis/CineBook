@@ -159,3 +159,5 @@ export const authApi = {
 
 export const fetchUserInfo = authApi.fetchUserInfo;
 export const updateUserInfo = authApi.updateUserInfo;
+
+export default api;

@@ -20,7 +20,7 @@ export function BookingList({
 
       {bookings.map((booking) => (
         <BookingCard
-          key={booking.id}
+          key={booking._id || booking.id}
           booking={booking}
           onCancel={onCancelBooking}
           onViewTicket={onViewTicket}

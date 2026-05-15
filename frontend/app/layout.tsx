@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Be_Vietnam_Pro, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import RouteGuard from "@/route/RouteGuard";
@@ -5,6 +6,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { MovieProvider } from "@/contexts/MovieContext";
 import { TheaterProvider } from "@/contexts/TheaterContext";
 import { BookingProvider } from "@/contexts/BookingContext";
+import Loading from "@/components/Loading";
 import { Toaster } from "react-hot-toast";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -38,9 +40,11 @@ export default function RootLayout({
           <TheaterProvider>
             <MovieProvider>
               <BookingProvider>
-                <RouteGuard>
-                  {children}
-                </RouteGuard>
+                <Suspense fallback={<Loading />}>
+                  <RouteGuard>
+                    {children}
+                  </RouteGuard>
+                </Suspense>
               </BookingProvider>
             </MovieProvider>
           </TheaterProvider>

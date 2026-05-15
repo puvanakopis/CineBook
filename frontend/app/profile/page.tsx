@@ -7,9 +7,10 @@ import { PersonalInfoForm } from "./_components/PersonalInfoForm";
 import { PreferencesSection } from "./_components/PreferencesSection";
 import { AuthContext } from "@/contexts/AuthContext";
 import { toast } from "react-hot-toast";
+import Loading from "@/components/Loading";
 
 export default function Profile() {
-  const { userInfo, fetchUserInfo, updateUserInfo } = useContext(AuthContext);
+  const { userInfo, fetchUserInfo, updateUserInfo, isLoading } = useContext(AuthContext)!;
 
   useEffect(() => {
     fetchUserInfo();
@@ -24,6 +25,10 @@ export default function Profile() {
       console.error("Update profile error:", err);
     }
   };
+
+  if (isLoading || !userInfo) {
+    return <Loading message="Loading profile..." />;
+  }
 
   return (
     <div className="flex w-full min-h-screen bg-[#0b0909]">
