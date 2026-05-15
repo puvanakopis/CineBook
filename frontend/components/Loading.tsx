@@ -1,49 +1,39 @@
 type LoadingProps = {
   message?: string;
+  fullHeight?: boolean;
   inline?: boolean;
   size?: 'sm' | 'md' | 'lg';
 };
 
-function Spinner({
-  inline = false,
-  size = 'md',
-}: {
-  inline?: boolean;
-  size?: 'sm' | 'md' | 'lg';
-}) {
-  const sizes: Record<string, string> = {
-    sm: 'w-5 h-5 border-2',
-    md: 'w-8 h-8 border-4',
-    lg: 'w-12 h-12 border-4',
-  };
-
-  return (
-    <div className={`${inline ? '' : 'flex items-center justify-center'}`}>
-      <div
-        className={`${sizes[size]} border-primary border-t-transparent rounded-full animate-spin`}
-      ></div>
-    </div>
-  );
-}
-
 export default function Loading({
   message = 'Loading ...',
+  fullHeight = true,
   inline = false,
   size = 'md',
 }: LoadingProps) {
-  if (inline) {
-    return <Spinner inline size={size} />;
-  }
+  const sizeClasses = {
+    sm: 'h-4 w-4 border-2',
+    md: 'h-12 w-12 border-t-2 border-b-2',
+    lg: 'h-16 w-16 border-t-4 border-b-4',
+  };
+
+  const containerClasses = inline
+    ? 'flex items-center gap-2'
+    : `flex flex-col items-center justify-center ${fullHeight ? 'min-h-[90vh]' : 'py-12'} gap-4`;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="flex flex-col items-center gap-4">
-        <Spinner size={size} />
-
-        <p className="text-text-secondary animate-pulse">
+    <div className={containerClasses}>
+      <div className={`animate-spin rounded-full ${sizeClasses[size]} border-primary`}></div>
+      {message && !inline && (
+        <p className="text-slate-500 dark:text-[#b99d9d] animate-pulse font-medium">
           {message}
         </p>
-      </div>
+      )}
+      {message && inline && (
+        <span className="text-slate-500 dark:text-[#b99d9d] font-medium text-sm">
+          {message}
+        </span>
+      )}
     </div>
   );
 }

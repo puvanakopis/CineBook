@@ -4,7 +4,7 @@ const bookingController = require('../controllers/bookingController');
 const { protect } = require('../middlewares/authMiddleware');
 
 router.post('/', bookingController.createBooking);
-router.get('/', bookingController.getBookings);
+router.get('/', protect, bookingController.getBookings);
 router.get('/me', protect, bookingController.getMyBookings);
 router.get('/booked-seats', bookingController.getBookedSeats);
 router.get('/:id', bookingController.getBookingById);

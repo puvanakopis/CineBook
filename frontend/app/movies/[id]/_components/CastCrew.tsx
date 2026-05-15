@@ -8,7 +8,7 @@ interface CastCrewProps {
 }
 
 const CastCrew = ({ cast }: CastCrewProps) => {
-  const getIcon = (type: string) => {
+  const getIcon = (type?: string) => {
     switch (type) {
       case 'actor':
         return 'person';

@@ -70,10 +70,12 @@ exports.getBookings = async (req, res) => {
         const { email } = req.query;
         let query = {};
 
-        if (req.user && req.user._id) {
+        // If admin, see all (optionally filter by customer email)
+        // If regular user, see only own bookings
+        if (req.user.role === 'admin') {
+            if (email) query.customerEmail = email;
+        } else {
             query.user = req.user._id;
-        } else if (email) {
-            query.customerEmail = email;
         }
 
         const bookings = await Booking.find(query).sort({ createdAt: -1 }).limit(100);

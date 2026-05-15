@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { MdEdit, MdDelete, MdMovie } from 'react-icons/md';
 import { Theater } from '@/interfaces/theaterInterface';
 import getImage from '@/utils/imageUrl';
+import { useState, useMemo, useEffect } from 'react';
+import Pagination from '../../_components/Pagination';
 
 interface TheaterTableProps {
   theaters: Theater[];
@@ -12,20 +14,23 @@ interface TheaterTableProps {
 }
 
 export function TheaterTable({ theaters, onEdit, onDelete }: TheaterTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const totalPages = Math.ceil(theaters.length / itemsPerPage);
+
+  const currentItems = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return theaters.slice(startIndex, startIndex + itemsPerPage);
+  }, [theaters, currentPage]);
+
+  // Reset to first page when filtering
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [theaters.length]);
+
   return (
     <section className="rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-[#392828] shadow-sm overflow-hidden">
-      <div className="p-6 border-b border-gray-200 dark:border-[#392828] flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">Theater catalog</h3>
-          <p className="text-sm text-slate-500 dark:text-[#b99d9d] mt-1">
-            Review theater details and manage assigned movies.
-          </p>
-        </div>
-        <span className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-[#b99d9d] font-semibold">
-          {theaters.length} results
-        </span>
-      </div>
-
       <div className="overflow-x-auto">
         <table className="min-w-full text-left border-collapse">
           <thead className="bg-slate-50 dark:bg-[#1a0f0f]">
@@ -39,8 +44,8 @@ export function TheaterTable({ theaters, onEdit, onDelete }: TheaterTableProps) 
           </thead>
 
           <tbody className="divide-y divide-gray-200 dark:divide-[#392828]">
-            {theaters.length > 0 ? (
-              theaters.map((theater) => {
+            {currentItems.length > 0 ? (
+              currentItems.map((theater) => {
                 const imageSrc = getImage(theater.image, 'theaters');
 
                 return (
@@ -95,6 +100,13 @@ export function TheaterTable({ theaters, onEdit, onDelete }: TheaterTableProps) 
           </tbody>
         </table>
       </div>
+      <Pagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalItems={theaters.length}
+        itemsPerPage={itemsPerPage}
+      />
     </section>
   );
 }

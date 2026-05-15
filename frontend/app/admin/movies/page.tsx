@@ -9,6 +9,7 @@ import { MovieTable } from './_components/MovieTable';
 import { AddEditModal } from './_components/AddEditModal';
 import { DeleteModal } from './_components/DeleteModal';
 import { Movie } from '@/interfaces/movieInterface';
+import Loading from '@/components/Loading';
 
 const ageRatings = ['G', 'PG', 'PG-13', 'R'];
 const releaseStatuses = ['Now Showing', 'Coming Soon'];
@@ -88,7 +89,7 @@ export default function AdminMovies() {
   };
 
   const handleDeleteConfirm = async () => {
-    if (movieToDelete) {
+    if (movieToDelete && movieToDelete._id) {
       await deleteMovie(movieToDelete._id);
       setIsDeleteModalOpen(false);
       setMovieToDelete(null);
@@ -100,6 +101,10 @@ export default function AdminMovies() {
     setSelectedMovie(undefined);
   };
 
+  if (isLoading) {
+    return <Loading message="Loading Movies..." />;
+  }
+
   return (
     <>
       <MovieHeader onAddMovie={handleAddMovie} />
@@ -107,31 +112,36 @@ export default function AdminMovies() {
         total={total}
         nowShowing={nowShowing}
         comingSoon={comingSoon}
+        totalGenres={allGenres.length}
       />
 
-      <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
-        <MovieFilters
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          selectedGenre={selectedGenre}
-          setSelectedGenre={setSelectedGenre}
-          selectedRating={selectedRating}
-          setSelectedRating={setSelectedRating}
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          genres={allGenres}
-          ageRatings={ageRatings}
-          releaseStatuses={releaseStatuses}
-        />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-1">
+          <MovieFilters
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedGenre={selectedGenre}
+            setSelectedGenre={setSelectedGenre}
+            selectedRating={selectedRating}
+            setSelectedRating={setSelectedRating}
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
+            genres={allGenres}
+            ageRatings={ageRatings}
+            releaseStatuses={releaseStatuses}
+          />
+        </div>
 
-        <MovieTable
-          movies={filteredMovies}
-          isLoading={isLoading}
-          getReleaseStatus={getReleaseStatus}
-          getAgeRating={getAgeRating}
-          onEdit={handleEditMovie}
-          onDelete={handleDeleteClick}
-        />
+        <div className="lg:col-span-3">
+          <MovieTable
+            movies={filteredMovies}
+            isLoading={isLoading}
+            getReleaseStatus={getReleaseStatus}
+            getAgeRating={getAgeRating}
+            onEdit={handleEditMovie}
+            onDelete={handleDeleteClick}
+          />
+        </div>
       </div>
 
       <AddEditModal

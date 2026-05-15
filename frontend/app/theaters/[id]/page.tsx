@@ -5,7 +5,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useTheater } from "@/contexts/TheaterContext";
 import { theaterApi } from '@/services/theaterApi';
 import { movieApi } from '@/services/movieApi';
-import { Theater, Screen, MovieShowtime, TimeSlot } from "@/interfaces/theaterInterface";
+import { Theater, Screen, MovieShowtime, TimeSlot, TheaterFeatures } from "@/interfaces/theaterInterface";
 import { Movie as ApiMovie } from '@/interfaces/movieInterface';
 import TheaterHero from "./_components/TheaterHero";
 import TheaterShowtimes from "./_components/TheaterShowtimes";
@@ -268,7 +268,7 @@ export default function TheaterDetail() {
                 <div className="flex flex-col lg:flex-row gap-8">
                     <div className="lg:w-2/3">
                         <TheaterShowtimes
-                            theaterId={theater.theater_id}
+                            theaterId={theater.theater_id || ""}
                             theaterName={theater.name}
                             theaterAddress={theater.address}
                             screens={theater.screens}

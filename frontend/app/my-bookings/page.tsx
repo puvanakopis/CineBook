@@ -7,7 +7,7 @@ import { BookingList } from "./_components/BookingList";
 import { BookingEmptyState } from "./_components/BookingEmptyState";
 import { useBooking } from "@/contexts/BookingContext";
 import { useEffect, useState, useMemo } from "react";
-import { BiLoaderAlt } from "react-icons/bi";
+import Loading from "@/components/Loading";
 
 export default function Bookings() {
   const { myBookings, isLoading, error, getMyBookings, cancelBooking } = useBooking();
@@ -91,9 +91,7 @@ export default function Bookings() {
             )}
 
             {isLoading ? (
-              <div className="flex items-center justify-center h-64">
-                <BiLoaderAlt className="w-12 h-12 text-primary animate-spin" />
-              </div>
+              <Loading message="Loading your bookings..." fullHeight={false} />
             ) : filteredBookings.length > 0 ? (
               <BookingList
                 bookings={filteredBookings}

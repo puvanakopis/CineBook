@@ -21,7 +21,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
 
     const handleShowtimeClick = (theater: Theater, show: any) => {
         if (show.status !== 'sold-out') {
-            const screen = (theater.screens || []).find(s => s.shows.some(sh => sh.date === show.date && sh.time === show.time));
+            const screen = (theater.screens || []).find(s => s.shows.some((sh: any) => sh.date === show.date && sh.time === show.time));
             
             if (!screen) return;
 
@@ -89,7 +89,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                     {theaters.map((theater) => {
                         if (!theater.screens) return null;
                         const screensWithShows = (theater.screens || []).filter(screen =>
-                            (screen.shows || []).some(show => show.date === selectedDate)
+                            (screen.shows || []).some((show: any) => show.date === selectedDate)
                         );
                         if (screensWithShows.length === 0) return null;
                         return (
@@ -150,7 +150,7 @@ const Showtimes = ({ theaters, selectedDate, allDates, onDateSelect, formatDateD
                                                 Screen: {screen.name} ({screen.screen_id})
                                             </span>
                                             <div className="flex flex-wrap gap-3">
-                                                {(screen.shows || []).filter(show => show.date === selectedDate).map((show, index) => (
+                                                {(screen.shows || []).filter((show: any) => show.date === selectedDate).map((show: any, index: number) => (
                                                     <button
                                                         key={index}
                                                         disabled={show.status === 'sold-out'}

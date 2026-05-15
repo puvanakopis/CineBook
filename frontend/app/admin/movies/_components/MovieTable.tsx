@@ -5,6 +5,8 @@ import { Movie } from '@/interfaces/movieInterface';
 import { MdEdit, MdDelete } from 'react-icons/md';
 import Loading from '@/components/Loading';
 import getImage from '@/utils/imageUrl';
+import { useState, useMemo, useEffect } from 'react';
+import Pagination from '../../_components/Pagination';
 
 interface MovieTableProps {
     movies: Movie[];
@@ -23,6 +25,21 @@ export function MovieTable({
     onEdit,
     onDelete,
 }: MovieTableProps) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+
+    const totalPages = Math.ceil(movies.length / itemsPerPage);
+
+    const currentItems = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        return movies.slice(startIndex, startIndex + itemsPerPage);
+    }, [movies, currentPage]);
+
+    // Reset to first page when filtering
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [movies.length]);
+
     if (isLoading) {
         return (
             <section className="rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-[#392828] shadow-sm overflow-hidden">
@@ -36,18 +53,6 @@ export function MovieTable({
 
     return (
         <section className="rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-[#392828] shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-gray-200 dark:border-[#392828] flex items-center justify-between">
-                <div>
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">Movie catalog</h3>
-                    <p className="text-sm text-slate-500 dark:text-[#b99d9d] mt-1">
-                        Browse the current movie selection and track release status at a glance.
-                    </p>
-                </div>
-                <span className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-[#b99d9d] font-semibold">
-                    {movies.length} results
-                </span>
-            </div>
-
             <div className="overflow-x-auto">
                 <table className="min-w-full text-left border-collapse">
                     <thead className="bg-slate-50 dark:bg-[#1a0f0f]">
@@ -61,8 +66,8 @@ export function MovieTable({
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-[#392828]">
-                        {movies.length > 0 ? (
-                            movies.map((movie) => {
+                        {currentItems.length > 0 ? (
+                            currentItems.map((movie) => {
                                 const status = getReleaseStatus(movie.releaseDate);
                                 const posterSrc = getImage(movie.poster, "movies");
 
@@ -130,6 +135,13 @@ export function MovieTable({
                     </tbody>
                 </table>
             </div>
+            <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={movies.length}
+                itemsPerPage={itemsPerPage}
+            />
         </section>
     );
 }

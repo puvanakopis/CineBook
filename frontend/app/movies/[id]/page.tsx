@@ -66,11 +66,11 @@ export default function MovieDetail() {
         parking: true,
         wheelchair: true,
       },
-      screens: showing.screens.map((screen) => ({
+      screens: showing.screens.map((screen: any) => ({
         screen_id: screen.screen_id,
         name: screen.name,
         type: screen.type,
-        shows: screen.shows.map((show) => ({
+        shows: screen.shows.map((show: any) => ({
           ...show,
           time: show.time || (show.startTime && show.endTime ? `${show.startTime} - ${show.endTime}` : ""),
         })),
@@ -111,9 +111,9 @@ export default function MovieDetail() {
     const dateSet = new Set<string>();
     theaters.forEach((theater) => {
       if (theater.screens) {
-        theater.screens.forEach((screen) => {
+        theater.screens.forEach((screen: any) => {
           if (screen.shows) {
-            screen.shows.forEach((show) => {
+            screen.shows.forEach((show: any) => {
               if (show.date) {
                 dateSet.add(show.date);
               }
@@ -183,7 +183,9 @@ export default function MovieDetail() {
     }
 
     try {
-      await addReview(selectedMovie._id, rating, reviewText);
+      if (selectedMovie && selectedMovie._id) {
+        await addReview(selectedMovie._id, rating, reviewText);
+      }
       setUserRating(0);
       setReviewText("");
     } catch (err) {
@@ -199,7 +201,7 @@ export default function MovieDetail() {
         genres={selectedMovie.genres}
         duration={selectedMovie.duration}
         releaseDate={selectedMovie.releaseDate}
-        languages={selectedMovie.languages.join(", ")}
+        languages={Array.isArray(selectedMovie.languages) ? selectedMovie.languages.join(", ") : selectedMovie.languages}
         formats={selectedMovie.formats}
         synopsis={selectedMovie.synopsis}
         poster={selectedMovie.poster}

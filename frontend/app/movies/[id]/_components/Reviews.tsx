@@ -42,7 +42,8 @@ const Reviews = ({ reviews, movieTitle, userRating, reviewText, isSubmitting, on
         }
     };
 
-    const formatDate = (dateString: string) => {
+    const formatDate = (dateString?: string) => {
+        if (!dateString) return "Recent";
         const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
     };

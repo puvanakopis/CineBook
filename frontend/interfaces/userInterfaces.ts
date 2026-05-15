@@ -1,10 +1,13 @@
 export interface User {
-  id: string;
-  name: string;
+  _id: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  role: 'Admin' | 'Manager' | 'Customer';
-  status: 'Active' | 'Suspended';
-  joinDate: string;
-  totalBookings: number;
-  lastActive: string;
+  role: 'admin' | 'manager' | 'user';
+  isActive: boolean;
+  createdAt: string;
+  totalBookings?: number;
+  lastActive?: string;
+  phone?: string;
+  profilePicture?: string;
 }
