@@ -11,6 +11,7 @@ import LoginForm from "./_components/LoginForm";
 import RegisterForm from "./_components/RegisterForm";
 import ForgotPasswordForm from "./_components/ForgotPasswordForm";
 import { LoginRequest, SignupRequestOtpRequest, VerifyPasswordResetRequest } from "@/interfaces/authInterface";
+import Loading from "@/components/Loading";
 
 export default function LoginPage() {
   const router = useRouter();

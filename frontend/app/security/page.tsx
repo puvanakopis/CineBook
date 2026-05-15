@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import Loading from "@/components/Loading";
 
 export default function Security() {
     const { updatePassword, deactivateAccount, error, clearError, userInfo, updateUserInfo, isLoading } = useAuth();
@@ -70,6 +71,10 @@ export default function Security() {
             console.error('Update notifications error:', err);
         }
     };
+
+    if (isLoading) {
+        return <Loading message="Loading security settings..." />;
+    }
 
     return (
         <div className="flex w-full min-h-screen bg-[#0b0909]">
