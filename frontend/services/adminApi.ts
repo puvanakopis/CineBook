@@ -1,5 +1,6 @@
 import axiosInstance from './authApi';
 import { User } from '@/interfaces/userInterfaces';
+import { DashboardStats } from '@/interfaces/adminInterface';
 
 export const adminApi = {
     /**
@@ -39,5 +40,13 @@ export const adminApi = {
      */
     deleteUser: async (userId: string): Promise<void> => {
         await axiosInstance.delete(`/api/admin/users/${userId}`);
+    },
+
+    /**
+     * Fetch dashboard statistics
+     */
+    getDashboardStats: async (): Promise<DashboardStats> => {
+        const response = await axiosInstance.get('/api/admin/stats');
+        return response.data;
     }
 };

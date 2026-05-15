@@ -8,6 +8,7 @@ router.use(protect);
 router.use(authorize('admin'));
 
 router.get('/users', adminController.getAllUsers);
+router.get('/stats', adminController.getDashboardStats);
 router.post('/users', adminController.createUser);
 router.patch('/users/:id/status', adminController.toggleUserStatus);
 router.patch('/users/:id/role', adminController.updateUserRole);

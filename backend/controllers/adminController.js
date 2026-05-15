@@ -1,6 +1,8 @@
 const User = require('../models/userModel');
 const Admin = require('../models/adminModel');
 const Booking = require('../models/bookingModel');
+const Movie = require('../models/movieModel');
+const Theater = require('../models/theaterModel');
 const bcrypt = require('bcryptjs');
 
 // Fetch all users and admins with their booking counts
@@ -144,5 +146,81 @@ exports.deleteUser = async (req, res) => {
         res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Server error deleting user', error: error.message });
+    }
+};
+
+// Fetch dashboard statistics
+exports.getDashboardStats = async (req, res) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const totalBookings = await Booking.countDocuments();
+        const totalMovies = await Movie.countDocuments({ isNowShowing: true });
+        
+        const revenueResult = await Booking.aggregate([
+            { $match: { 'payment.status': 'Paid' } },
+            { $group: { _id: null, total: { $sum: '$totalPrice' } } }
+        ]);
+        const totalRevenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
+
+        // Last 6 months revenue
+        const last6Months = [];
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date();
+            d.setMonth(d.getMonth() - i);
+            last6Months.push({
+                month: d.toLocaleString('default', { month: 'short' }),
+                year: d.getFullYear(),
+                monthIndex: d.getMonth()
+            });
+        }
+
+        const monthlyRevenue = await Promise.all(last6Months.map(async (m) => {
+            const start = new Date(m.year, m.monthIndex, 1);
+            const end = new Date(m.year, m.monthIndex + 1, 0, 23, 59, 59);
+            const result = await Booking.aggregate([
+                { $match: { 
+                    'payment.status': 'Paid',
+                    createdAt: { $gte: start, $lte: end }
+                } },
+                { $group: { _id: null, total: { $sum: '$totalPrice' } } }
+            ]);
+            return {
+                name: m.month,
+                revenue: result.length > 0 ? result[0].total : 0
+            };
+        }));
+
+        // Top Genres (by booking count)
+        const genreStats = await Booking.aggregate([
+            { $unwind: '$genres' },
+            { $group: { _id: '$genres', count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 5 }
+        ]);
+        const topGenres = genreStats.map(g => ({
+            name: g._id,
+            value: g.count
+        }));
+
+        // Recent Bookings
+        const recentBookings = await Booking.find()
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .lean();
+
+        res.status(200).json({
+            stats: {
+                totalRevenue,
+                totalBookings,
+                totalUsers,
+                activeMovies: totalMovies
+            },
+            monthlyRevenue,
+            topGenres,
+            recentBookings
+        });
+    } catch (error) {
+        console.error('Error fetching dashboard stats:', error);
+        res.status(500).json({ message: 'Server error fetching dashboard stats', error: error.message });
     }
 };
