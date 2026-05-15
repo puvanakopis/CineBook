@@ -125,7 +125,7 @@ export interface CreateMovieRequest {
     languages: string | string[];
     formats: string;
     synopsis: string;
-    poster?: File | string;
+    poster?: File | string | StaticImageData;
     trailerUrl: string;
     cast?: Cast[];
     reviews?: Review[];

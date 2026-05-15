@@ -6,7 +6,7 @@ export interface Booking {
     customerName: string;
     customerEmail: string;
     dateTime: string;
-    seats: Seat[];
+    seats: (Seat | string)[];
     totalPrice: number;
     status: 'Confirmed' | 'Cancelled' | 'Completed';
     payment?: PaymentInfo;

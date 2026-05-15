@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React from "react";
 import Link from "next/link";
 import { FaRegStar } from "react-icons/fa";
@@ -10,7 +10,7 @@ export interface MovieCardProps {
     genre: string;
     duration: string;
     rating: number;
-    poster: string;
+    poster: string | StaticImageData;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ id, title, genre, duration, rating, poster }) => {

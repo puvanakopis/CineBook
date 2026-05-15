@@ -219,7 +219,7 @@ export default function Movies() {
 
   return (
     <div>
-      <MovieHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <MovieHeader />
       <div className="flex flex-col lg:flex-row max-w-[1400px] mx-auto w-full px-4 md:px-10 lg:px-20 py-10 gap-8">
         <MovieFilters {...filterProps} />
 

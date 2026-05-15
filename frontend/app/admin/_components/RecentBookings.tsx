@@ -37,7 +37,7 @@ export function RecentBookings({ bookings }: RecentBookingsProps) {
           <tbody className="divide-y divide-gray-200 dark:divide-[#392828]">
             {bookings.length > 0 ? (
               bookings.map((booking) => {
-                const seatsString = booking.seats.map(s => `${s.row}${s.number}`).join(', ');
+                const seatsString = booking.seats.map(s => typeof s === 'string' ? s : `${s.row || ""}${s.number || ""}`).join(', ');
                 const formattedDate = new Date(booking.dateTime).toLocaleString('default', {
                   month: 'short',
                   day: 'numeric',
@@ -46,9 +46,11 @@ export function RecentBookings({ bookings }: RecentBookingsProps) {
                   hour12: false
                 });
 
+                const bookingId = (booking._id || booking.id || '') as string;
+
                 return (
-                  <tr key={booking._id} className="hover:bg-slate-50 dark:hover:bg-[#1f1212] transition-colors">
-                    <td className="p-4 text-sm text-slate-900 dark:text-white font-mono">#{booking._id.split('_')[1] || booking._id}</td>
+                  <tr key={bookingId} className="hover:bg-slate-50 dark:hover:bg-[#1f1212] transition-colors">
+                    <td className="p-4 text-sm text-slate-900 dark:text-white font-mono">#{bookingId.includes('_') ? bookingId.split('_')[1] : bookingId.slice(-6)}</td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <div 

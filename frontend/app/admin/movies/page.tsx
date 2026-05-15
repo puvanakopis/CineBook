@@ -89,7 +89,7 @@ export default function AdminMovies() {
   };
 
   const handleDeleteConfirm = async () => {
-    if (movieToDelete) {
+    if (movieToDelete && movieToDelete._id) {
       await deleteMovie(movieToDelete._id);
       setIsDeleteModalOpen(false);
       setMovieToDelete(null);

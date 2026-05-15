@@ -1,10 +1,11 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { StaticImageData } from "next/image";
 
 export interface BookingPayload {
     movie: {
         id: string | number;
         title: string;
-        poster: string;
+        poster: string | StaticImageData;
         genres?: string[];
         duration?: string;
         rating?: number;
@@ -26,9 +27,7 @@ export interface BookingPayload {
     format: string;
 }
 
-/**
- * Centrally handles navigation to the select-seats page with a consistent payload.
- */
+
 export const navigateToSelectSeats = (router: AppRouterInstance, payload: BookingPayload) => {
     const searchString = encodeURIComponent(JSON.stringify(payload));
     router.push(`/select-seats?data=${searchString}`);

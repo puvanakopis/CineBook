@@ -69,7 +69,7 @@ export default function AdminTheaters() {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!theaterToDelete) return;
+    if (!theaterToDelete || !theaterToDelete._id) return;
     await deleteTheater(theaterToDelete._id);
     setIsDeleteModalOpen(false);
     setTheaterToDelete(null);
