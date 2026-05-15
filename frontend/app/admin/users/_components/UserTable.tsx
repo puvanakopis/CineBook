@@ -20,7 +20,7 @@ export function UserTable({ users, onToggleStatus, onDeleteUser }: UserTableProp
 
     return (
         <section className="rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-[#392828] shadow-sm overflow-hidden h-fit">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto scrollbar-none">
                 <table className="min-w-full text-left border-collapse">
                     <thead className="bg-slate-50 dark:bg-[#1a0f0f]">
                         <tr>

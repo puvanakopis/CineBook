@@ -6,9 +6,10 @@ interface UserStatsGridProps {
   total: number;
   active: number;
   suspended: number;
+  admins: number;
 }
 
-export function UserStatsGrid({ total, active, suspended }: UserStatsGridProps) {
+export function UserStatsGrid({ total, active, suspended, admins }: UserStatsGridProps) {
   const stats = [
     {
       label: 'Total Users',
@@ -21,6 +22,12 @@ export function UserStatsGrid({ total, active, suspended }: UserStatsGridProps) 
       value: active.toLocaleString(),
       icon: MdPersonOutline,
       bgColor: 'bg-emerald-500/10 text-emerald-600',
+    },
+    {
+      label: 'Admin Users',
+      value: admins.toLocaleString(),
+      icon: MdPersonAddAlt1,
+      bgColor: 'bg-amber-500/10 text-amber-600',
     },
     {
       label: 'Suspended',

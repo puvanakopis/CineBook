@@ -105,20 +105,24 @@ export default function AdminTheaters() {
         totalMoviesAssigned={totalMoviesAssigned}
       />
 
-      <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
-        <TheaterFilters
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          selectedCity={selectedCity}
-          setSelectedCity={setSelectedCity}
-          cities={allCities}
-        />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-1">
+          <TheaterFilters
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedCity={selectedCity}
+            setSelectedCity={setSelectedCity}
+            cities={allCities}
+          />
+        </div>
 
-        <TheaterTable
-          theaters={filteredTheaters}
-          onEdit={handleEditTheater}
-          onDelete={handleDeleteClick}
-        />
+        <div className="lg:col-span-3">
+          <TheaterTable
+            theaters={filteredTheaters}
+            onEdit={handleEditTheater}
+            onDelete={handleDeleteClick}
+          />
+        </div>
       </div>
 
       <AddEditModal

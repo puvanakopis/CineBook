@@ -25,7 +25,7 @@ export function BookingTable({ bookings }: BookingTableProps) {
 
   return (
     <div className="bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-[#392828] shadow-sm overflow-hidden">
-      <div className="overflow-x-auto overflow-y-visible">
+      <div className="overflow-x-auto overflow-y-visible scrollbar-none">
         <table className="w-full text-left border-collapse min-w-[1000px]">
           <thead className="bg-slate-50 dark:bg-[#1a0f0f] border-b border-gray-200 dark:border-[#392828]">
             <tr>

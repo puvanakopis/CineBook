@@ -5,7 +5,6 @@ import { UserHeader } from './_components/UserHeader';
 import { UserStatsGrid } from './_components/UserStatsGrid';
 import { UserFilters } from './_components/UserFilters';
 import { UserTable } from './_components/UserTable';
-import { AddUserModal } from './_components/AddUserModal';
 import { adminApi } from '@/services/adminApi';
 import { User } from '@/interfaces/userInterfaces';
 import { toast } from 'react-hot-toast';
@@ -20,7 +19,6 @@ export default function AdminUsers() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState('All Roles');
   const [selectedStatus, setSelectedStatus] = useState('All Statuses');
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -81,51 +79,55 @@ export default function AdminUsers() {
   }, [users, searchQuery, selectedRole, selectedStatus]);
 
   const stats = useMemo(() => {
+    const active = users.filter(u => u.isActive && u.role === 'user').length;
+    const admins = users.filter(u => u.role === 'admin').length;
+    const suspended = users.filter(u => !u.isActive).length;
+    
     return {
       total: users.length,
-      active: users.filter(u => u.isActive && u.role === 'user').length,
-      suspended: users.filter(u => !u.isActive).length,
+      active,
+      admins,
+      suspended,
     };
   }, [users]);
-
-  if (loading) {
-    return <Loading message="Loading Users..." />;
-  }
-
-  return (
-    <>
-      <UserHeader onAddUser={() => setIsAddModalOpen(true)} />
-
-      <UserStatsGrid
-        total={stats.total}
-        active={stats.active}
-        suspended={stats.suspended}
-      />
-
-      <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
-        <UserFilters
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          selectedRole={selectedRole}
-          setSelectedRole={setSelectedRole}
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          roles={roles}
-          statuses={statuses}
+  
+    if (loading) {
+      return <Loading message="Loading Users..." />;
+    }
+  
+    return (
+      <>
+        <UserHeader />
+  
+        <UserStatsGrid
+          total={stats.total}
+          active={stats.active}
+          admins={stats.admins}
+          suspended={stats.suspended}
         />
 
-        <UserTable
-          users={filteredUsers}
-          onToggleStatus={handleToggleStatus}
-          onDeleteUser={handleDeleteUser}
-        />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-1">
+          <UserFilters
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedRole={selectedRole}
+            setSelectedRole={setSelectedRole}
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
+            roles={roles}
+            statuses={statuses}
+          />
+        </div>
+
+        <div className="lg:col-span-3">
+          <UserTable
+            users={filteredUsers}
+            onToggleStatus={handleToggleStatus}
+            onDeleteUser={handleDeleteUser}
+          />
+        </div>
       </div>
-
-      <AddUserModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onUserAdded={fetchUsers}
-      />
     </>
   );
 }

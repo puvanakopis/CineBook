@@ -66,18 +66,22 @@ export default function AdminBookings() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
-        <BookingFilters
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          statuses={statuses}
-        />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-1">
+          <BookingFilters
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
+            statuses={statuses}
+          />
+        </div>
 
-        <BookingTable
-          bookings={filteredBookings}
-        />
+        <div className="lg:col-span-3">
+          <BookingTable
+            bookings={filteredBookings}
+          />
+        </div>
       </div>
     </>
   );

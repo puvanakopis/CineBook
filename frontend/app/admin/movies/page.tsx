@@ -112,31 +112,36 @@ export default function AdminMovies() {
         total={total}
         nowShowing={nowShowing}
         comingSoon={comingSoon}
+        totalGenres={allGenres.length}
       />
 
-      <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr] gap-6">
-        <MovieFilters
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          selectedGenre={selectedGenre}
-          setSelectedGenre={setSelectedGenre}
-          selectedRating={selectedRating}
-          setSelectedRating={setSelectedRating}
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          genres={allGenres}
-          ageRatings={ageRatings}
-          releaseStatuses={releaseStatuses}
-        />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-1">
+          <MovieFilters
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedGenre={selectedGenre}
+            setSelectedGenre={setSelectedGenre}
+            selectedRating={selectedRating}
+            setSelectedRating={setSelectedRating}
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
+            genres={allGenres}
+            ageRatings={ageRatings}
+            releaseStatuses={releaseStatuses}
+          />
+        </div>
 
-        <MovieTable
-          movies={filteredMovies}
-          isLoading={isLoading}
-          getReleaseStatus={getReleaseStatus}
-          getAgeRating={getAgeRating}
-          onEdit={handleEditMovie}
-          onDelete={handleDeleteClick}
-        />
+        <div className="lg:col-span-3">
+          <MovieTable
+            movies={filteredMovies}
+            isLoading={isLoading}
+            getReleaseStatus={getReleaseStatus}
+            getAgeRating={getAgeRating}
+            onEdit={handleEditMovie}
+            onDelete={handleDeleteClick}
+          />
+        </div>
       </div>
 
       <AddEditModal
