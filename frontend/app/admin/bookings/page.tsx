@@ -47,7 +47,7 @@ export default function AdminBookings() {
     };
   }, [bookings]);
 
-  if (isLoading && bookings.length === 0) return <Loading />;
+  if (isLoading && bookings.length === 0) return <Loading message="Loading Bookings..." />;
 
   return (
     <>

@@ -81,7 +81,7 @@ export default function AdminTheaters() {
   };
 
   if (isLoading || isMoviesLoading) {
-    return <Loading />;
+    return <Loading message="Loading Theaters..." />;
   }
 
   if (error) {

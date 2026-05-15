@@ -9,6 +9,7 @@ import { MovieTable } from './_components/MovieTable';
 import { AddEditModal } from './_components/AddEditModal';
 import { DeleteModal } from './_components/DeleteModal';
 import { Movie } from '@/interfaces/movieInterface';
+import Loading from '@/components/Loading';
 
 const ageRatings = ['G', 'PG', 'PG-13', 'R'];
 const releaseStatuses = ['Now Showing', 'Coming Soon'];
@@ -99,6 +100,10 @@ export default function AdminMovies() {
     setIsModalOpen(false);
     setSelectedMovie(undefined);
   };
+
+  if (isLoading) {
+    return <Loading message="Loading Movies..." />;
+  }
 
   return (
     <>

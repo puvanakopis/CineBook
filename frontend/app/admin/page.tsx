@@ -9,6 +9,7 @@ import { RecentBookings } from './_components/RecentBookings';
 import { HallStatus } from './_components/HallStatus';
 import { adminApi } from '@/services/adminApi';
 import { DashboardStats } from '@/interfaces/adminInterface';
+import Loading from '@/components/Loading';
 
 export default function AdminDashboard() {
     const [data, setData] = useState<DashboardStats | null>(null);
@@ -30,12 +31,7 @@ export default function AdminDashboard() {
     }, []);
 
     if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-slate-500 dark:text-[#b99d9d] animate-pulse">Loading Analytics...</p>
-            </div>
-        );
+        return <Loading message="Loading Dashboard..." />;
     }
 
     if (!data) {

@@ -9,6 +9,7 @@ import { AddUserModal } from './_components/AddUserModal';
 import { adminApi } from '@/services/adminApi';
 import { User } from '@/interfaces/userInterfaces';
 import { toast } from 'react-hot-toast';
+import Loading from '@/components/Loading';
 
 const roles = ['Admin', 'Customer'];
 const statuses = ['Active', 'Suspended'];
@@ -88,11 +89,7 @@ export default function AdminUsers() {
   }, [users]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <Loading message="Loading Users..." />;
   }
 
   return (
