@@ -2,6 +2,8 @@
 
 import { User } from '@/interfaces/userInterfaces';
 import { MdEdit, MdBlock, MdCheckCircleOutline, MdDelete } from 'react-icons/md';
+import { useState, useMemo, useEffect } from 'react';
+import Pagination from '../../_components/Pagination';
 
 interface UserTableProps {
     users: User[];
@@ -10,6 +12,21 @@ interface UserTableProps {
 }
 
 export function UserTable({ users, onToggleStatus, onDeleteUser }: UserTableProps) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+
+    const totalPages = Math.ceil(users.length / itemsPerPage);
+
+    const currentItems = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        return users.slice(startIndex, startIndex + itemsPerPage);
+    }, [users, currentPage]);
+
+    // Reset to first page when filtering
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [users.length]);
+
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -33,8 +50,8 @@ export function UserTable({ users, onToggleStatus, onDeleteUser }: UserTableProp
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-[#392828]">
-                        {users.length > 0 ? (
-                            users.map((user) => (
+                        {currentItems.length > 0 ? (
+                            currentItems.map((user) => (
                                 <tr key={user._id} className="hover:bg-slate-50 dark:hover:bg-[#1f1212] transition-colors">
                                     <td className="px-6 py-4 align-top">
                                         <div className="flex items-center gap-3">
@@ -128,6 +145,13 @@ export function UserTable({ users, onToggleStatus, onDeleteUser }: UserTableProp
                     </tbody>
                 </table>
             </div>
+            <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={users.length}
+                itemsPerPage={itemsPerPage}
+            />
         </section>
     );
 }

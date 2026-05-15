@@ -8,7 +8,8 @@ import {
   MdDelete,
   MdConfirmationNumber
 } from 'react-icons/md';
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import Pagination from '../../_components/Pagination';
 
 interface BookingTableProps {
   bookings: Booking[];
@@ -22,6 +23,20 @@ const statusStyles = {
 
 export function BookingTable({ bookings }: BookingTableProps) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const totalPages = Math.ceil(bookings.length / itemsPerPage);
+  
+  const currentItems = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return bookings.slice(startIndex, startIndex + itemsPerPage);
+  }, [bookings, currentPage]);
+
+  // Reset to first page when filtering
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [bookings.length]);
 
   return (
     <div className="bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-[#392828] shadow-sm overflow-hidden">
@@ -40,8 +55,8 @@ export function BookingTable({ bookings }: BookingTableProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-[#392828]">
-            {bookings.length > 0 ? (
-              bookings.map((booking) => {
+            {currentItems.length > 0 ? (
+              currentItems.map((booking) => {
                 const bookingId = booking._id || booking.id || '';
                 const displayDate = booking.dateTime ? new Date(booking.dateTime).toLocaleString() : 'N/A';
                 
@@ -135,22 +150,13 @@ export function BookingTable({ bookings }: BookingTableProps) {
         </table>
       </div>
 
-      <div className="p-4 border-t border-gray-200 dark:border-[#392828] bg-slate-50/50 dark:bg-[#1a0f0f] flex items-center justify-between">
-        <p className="text-xs text-slate-500 dark:text-[#b99d9d]">
-          Showing <span className="font-bold text-slate-900 dark:text-white">{bookings.length}</span> results
-        </p>
-        <div className="flex items-center gap-2">
-          <button className="px-3 py-1 text-xs font-medium text-slate-500 dark:text-[#b99d9d] border border-gray-200 dark:border-[#392828] rounded hover:bg-white dark:hover:bg-[#2b1a1a] transition-all disabled:opacity-50" disabled>
-            Previous
-          </button>
-          <button className="px-3 py-1 text-xs font-medium text-white bg-primary rounded hover:bg-primary-dark transition-all">
-            1
-          </button>
-          <button className="px-3 py-1 text-xs font-medium text-slate-500 dark:text-[#b99d9d] border border-gray-200 dark:border-[#392828] rounded hover:bg-white dark:hover:bg-[#2b1a1a] transition-all">
-            Next
-          </button>
-        </div>
-      </div>
+      <Pagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalItems={bookings.length}
+        itemsPerPage={itemsPerPage}
+      />
     </div>
   );
 }
