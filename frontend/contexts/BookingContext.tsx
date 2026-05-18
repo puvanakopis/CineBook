@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
 import { AxiosError } from "axios";
+import Cookies from "js-cookie";
 import { bookingApi } from "@/services/bookingApi";
 import {
     BookingContextType,
@@ -43,6 +44,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
     const clearSelectedBooking = () => setSelectedBooking(null);
 
     const getBookings = useCallback(async () => {
+        const token = Cookies.get("token");
+        if (!token) return;
+
         try {
             setIsLoading(true);
             setError(null);
@@ -57,6 +61,9 @@ export const BookingProvider: React.FC<BookingProviderProps> = ({ children }) =>
     }, []);
 
     const getMyBookings = useCallback(async () => {
+        const token = Cookies.get("token");
+        if (!token) return;
+
         try {
             setIsLoading(true);
             setError(null);

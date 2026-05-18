@@ -11,6 +11,7 @@ const theaterRoutes = require('./routes/theaterRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 const passport = require('./config/passport');
 
 connectDB();
@@ -34,6 +35,7 @@ app.use('/api/theaters', theaterRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/chat', chatRoutes);
 
 app.get('/', (req, res) => res.send('Hello from CineBook!'));
 

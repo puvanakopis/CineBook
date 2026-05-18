@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { IoIosAddCircleOutline, IoMdClose } from "react-icons/io";
 import { MdOutlinePerson, MdOutlineSmartToy, MdOutlineRestartAlt } from "react-icons/md";
+import { chatApi, ChatMessage } from "@/services/chatApi";
 
 interface Message {
     id: number;
@@ -24,6 +25,7 @@ export default function CineBotChat() {
     const [input, setInput] = useState("");
     const chatContainerRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         chatContainerRef.current?.scrollTo({
@@ -32,32 +34,57 @@ export default function CineBotChat() {
         });
     }, [messages]);
 
-    const handleSend = () => {
-        if (!input.trim()) return;
-        const newMessage: Message = {
+    const handleSend = async () => {
+        if (!input.trim() || isLoading) return;
+
+        const userMsgText = input.trim();
+        const userMessage: Message = {
             id: Date.now(),
             sender: "user",
-            text: input,
+            text: userMsgText,
         };
-        setMessages([...messages, newMessage]);
 
-        setTimeout(() => {
+        setMessages((prev) => [...prev, userMessage]);
+        setInput("");
+        setIsLoading(true);
+
+        try {
+            const history: ChatMessage[] = messages
+                .filter(m => m.id !== 1) // exclude intro if needed, or keep it
+                .map(m => ({
+                    sender: m.sender,
+                    text: m.text
+                }));
+
+            const response = await chatApi.sendMessage({
+                message: userMsgText,
+                chat_history: history
+            });
+
             const botMessage: Message = {
                 id: Date.now() + 1,
                 sender: "bot",
-                text: `You asked: "${input}". CineBot is working on it...`,
+                text: response.response,
             };
             setMessages((prev) => [...prev, botMessage]);
-        }, 1000);
-
-        setInput("");
+        } catch (error) {
+            console.error("Chat Error:", error);
+            const errorMessage: Message = {
+                id: Date.now() + 1,
+                sender: "bot",
+                text: "Sorry, I'm having trouble connecting to my brain right now. Please try again later.",
+            };
+            setMessages((prev) => [...prev, errorMessage]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
             {/* Chat Window */}
             {isOpen && (
-                <div className="flex flex-col w-[400px] h-[500px] bg-surface-dark/95 backdrop-blur-sm border border-[#392828] rounded-2xl shadow-2xl overflow-hidden mb-2">
+                <div className="flex flex-col w-[450px] h-[600px] bg-surface-dark/95 backdrop-blur-sm border border-[#392828] rounded-2xl shadow-2xl overflow-hidden mb-2">
                     {/* Header */}
                     <div className="bg-surface-dark px-4 py-3 border-b border-[#392828] flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -135,7 +162,7 @@ export default function CineBotChat() {
                                 <IoIosAddCircleOutline className="text-[18px]" />
                             </button>
                             <textarea
-                                className="w-full bg-transparent border-none text-white placeholder-text-secondary focus:ring-0 focus:outline-none resize-none py-2 px-1 text-sm leading-relaxed max-h-24 overflow-hidden rounded-lg"
+                                className="w-full bg-transparent border-none text-white placeholder-text-secondary focus:ring-0 focus:outline-none resize-none py-2 px-1 text-sm leading-relaxed max-h-24 overflow-hidden rounded-lg disabled:opacity-50"
                                 placeholder="Ask about movies, showtimes ..."
                                 rows={1}
                                 value={input}
@@ -147,10 +174,12 @@ export default function CineBotChat() {
                                 onKeyDown={(e) =>
                                     e.key === "Enter" && !e.shiftKey && (e.preventDefault(), handleSend())
                                 }
+                                disabled={isLoading}
                             />
                             <button
                                 onClick={handleSend}
-                                className="p-2 bg-primary text-white rounded-lg hover:bg-red-700 transition-colors shadow-lg shadow-primary/20"
+                                disabled={!input.trim() || isLoading}
+                                className="p-2 bg-primary text-white rounded-lg hover:bg-red-700 transition-colors shadow-lg shadow-primary/20 disabled:opacity-50"
                             >
                                 <AiOutlineSend className="text-[18px]" />
                             </button>

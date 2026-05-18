@@ -5,13 +5,11 @@ const Movie = require('../models/movieModel');
 const Theater = require('../models/theaterModel');
 const bcrypt = require('bcryptjs');
 
-// Fetch all users and admins with their booking counts
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.find().select('-password').lean();
         const admins = await Admin.find().select('-password').lean();
 
-        // Get booking counts for regular users
         const usersWithStats = await Promise.all(users.map(async (user) => {
             const bookingCount = await Booking.countDocuments({ 
                 $or: [
@@ -22,11 +20,9 @@ exports.getAllUsers = async (req, res) => {
             return {
                 ...user,
                 totalBookings: bookingCount,
-                // Map roles for frontend consistency if needed, but we'll do it in frontend
             };
         }));
 
-        // Admins/Managers usually don't have bookings in this context, but we can set to 0
         const adminsWithStats = admins.map(admin => ({
             ...admin,
             totalBookings: 0
@@ -41,7 +37,6 @@ exports.getAllUsers = async (req, res) => {
     }
 };
 
-// Toggle user/admin active status
 exports.toggleUserStatus = async (req, res) => {
     try {
         const { id } = req.params;
@@ -68,7 +63,6 @@ exports.toggleUserStatus = async (req, res) => {
     }
 };
 
-// Update user role (only for Admin model users: admin <-> manager)
 exports.updateUserRole = async (req, res) => {
     try {
         const { id } = req.params;
@@ -92,7 +86,6 @@ exports.updateUserRole = async (req, res) => {
     }
 };
 
-// Create a new user or admin/manager
 exports.createUser = async (req, res) => {
     try {
         const { firstName, lastName, email, password, role } = req.body;
@@ -126,7 +119,6 @@ exports.createUser = async (req, res) => {
     }
 };
 
-// Delete a user or admin/manager
 exports.deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
@@ -140,16 +132,12 @@ exports.deleteUser = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Also delete their bookings? Maybe just keep them for records but unlinked or handled by status.
-        // For now, just delete the user.
-
         res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Server error deleting user', error: error.message });
     }
 };
 
-// Fetch dashboard statistics
 exports.getDashboardStats = async (req, res) => {
     try {
         const totalUsers = await User.countDocuments();
@@ -162,7 +150,6 @@ exports.getDashboardStats = async (req, res) => {
         ]);
         const totalRevenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
 
-        // Last 6 months revenue
         const last6Months = [];
         for (let i = 5; i >= 0; i--) {
             const d = new Date();
@@ -190,7 +177,6 @@ exports.getDashboardStats = async (req, res) => {
             };
         }));
 
-        // Top Genres (by booking count)
         const genreStats = await Booking.aggregate([
             { $unwind: '$genres' },
             { $group: { _id: '$genres', count: { $sum: 1 } } },
@@ -202,7 +188,6 @@ exports.getDashboardStats = async (req, res) => {
             value: g.count
         }));
 
-        // Recent Bookings
         const recentBookings = await Booking.find()
             .sort({ createdAt: -1 })
             .limit(5)
