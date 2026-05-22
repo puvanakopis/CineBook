@@ -1,26 +1,25 @@
 const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
 
-// Create folder if not exists
-const createFolder = (folderPath) => {
-    if (!fs.existsSync(folderPath)) {
-        fs.mkdirSync(folderPath, { recursive: true });
-    }
-};
+// Cloudinary Configuration
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// Dynamic storage
+// Cloudinary storage configuration
 const storage = (folderName) =>
-    multer.diskStorage({
-        destination: function (req, file, cb) {
-            const uploadPath = path.join("uploads", folderName);
-            createFolder(uploadPath);
-            cb(null, uploadPath);
-        },
-        filename: function (req, file, cb) {
-            const ext = path.extname(file.originalname);
-            const id = (req.user && req.user.id) || req.body._id || Date.now();
-            cb(null, `${id}${ext}`);
+    new CloudinaryStorage({
+        cloudinary: cloudinary,
+        params: {
+            folder: `CineBook/${folderName}`,
+            allowed_formats: ["jpg", "jpeg", "png", "webp"],
+            public_id: (req, file) => {
+                const id = (req.user && req.user.id) || req.body._id || Date.now();
+                return `${id}`;
+            },
         },
     });
 

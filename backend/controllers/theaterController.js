@@ -160,18 +160,6 @@ exports.createTheater = async (req, res) => {
         const newTheater = new Theater(normalized);
         await newTheater.save();
 
-        if (req.file) {
-            try {
-                const ext = path.extname(req.file.originalname);
-                const newPath = `uploads/theaters/${newTheater._id}${ext}`;
-                fs.renameSync(req.file.path, newPath);
-                newTheater.image = newPath;
-                await newTheater.save();
-            } catch (fsErr) {
-                console.error('createTheater file move error:', fsErr);
-            }
-        }
-
         const populatedNew = await Theater.findById(newTheater._id).populate('screens.shows.movie');
         res.status(201).json({ message: 'Theater created', theater: populatedNew });
     } catch (err) {
@@ -197,22 +185,7 @@ exports.updateTheater = async (req, res) => {
         const theater = await Theater.findById(req.params.id);
         if (!theater) return res.status(404).json({ message: "Theater not found" });
 
-        if (req.file && theater.image && fs.existsSync(theater.image)) {
-            try { fs.unlinkSync(theater.image); } catch (e) { /* ignore */ }
-        }
-
         Object.assign(theater, normalized);
-
-        if (req.file) {
-            try {
-                const ext = path.extname(req.file.originalname);
-                const newPath = `uploads/theaters/${theater._id}${ext}`;
-                fs.renameSync(req.file.path, newPath);
-                theater.image = newPath;
-            } catch (fsErr) {
-                console.error('updateTheater file move error:', fsErr);
-            }
-        }
 
         await theater.save();
 
