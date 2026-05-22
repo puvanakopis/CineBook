@@ -18,7 +18,11 @@ export const getImage = (
 
   const cleanPath = fileName.replace(/^\/+/, "");
 
-  if (cleanPath.startsWith("http://") || cleanPath.startsWith("https://")) {
+  if (
+    cleanPath.startsWith("http://") ||
+    cleanPath.startsWith("https://") ||
+    cleanPath.includes("res.cloudinary.com")
+  ) {
     return fileName;
   }
 

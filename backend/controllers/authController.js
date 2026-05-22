@@ -123,18 +123,18 @@ exports.verifyOtpAndSignup = async (req, res) => {
     await newUser.save();
     await OTP.deleteOne({ email: email.toLowerCase() });
 
-    res.status(201).json({ 
-        message: 'Signup successful', 
-        user: { 
-            email: newUser.email, 
-            role: newUser.role, 
-            firstName: newUser.firstName, 
-            lastName: newUser.lastName, 
-            phone: newUser.phone, 
-            profilePicture: newUser.profilePicture, 
+    res.status(201).json({
+        message: 'Signup successful',
+        user: {
+            email: newUser.email,
+            role: newUser.role,
+            firstName: newUser.firstName,
+            lastName: newUser.lastName,
+            phone: newUser.phone,
+            profilePicture: newUser.profilePicture,
             createdAt: newUser.createdAt,
-            paymentMethods: newUser.paymentMethods 
-        } 
+            paymentMethods: newUser.paymentMethods
+        }
     });
 };
 
@@ -153,18 +153,18 @@ exports.login = async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-    res.status(200).json({ 
-        token, 
-        user: { 
-            email: user.email, 
-            role: user.role, 
-            firstName: user.firstName, 
-            lastName: user.lastName, 
-            phone: user.phone, 
-            profilePicture: user.profilePicture, 
+    res.status(200).json({
+        token,
+        user: {
+            email: user.email,
+            role: user.role,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phone: user.phone,
+            profilePicture: user.profilePicture,
             createdAt: user.createdAt,
-            paymentMethods: user.paymentMethods 
-        } 
+            paymentMethods: user.paymentMethods
+        }
     });
 };
 
@@ -277,7 +277,7 @@ exports.uploadProfilePicture = async (req, res) => {
             return res.status(400).json({ message: "No file uploaded" });
         }
 
-        const profilePicture = `/uploads/users/${req.file.filename}`;
+        const profilePicture = req.file.path;
         const user = await User.findByIdAndUpdate(
             req.user.id,
             { profilePicture },
@@ -368,7 +368,7 @@ exports.updatePaymentMethod = async (req, res) => {
 
         if (cardholderName) method.cardholderName = cardholderName;
         if (expiryDate) method.expiryDate = expiryDate;
-        
+
         if (isDefault) {
             user.paymentMethods.forEach(m => m.isDefault = false);
             method.isDefault = true;
@@ -389,7 +389,7 @@ exports.deletePaymentMethod = async (req, res) => {
         if (!user) return res.status(404).json({ message: "User not found" });
 
         user.paymentMethods = user.paymentMethods.filter(m => m._id.toString() !== id);
-        
+
         if (user.paymentMethods.length > 0 && !user.paymentMethods.some(m => m.isDefault)) {
             user.paymentMethods[0].isDefault = true;
         }

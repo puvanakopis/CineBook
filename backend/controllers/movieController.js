@@ -57,16 +57,6 @@ exports.createMovie = async (req, res) => {
         const movie = new Movie(normalizeMovieBody(req.body, req.file ? req.file.path : req.body.poster));
         await movie.save();
 
-        if (req.file) {
-            const ext = path.extname(req.file.originalname);
-            const newPath = `uploads/movies/${movie._id}${ext}`;
-
-            fs.renameSync(req.file.path, newPath);
-
-            movie.poster = newPath;
-            await movie.save();
-        }
-
         res.status(201).json({ message: "Movie created", movie });
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -129,21 +119,7 @@ exports.updateMovie = async (req, res) => {
         let movie = await Movie.findById(req.params.id);
         if (!movie) return res.status(404).json({ message: "Movie not found" });
 
-        if (req.file && movie.poster) {
-            if (fs.existsSync(movie.poster)) {
-                fs.unlinkSync(movie.poster);
-            }
-        }
-
-        Object.assign(movie, normalizeMovieBody(req.body));
-
-        if (req.file) {
-            const ext = path.extname(req.file.originalname);
-            const newPath = `uploads/movies/${movie._id}${ext}`;
-
-            fs.renameSync(req.file.path, newPath);
-            movie.poster = newPath;
-        }
+        Object.assign(movie, normalizeMovieBody(req.body, req.file ? req.file.path : undefined));
 
         await movie.save();
 
@@ -157,10 +133,6 @@ exports.deleteMovie = async (req, res) => {
     try {
         const movie = await Movie.findById(req.params.id);
         if (!movie) return res.status(404).json({ message: "Movie not found" });
-
-        if (movie.poster && fs.existsSync(movie.poster)) {
-            fs.unlinkSync(movie.poster);
-        }
 
         await movie.deleteOne();
 

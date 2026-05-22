@@ -20,7 +20,9 @@ const app = express();
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(passport.initialize());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+const uploadDir = process.env.NODE_ENV === 'production' ? '/tmp/uploads' : path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(uploadDir));
 
 app.use((req, res, next) => {
     const timestamp = new Date().toISOString();
@@ -38,4 +40,8 @@ app.use('/api/admin', adminRoutes);
 app.get('/', (req, res) => res.send('Hello from CineBook!'));
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+}
+
+module.exports = app;
