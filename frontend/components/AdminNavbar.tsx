@@ -15,8 +15,13 @@ const AdminNavbar = () => {
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const authRef = useRef<HTMLDivElement | null>(null);
+    const [mounted, setMounted] = useState(false);
 
     const initials = user ? `${user.firstName?.[0] ?? ""}`.toUpperCase() : "";
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -93,14 +98,7 @@ const AdminNavbar = () => {
                 <div className="hidden md:block h-6 w-px bg-[#392828]" />
 
                 {/* Admin Actions */}
-                {!isAuthenticated ? (
-                    <Link
-                        href="/admin/login"
-                        className="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-6 bg-[#ec1313] hover:bg-red-700 transition-colors text-white text-base font-bold shadow-lg hover:shadow-[#ec1313]/20"
-                    >
-                        Login
-                    </Link>
-                ) : (
+                {mounted && isAuthenticated ? (
                     <div className="relative" ref={authRef}>
                         <button
                             onClick={() => setOpen((v) => !v)}
@@ -122,6 +120,13 @@ const AdminNavbar = () => {
                             </div>
                         )}
                     </div>
+                ) : (
+                    <Link
+                        href="/admin/login"
+                        className="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-6 bg-[#ec1313] hover:bg-red-700 transition-colors text-white text-base font-bold shadow-lg hover:shadow-[#ec1313]/20"
+                    >
+                        Login
+                    </Link>
                 )}
             </div>
         </header>

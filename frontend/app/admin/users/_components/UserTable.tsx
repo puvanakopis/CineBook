@@ -56,8 +56,8 @@ export function UserTable({ users, onToggleStatus, onDeleteUser }: UserTableProp
                                     <td className="px-6 py-4 align-top">
                                         <div className="flex items-center gap-3">
                                             {user.profilePicture ? (
-                                                <img 
-                                                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}${user.profilePicture}`} 
+                                                <img
+                                                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:4000'}${user.profilePicture}`}
                                                     alt={user.firstName}
                                                     className="size-10 rounded-full object-cover"
                                                 />
@@ -108,25 +108,25 @@ export function UserTable({ users, onToggleStatus, onDeleteUser }: UserTableProp
                                                 <MdEdit className="text-lg" />
                                             </button>
                                             {user.isActive ? (
-                                                <button 
+                                                <button
                                                     onClick={() => onToggleStatus(user._id, user.isActive)}
-                                                    className="p-2 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors" 
+                                                    className="p-2 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors"
                                                     title="Suspend User"
                                                 >
                                                     <MdBlock className="text-lg" />
                                                 </button>
                                             ) : (
-                                                <button 
+                                                <button
                                                     onClick={() => onToggleStatus(user._id, user.isActive)}
-                                                    className="p-2 rounded-lg hover:bg-emerald-500/10 text-emerald-500 transition-colors" 
+                                                    className="p-2 rounded-lg hover:bg-emerald-500/10 text-emerald-500 transition-colors"
                                                     title="Activate User"
                                                 >
                                                     <MdCheckCircleOutline className="text-lg" />
                                                 </button>
                                             )}
-                                            <button 
+                                            <button
                                                 onClick={() => onDeleteUser(user._id)}
-                                                className="p-2 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors" 
+                                                className="p-2 rounded-lg hover:bg-rose-500/10 text-rose-500 transition-colors"
                                                 title="Delete User"
                                             >
                                                 <MdDelete className="text-lg" />
@@ -145,7 +145,7 @@ export function UserTable({ users, onToggleStatus, onDeleteUser }: UserTableProp
                     </tbody>
                 </table>
             </div>
-            <Pagination 
+            <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
