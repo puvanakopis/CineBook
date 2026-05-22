@@ -15,6 +15,7 @@ const Navbar = () => {
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const authRef = useRef<HTMLDivElement | null>(null);
+    const [mounted, setMounted] = useState(false);
 
     const [imgError, setImgError] = useState(false);
 
@@ -24,11 +25,12 @@ const Navbar = () => {
     const profilePic = user?.profilePicture
         ? (user.profilePicture.startsWith('http')
             ? user.profilePicture
-            : `${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000').replace(/\/$/, '')}/${user.profilePicture.replace(/^\//, '')}`)
+            : `${(process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:4000').replace(/\/$/, '')}/${user.profilePicture.replace(/^\//, '')}`)
         : null;
 
     useEffect(() => {
-        setImgError(false); 
+        setMounted(true);
+        setImgError(false);
     }, [user?.profilePicture]);
 
     useEffect(() => {
@@ -114,14 +116,7 @@ const Navbar = () => {
                 <div className="hidden md:block h-6 w-px bg-[#392828]" />
 
                 {/* Auth links */}
-                {!isAuthenticated ? (
-                    <Link
-                        href="/login"
-                        className="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-6 bg-[#ec1313] hover:bg-red-700 transition-colors text-white text-base font-bold shadow-lg hover:shadow-[#ec1313]/20"
-                    >
-                        Login
-                    </Link>
-                ) : (
+                {mounted && isAuthenticated ? (
                     <div className="relative" ref={authRef}>
                         <button
                             onClick={() => setOpen((v) => !v)}
@@ -200,6 +195,13 @@ const Navbar = () => {
                             </div>
                         </div>
                     </div>
+                ) : (
+                    <Link
+                        href="/login"
+                        className="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-6 bg-[#ec1313] hover:bg-red-700 transition-colors text-white text-base font-bold shadow-lg hover:shadow-[#ec1313]/20"
+                    >
+                        Login
+                    </Link>
                 )}
             </div>
         </header>

@@ -1,5 +1,5 @@
 export async function postPayment(payload: any, baseUrl?: string) {
-    const API_BASE = (process.env.NEXT_PUBLIC_API_URL as string) || baseUrl || 'http://localhost:4000';
+    const API_BASE = (process.env.NEXT_PUBLIC_API_URL as string) || baseUrl || 'http://127.0.0.1:4000';
     const resp = await fetch(`${API_BASE}/api/payments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -13,7 +13,7 @@ export async function postPayment(payload: any, baseUrl?: string) {
 }
 
 export async function createStripeIntent(amount: number, currency = 'lkr', baseUrl?: string) {
-    const API_BASE = (process.env.NEXT_PUBLIC_API_URL as string) || baseUrl || 'http://localhost:4000';
+    const API_BASE = (process.env.NEXT_PUBLIC_API_URL as string) || baseUrl || 'http://127.0.0.1:4000';
     const resp = await fetch(`${API_BASE}/api/payments/intent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

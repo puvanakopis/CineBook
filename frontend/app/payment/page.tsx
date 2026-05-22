@@ -111,7 +111,7 @@ function PaymentContent() {
         });
         setSelectedSavedCardId(method._id);
         setSelectedCardBrand(method.brand);
-        
+
         // Clear card errors when selecting a saved card
         const newErrors = { ...errors };
         delete newErrors.cardName;
@@ -130,7 +130,7 @@ function PaymentContent() {
         const newErrors: Record<string, string> = {};
         if (!formData.customerName || !formData.customerName.toString().trim()) newErrors.customerName = "Name is required";
         if (!formData.customerEmail || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(String(formData.customerEmail))) newErrors.customerEmail = "Valid email is required";
-        
+
         if (paymentMethod === 'card') {
             if (!formData.cardName?.toString().trim()) newErrors.cardName = "Cardholder name is required";
             if (!selectedSavedCardId && !/^\d{16}$/.test(formData.cardNumber.replace(/\s+/g, ''))) {
@@ -139,7 +139,7 @@ function PaymentContent() {
             if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry)) newErrors.expiry = "Use MM/YY format";
             if (!/^\d{3,4}$/.test(formData.cvv)) newErrors.cvv = "Invalid CVV (3-4 digits)";
         }
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -152,9 +152,9 @@ function PaymentContent() {
         setIsProcessing(true);
         setPaymentStatus("idle");
         try {
-            const API_BASE = (process.env.NEXT_PUBLIC_API_URL as string) || 'http://localhost:4000';
+            const API_BASE = (process.env.NEXT_PUBLIC_API_URL as string) || 'http://127.0.0.1:4000';
 
-            const paymentDetails = paymentMethod === 'card' 
+            const paymentDetails = paymentMethod === 'card'
                 ? {
                     method: 'card',
                     provider: 'MockGateway',
@@ -162,11 +162,11 @@ function PaymentContent() {
                     cardNumber: formData.cardNumber.replace(/\s+/g, ''),
                     cvv: formData.cvv,
                     paymentMethodId: selectedSavedCardId
-                  }
+                }
                 : {
                     method: 'cash',
                     provider: 'InPerson',
-                  };
+                };
 
             const resp = await fetch(`${API_BASE}/api/payments`, {
                 method: 'POST',
